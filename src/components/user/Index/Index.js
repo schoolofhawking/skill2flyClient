@@ -5,6 +5,9 @@ import BannerOne from "./Banners/BannerOne";
 import BannerTwo from "./Banners/BannerTwo";
 import CourseCard from "./Banners/CourseCard";
 import HomeVideo from "./Banners/HomeVideo";
+import UpcomingEvents from "./Banners/UpcomingEvents";
+import Memberships from "./Banners/Memberships";
+import Blogs from "./Banners/Blogs";
 
 function Index() {
   return (
@@ -16,6 +19,9 @@ function Index() {
       
       <CourseCard/>
       <HomeVideo/>
+      <UpcomingEvents/>
+      <Memberships/>
+      <Blogs/>
 
       <Footer/>
     </>

@@ -20,7 +20,7 @@ function Index() {
       <CourseCard/>
       <HomeVideo/>
       <UpcomingEvents/>
-      <Memberships/>
+      <Memberships/> 
       <Blogs/>
 
       <Footer/>

@@ -8,7 +8,7 @@ export default function Signup() {
     const [state,setState] = useState([])
     const [city,setCity] = useState([])
     useEffect(() => {
-        document.getElementById('navbarSch').style.background = "-webkit-linear-gradient(left, #3931af, #00c6ff)"
+        document.getElementById('navbarSch').style.background = "-webkit-linear-gradient(left, #8436f6, #5f38fb)"
         document.getElementById('navbarSch').style.position = "relative"
         getCountries()
     }, [])

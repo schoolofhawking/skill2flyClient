@@ -10,10 +10,7 @@ function App() {
     {/* test abc */}
       <div className="App">
         <Router>
-          <Route path="/">
-            {" "}
-            <User />{" "}
-          </Route>
+          <Route path="/"><User /></Route>
         </Router>
       </div>
     </>

@@ -189,7 +189,7 @@ setIsLogin(props.login)
                         <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
                         <h3>Welcome</h3>
                         <p>Login to unlock a successfull career</p>
-                        <p style={{ padding: "0%" }} className="text-white">Dont have registered yet?</p>
+                        <p style={{ padding: "0%" }} className="text-wshite">Dont have registered yet?</p>
                         <input type="submit" value="Signup" onClick={()=>{setIsLogin(false)}} /><br />
                     </div>
                     <div className="col-md-9 register-right">

@@ -3,10 +3,20 @@ import React, { useEffect, useState } from 'react'
 import Navbar from '../NavBar/Navbar'
 import './Signup.css'
 
-export default function Signup() {
+export default function Signup(props) {
     const [country, setCountry] = useState([])
     const [state,setState] = useState([])
     const [city,setCity] = useState([])
+const [isLogin,setIsLogin]=useState(false)
+
+
+  useEffect(()=>{
+
+setIsLogin(props.login)
+
+  },[props])
+
+
     useEffect(() => {
         document.getElementById('navbarSch').style.background = "-webkit-linear-gradient(left, #8436f6, #5f38fb)"
         document.getElementById('navbarSch').style.position = "relative"
@@ -67,6 +77,7 @@ export default function Signup() {
             <Navbar />
 
 
+{!isLogin ? <>
             <div className="container register">
                 <div className="row">
                     <div className="col-md-3 register-left">
@@ -74,7 +85,7 @@ export default function Signup() {
                         <h3>Welcome</h3>
                         <p>We are so happy to welcome you to School of Hawking Family</p>
                         <p style={{ padding: "0%" }} className="text-white">Already Have an Account?</p>
-                        <input type="submit" value="Login" /><br />
+                        <input type="submit" value="Login" onClick={()=>{setIsLogin(true)}} /><br />
                     </div>
                     <div className="col-md-9 register-right">
                         <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -165,6 +176,56 @@ export default function Signup() {
                     </div>
                 </div>
             </div>
+
+            </>
+
+
+// Login form when is login state is true
+            :<>
+            
+            <div className="container register">
+                <div className="row">
+                    <div className="col-md-3 register-left">
+                        <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
+                        <h3>Welcome</h3>
+                        <p>Login to unlock a successfull career</p>
+                        <p style={{ padding: "0%" }} className="text-white">Dont have registered yet?</p>
+                        <input type="submit" value="Signup" onClick={()=>{setIsLogin(false)}} /><br />
+                    </div>
+                    <div className="col-md-9 register-right">
+                        <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <h3 className="register-heading">Login Now</h3>
+                            <div className="row register-form">
+                                <div className="col-md-6">
+                                    <div className="form-group">
+                                        <label className="text-left">User Email</label>
+                                        <input type="text" className="form-control" name="fname" placeholder="Johndoe@gmail.com " />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-left">Password</label>
+                                        <input type="password" className="form-control" name="lname" placeholder="password" />
+                                    </div>
+
+                                    <div className="form-group">
+                                    <button type="submit" className="btnLogin" >Login  </button>
+                                    </div>
+                                    
+                                </div>
+                                
+                     
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            
+            </>}
+
+
+
         </div>
     )
 }

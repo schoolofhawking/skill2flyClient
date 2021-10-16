@@ -9,8 +9,9 @@ function User() {
     return (
         <div>
              <Route  path="/" exact ><Index/> </Route> 
-             <Route path="/signup"><Signup/></Route>
-             <Route path="/dummy"><Dummy /></Route>
+             <Route path="/signup"><Signup login={false}/></Route>
+             <Route path="/login"><Signup login={true} /></Route>
+           
         </div>
     )
 }

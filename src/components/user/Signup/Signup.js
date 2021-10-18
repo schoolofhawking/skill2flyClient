@@ -18,7 +18,7 @@ export default function Signup(props) {
     document.getElementById("navbarSch").style.background =
       "-webkit-linear-gradient(left, #8436f6, #5f38fb)";
     document.getElementById("navbarSch").style.position = "relative";
-    getCountries();
+    //getCountries();
   }, []);
   const getCountries = () => {
     var headers = new Headers();
@@ -100,7 +100,7 @@ export default function Signup(props) {
             <div className="row">
               <div className="col-md-3 register-left">
                 <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
-                <h3>Welcome</h3>
+                <h3 className="text-white">Welcome</h3>
                 <p>
                   We are so happy to welcome you to School of Hawking Family
                 </p>
@@ -261,7 +261,7 @@ export default function Signup(props) {
             <div className="row">
               <div className="col-md-3 register-left">
                 <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
-                <h3>Welcome</h3>
+                <h3 className="text-white">Welcome</h3>
                 <p>Login to unlock a successfull career</p>
                 <p style={{ padding: "0%" }} className="text-wshite">
                   Dont have registered yet?

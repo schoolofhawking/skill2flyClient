@@ -10,29 +10,29 @@ import toast, { Toaster } from 'react-hot-toast';
 
 export default function Signup(props) {
   const dispatch = useDispatch()
-  const userDetails = useSelector(state=>state.userData)
+  const userDetails = useSelector(state => state.userData)
   // const [country, setCountry] = useState([]);
   // const [state, setState] = useState([]);
   // const [city, setCity] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
 
-  const [fieldValues,setFieldValues]=useState({
+  const [fieldValues, setFieldValues] = useState({
 
-fullName:'',
-phoneNumber:'',
-email:'',
-password:''
+    fullName: '',
+    phoneNumber: '',
+    email: '',
+    password: ''
 
   })
 
-  
+
   const {
     fullName,
-phoneNumber,
-email,
-password
-   
-} = fieldValues
+    phoneNumber,
+    email,
+    password
+
+  } = fieldValues
 
   useEffect(() => {
     setIsLogin(props.login);
@@ -46,62 +46,57 @@ password
   }, []);
 
 
-  const handleChange = (name) =>async (event )=> {
-    setFieldValues({...fieldValues, [name]: event.target.value})
-}
+  const handleChange = (name) => async (event) => {
+    setFieldValues({ ...fieldValues, [name]: event.target.value })
+  }
+  const signupSubmit = async () => {
 
-
-
-  const signupSubmit = async()=>
-  {
-       
-    const headers= {
+    const headers = {
       Accept: 'application/json',
       "Content-Type": 'application/json'
     }
-    try{
-
-     
-
-let {data}=await axios.post(`${API}`+'/signup',{fullName,email,phoneNumber,password}, {withCredentials: true})
+    try {
 
 
 
-console.log("apiresult",data);
-
-let userInfo = {
-  userId:data._id,
-  userName:data.fullName,
-  userMail:data.email,
-  userPhone:data.password
-}
-dispatch(userData(userInfo))
+      let { data } = await axios.post(`${API}` + '/signup', { fullName, email, phoneNumber, password }, { withCredentials: true })
 
 
+      console.log("apiresult", data);
 
-toast.success("Signup successfull enjoy !!",
-{
-  style: {
-    minWidth: '250px'
-  },
-  success: {
-    duration: 5000,
-    icon: '🔥',
-  },
-})
+      let userInfo = {
+        userId: data._id,
+        userName: data.fullName,
+        userMail: data.email,
+        userPhone: data.mobileNumber,
+        userLogin:true
+      }
+      dispatch(userData(userInfo))
+
+
+
+      toast.success("Signup successfull enjoy !!",
+        {
+          style: {
+            minWidth: '250px'
+          },
+          success: {
+            duration: 5000,
+            icon: '🔥',
+          },
+        })
 
     }
-    catch(err)
-    {
+    catch (err) {
       console.log(err)
       toast.error("This didn't work.")
     }
 
 
-    
+
   }
 
-  
+
 
 
   // const getCountries = () => {
@@ -174,7 +169,7 @@ toast.success("Signup successfull enjoy !!",
   //     });
   // };
 
- 
+
 
   return (
     <div>
@@ -318,7 +313,7 @@ toast.success("Signup successfull enjoy !!",
 
                     <div className="col-md-6">
                       <div className="form-group">
-                        <button type="submit" onClick={()=>signupSubmit()} className="btnLogin">
+                        <button type="submit" onClick={() => signupSubmit()} className="btnLogin">
                           Signup{" "}
                         </button>
                       </div>

@@ -90,6 +90,14 @@ export default function Signup(props) {
       });
   };
 
+  async function signupuser() {
+    try {
+     await  axios.post(process.env.EXTERNAL_SERVER + "signup", { k: "2" });
+    } catch (err) {
+      
+    }
+  }
+
   return (
     <div>
       <Navbar />
@@ -228,7 +236,11 @@ export default function Signup(props) {
 
                     <div className="col-md-6">
                       <div className="form-group">
-                        <button type="submit" className="btnLogin">
+                        <button
+                          type="submit"
+                          className="btnLogin"
+                          onClick={signupuser}
+                        >
                           Signup{" "}
                         </button>
                       </div>

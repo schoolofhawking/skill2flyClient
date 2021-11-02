@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function Navbar() {
     return (
@@ -61,16 +62,16 @@ function Navbar() {
                       </ul>
                     </li>
                     <li>
-                      <a href="contact.html">Contact</a>
+                      <Link to="/contact">Contact</Link>
                     </li>
                   </ul>
                 </div>
                 {/* Nav Menu End */}
                 {/* User Btn */}
-                <a href="#" className="user-btn"><i className="ti-user" /></a>
+                <Link to="/profile"><i className="ti-user" style={{fontSize:"1.5em",color:"white"}} /></Link>
                 {/* User Btn */}
                 {/* Join Btn */}
-                <a href="#" className="join-btn">Join for Free</a>
+                <Link to="/signup" className="join-btn">Join for Free</Link>
                 {/* Join Btn */}
               </nav>
             </div>

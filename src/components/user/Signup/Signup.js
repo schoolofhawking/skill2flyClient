@@ -3,12 +3,36 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../NavBar/Navbar";
 import "./Signup.css";
 import Footer from "../Footer/Footer";
+import { useDispatch, useSelector } from "react-redux";
+import { userData } from "../../../redux/rootActions";
+import { API } from '../../../config/config'
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Signup(props) {
-  const [country, setCountry] = useState([]);
-  const [state, setState] = useState([]);
-  const [city, setCity] = useState([]);
+  const dispatch = useDispatch()
+  const userDetails = useSelector(state=>state.userData)
+  // const [country, setCountry] = useState([]);
+  // const [state, setState] = useState([]);
+  // const [city, setCity] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
+
+  const [fieldValues,setFieldValues]=useState({
+
+fullName:'',
+phoneNumber:'',
+email:'',
+password:''
+
+  })
+
+  
+  const {
+    fullName,
+phoneNumber,
+email,
+password
+   
+} = fieldValues
 
   useEffect(() => {
     setIsLogin(props.login);
@@ -18,85 +42,139 @@ export default function Signup(props) {
     document.getElementById("navbarSch").style.background =
       "-webkit-linear-gradient(left, #8436f6, #5f38fb)";
     document.getElementById("navbarSch").style.position = "relative";
-    getCountries();
+    //getCountries();
   }, []);
-  const getCountries = () => {
-    var headers = new Headers();
-    headers.append(
-      "X-CSCAPI-KEY",
-      "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
-    );
 
-    var requestOptions = {
-      method: "GET",
-      headers: headers,
-      redirect: "follow",
-    };
-    fetch("https://api.countrystatecity.in/v1/countries", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        setCountry(result);
-      });
-  };
-  const getCity = () => {
-    let country = document.getElementById("country").value;
-    let state = document.getElementById("state").value;
-    var headers = new Headers();
-    headers.append(
-      "X-CSCAPI-KEY",
-      "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
-    );
 
-    var requestOptions = {
-      method: "GET",
-      headers: headers,
-      redirect: "follow",
-    };
-    fetch(
-      "https://api.countrystatecity.in/v1/countries/" +
-        country +
-        "/states/" +
-        state +
-        "/cities",
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        setCity(result);
-      });
-  };
-  const getState = () => {
-    let country = document.getElementById("country").value;
+  const handleChange = (name) =>async (event )=> {
+    setFieldValues({...fieldValues, [name]: event.target.value})
+}
 
-    country = country;
-    var headers = new Headers();
-    headers.append(
-      "X-CSCAPI-KEY",
-      "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
-    );
 
-    var requestOptions = {
-      method: "GET",
-      headers: headers,
-      redirect: "follow",
-    };
-    fetch(
-      "https://api.countrystatecity.in/v1/countries/" + country + "/states",
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        setState(result);
-      });
-  };
 
-  async function signupuser() {
-    try {
-     await  axios.post(process.env.EXTERNAL_SERVER + "signup", { k: "2" });
-    } catch (err) {
-      
+  const signupSubmit = async()=>
+  {
+       
+    const headers= {
+      Accept: 'application/json',
+      "Content-Type": 'application/json'
     }
+    try{
+
+     
+
+let {data}=await axios.post(`${API}`+'/signup',{fullName,email,phoneNumber,password}, {withCredentials: true})
+
+
+
+console.log("apiresult",data);
+
+let userInfo = {
+  userId:data._id,
+  userName:data.fullName,
+  userMail:data.email,
+  userPhone:data.password
+}
+dispatch(userData(userInfo))
+
+
+
+toast.success("Signup successfull enjoy !!",
+{
+  style: {
+    minWidth: '250px'
+  },
+  success: {
+    duration: 5000,
+    icon: '🔥',
+  },
+})
+
+    }
+    catch(err)
+    {
+      console.log(err)
+      toast.error("This didn't work.")
+    }
+
+
+    
   }
+
+  
+
+
+  // const getCountries = () => {
+  //   var headers = new Headers();
+  //   headers.append(
+  //     "X-CSCAPI-KEY",
+  //     "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
+  //   );
+
+  //   var requestOptions = {
+  //     method: "GET",
+  //     headers: headers,
+  //     redirect: "follow",
+  //   };
+  //   fetch("https://api.countrystatecity.in/v1/countries", requestOptions)
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       setCountry(result);
+  //     });
+  // };
+  // const getCity = () => {
+  //   let country = document.getElementById("country").value;
+  //   let state = document.getElementById("state").value;
+  //   var headers = new Headers();
+  //   headers.append(
+  //     "X-CSCAPI-KEY",
+  //     "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
+  //   );
+
+  //   var requestOptions = {
+  //     method: "GET",
+  //     headers: headers,
+  //     redirect: "follow",
+  //   };
+  //   fetch(
+  //     "https://api.countrystatecity.in/v1/countries/" +
+  //       country +
+  //       "/states/" +
+  //       state +
+  //       "/cities",
+  //     requestOptions
+  //   )
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       setCity(result);
+  //     });
+  // };
+  // const getState = () => {
+  //   let country = document.getElementById("country").value;
+
+  //   country = country;
+  //   var headers = new Headers();
+  //   headers.append(
+  //     "X-CSCAPI-KEY",
+  //     "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
+  //   );
+
+  //   var requestOptions = {
+  //     method: "GET",
+  //     headers: headers,
+  //     redirect: "follow",
+  //   };
+  //   fetch(
+  //     "https://api.countrystatecity.in/v1/countries/" + country + "/states",
+  //     requestOptions
+  //   )
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       setState(result);
+  //     });
+  // };
+
+ 
 
   return (
     <div>
@@ -108,7 +186,7 @@ export default function Signup(props) {
             <div className="row">
               <div className="col-md-3 register-left">
                 <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
-                <h3>Welcome</h3>
+                <h3 className="text-white">Welcome</h3>
                 <p>
                   We are so happy to welcome you to School of Hawking Family
                 </p>
@@ -138,6 +216,7 @@ export default function Signup(props) {
                         <label className="text-left">Full Name</label>
                         <input
                           type="text"
+                          onChange={handleChange('fullName')}
                           className="form-control"
                           name="fname"
                           placeholder="First Name *"
@@ -159,6 +238,7 @@ export default function Signup(props) {
                           className="form-control"
                           name="email"
                           placeholder="Your Email *"
+                          onChange={handleChange('email')}
                         />
                       </div>
                     </div>
@@ -170,6 +250,7 @@ export default function Signup(props) {
                           minLength={10}
                           maxLength={10}
                           name="phone"
+                          onChange={handleChange('phoneNumber')}
                           className="form-control"
                           placeholder="Your Phone *"
                         />
@@ -179,6 +260,7 @@ export default function Signup(props) {
                         <label className="text-left">Password</label>
                         <input
                           type="password"
+                          onChange={handleChange('password')}
                           className="form-control"
                           name="password"
                           placeholder="Password *"
@@ -236,11 +318,7 @@ export default function Signup(props) {
 
                     <div className="col-md-6">
                       <div className="form-group">
-                        <button
-                          type="submit"
-                          className="btnLogin"
-                          onClick={signupuser}
-                        >
+                        <button type="submit" onClick={()=>signupSubmit()} className="btnLogin">
                           Signup{" "}
                         </button>
                       </div>
@@ -273,7 +351,7 @@ export default function Signup(props) {
             <div className="row">
               <div className="col-md-3 register-left">
                 <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
-                <h3>Welcome</h3>
+                <h3 className="text-white">Welcome</h3>
                 <p>Login to unlock a successfull career</p>
                 <p style={{ padding: "0%" }} className="text-wshite">
                   Dont have registered yet?

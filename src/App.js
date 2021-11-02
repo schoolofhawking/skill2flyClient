@@ -1,19 +1,36 @@
 import logo from "./logo.svg";
 import "./App.css";
-import {BrowserRouter as Router, Route} from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import User from './components/user/User'
-   
+import User from './components/user/Signup/User'
+import { Provider } from "react-redux";
+import store from "./redux/store";
+import toast, { Toaster } from 'react-hot-toast';
+
 function App() {
   return (
-    <>
-    {/* test abc */}
+    <Provider store={store}>
       <div className="App">
+      <Toaster
+  position="top-center"
+  reverseOrder={false}
+  toastOptions={{
+  
+    className: '',
+    duration: 5000,
+    style: {
+      background: '#363636',
+      color: '#fff',
+    },
+    
+  }}
+/>
         <Router>
           <Route path="/"><User /></Route>
         </Router>
       </div>
-    </>
+    </Provider>
+
   );
 }
 

@@ -3,11 +3,15 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../NavBar/Navbar";
 import "./Signup.css";
 import Footer from "../Footer/Footer";
+import { useDispatch, useSelector } from "react-redux";
+import { userData } from "../../../redux/rootActions";
 
 export default function Signup(props) {
-  const [country, setCountry] = useState([]);
-  const [state, setState] = useState([]);
-  const [city, setCity] = useState([]);
+  const dispatch = useDispatch()
+  const userDetails = useSelector(state=>state.userData)
+  // const [country, setCountry] = useState([]);
+  // const [state, setState] = useState([]);
+  // const [city, setCity] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
@@ -20,75 +24,90 @@ export default function Signup(props) {
     document.getElementById("navbarSch").style.position = "relative";
     //getCountries();
   }, []);
-  const getCountries = () => {
-    var headers = new Headers();
-    headers.append(
-      "X-CSCAPI-KEY",
-      "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
-    );
 
-    var requestOptions = {
-      method: "GET",
-      headers: headers,
-      redirect: "follow",
-    };
-    fetch("https://api.countrystatecity.in/v1/countries", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        setCountry(result);
-      });
-  };
-  const getCity = () => {
-    let country = document.getElementById("country").value;
-    let state = document.getElementById("state").value;
-    var headers = new Headers();
-    headers.append(
-      "X-CSCAPI-KEY",
-      "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
-    );
+  const signupSubmit = ()=>
+  {
+    let userInfo = {
+      userId:'9446868549',
+      userName:'Harikrishnan.U.A',
+      userJwt:'India Is My Country',
+      userMail:'hariua111@gmail.com',
+      userPhone:'8848722067'
+    }
+    dispatch(userData(userInfo))
+  }
 
-    var requestOptions = {
-      method: "GET",
-      headers: headers,
-      redirect: "follow",
-    };
-    fetch(
-      "https://api.countrystatecity.in/v1/countries/" +
-        country +
-        "/states/" +
-        state +
-        "/cities",
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        setCity(result);
-      });
-  };
-  const getState = () => {
-    let country = document.getElementById("country").value;
 
-    country = country;
-    var headers = new Headers();
-    headers.append(
-      "X-CSCAPI-KEY",
-      "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
-    );
 
-    var requestOptions = {
-      method: "GET",
-      headers: headers,
-      redirect: "follow",
-    };
-    fetch(
-      "https://api.countrystatecity.in/v1/countries/" + country + "/states",
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        setState(result);
-      });
-  };
+  // const getCountries = () => {
+  //   var headers = new Headers();
+  //   headers.append(
+  //     "X-CSCAPI-KEY",
+  //     "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
+  //   );
+
+  //   var requestOptions = {
+  //     method: "GET",
+  //     headers: headers,
+  //     redirect: "follow",
+  //   };
+  //   fetch("https://api.countrystatecity.in/v1/countries", requestOptions)
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       setCountry(result);
+  //     });
+  // };
+  // const getCity = () => {
+  //   let country = document.getElementById("country").value;
+  //   let state = document.getElementById("state").value;
+  //   var headers = new Headers();
+  //   headers.append(
+  //     "X-CSCAPI-KEY",
+  //     "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
+  //   );
+
+  //   var requestOptions = {
+  //     method: "GET",
+  //     headers: headers,
+  //     redirect: "follow",
+  //   };
+  //   fetch(
+  //     "https://api.countrystatecity.in/v1/countries/" +
+  //       country +
+  //       "/states/" +
+  //       state +
+  //       "/cities",
+  //     requestOptions
+  //   )
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       setCity(result);
+  //     });
+  // };
+  // const getState = () => {
+  //   let country = document.getElementById("country").value;
+
+  //   country = country;
+  //   var headers = new Headers();
+  //   headers.append(
+  //     "X-CSCAPI-KEY",
+  //     "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
+  //   );
+
+  //   var requestOptions = {
+  //     method: "GET",
+  //     headers: headers,
+  //     redirect: "follow",
+  //   };
+  //   fetch(
+  //     "https://api.countrystatecity.in/v1/countries/" + country + "/states",
+  //     requestOptions
+  //   )
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       setState(result);
+  //     });
+  // };
 
   return (
     <div>
@@ -228,7 +247,7 @@ export default function Signup(props) {
 
                     <div className="col-md-6">
                       <div className="form-group">
-                        <button type="submit" className="btnLogin">
+                        <button type="submit" onClick={()=>signupSubmit()} className="btnLogin">
                           Signup{" "}
                         </button>
                       </div>

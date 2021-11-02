@@ -5,14 +5,34 @@ import "./Signup.css";
 import Footer from "../Footer/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { userData } from "../../../redux/rootActions";
+import { API } from '../../../config/config'
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Signup(props) {
   const dispatch = useDispatch()
-  const userDetails = useSelector(state=>state.userData)
+  const userDetails = useSelector(state => state.userData)
   // const [country, setCountry] = useState([]);
   // const [state, setState] = useState([]);
   // const [city, setCity] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
+
+  const [fieldValues, setFieldValues] = useState({
+
+    fullName: '',
+    phoneNumber: '',
+    email: '',
+    password: ''
+
+  })
+
+
+  const {
+    fullName,
+    phoneNumber,
+    email,
+    password
+
+  } = fieldValues
 
   useEffect(() => {
     setIsLogin(props.login);
@@ -25,18 +45,57 @@ export default function Signup(props) {
     //getCountries();
   }, []);
 
-  const signupSubmit = ()=>
-  {
-    let userInfo = {
-      userId:'9446868549',
-      userName:'Harikrishnan.U.A',
-      userJwt:'India Is My Country',
-      userMail:'hariua111@gmail.com',
-      userPhone:'8848722067',
-      userLogin:true
-    }
-    dispatch(userData(userInfo))
+
+  const handleChange = (name) => async (event) => {
+    setFieldValues({ ...fieldValues, [name]: event.target.value })
   }
+  const signupSubmit = async () => {
+
+    const headers = {
+      Accept: 'application/json',
+      "Content-Type": 'application/json'
+    }
+    try {
+
+
+
+      let { data } = await axios.post(`${API}` + '/signup', { fullName, email, phoneNumber, password }, { withCredentials: true })
+
+
+      console.log("apiresult", data);
+
+      let userInfo = {
+        userId: data._id,
+        userName: data.fullName,
+        userMail: data.email,
+        userPhone: data.mobileNumber,
+        userLogin:true
+      }
+      dispatch(userData(userInfo))
+
+
+
+      toast.success("Signup successfull enjoy !!",
+        {
+          style: {
+            minWidth: '250px'
+          },
+          success: {
+            duration: 5000,
+            icon: '🔥',
+          },
+        })
+
+    }
+    catch (err) {
+      console.log(err)
+      toast.error("This didn't work.")
+    }
+
+
+
+  }
+
 
 
 
@@ -110,6 +169,8 @@ export default function Signup(props) {
   //     });
   // };
 
+
+
   return (
     <div>
       <Navbar />
@@ -150,6 +211,7 @@ export default function Signup(props) {
                         <label className="text-left">Full Name</label>
                         <input
                           type="text"
+                          onChange={handleChange('fullName')}
                           className="form-control"
                           name="fname"
                           placeholder="First Name *"
@@ -171,6 +233,7 @@ export default function Signup(props) {
                           className="form-control"
                           name="email"
                           placeholder="Your Email *"
+                          onChange={handleChange('email')}
                         />
                       </div>
                     </div>
@@ -182,6 +245,7 @@ export default function Signup(props) {
                           minLength={10}
                           maxLength={10}
                           name="phone"
+                          onChange={handleChange('phoneNumber')}
                           className="form-control"
                           placeholder="Your Phone *"
                         />
@@ -191,6 +255,7 @@ export default function Signup(props) {
                         <label className="text-left">Password</label>
                         <input
                           type="password"
+                          onChange={handleChange('password')}
                           className="form-control"
                           name="password"
                           placeholder="Password *"
@@ -248,7 +313,7 @@ export default function Signup(props) {
 
                     <div className="col-md-6">
                       <div className="form-group">
-                        <button type="submit" onClick={()=>signupSubmit()} className="btnLogin">
+                        <button type="submit" onClick={() => signupSubmit()} className="btnLogin">
                           Signup{" "}
                         </button>
                       </div>

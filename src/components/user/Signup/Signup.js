@@ -32,7 +32,8 @@ export default function Signup(props) {
       userName:'Harikrishnan.U.A',
       userJwt:'India Is My Country',
       userMail:'hariua111@gmail.com',
-      userPhone:'8848722067'
+      userPhone:'8848722067',
+      userLogin:true
     }
     dispatch(userData(userInfo))
   }

@@ -5,7 +5,8 @@ const initialState= {
     userName:'sch',
     userJwt:'abcdefg',
     userPhone:'123',
-    userMail:'abc@gmail.com'
+    userMail:'abc@gmail.com',
+    userLogin:false
 }
 
 const userReducer = (state=initialState,action)=>
@@ -18,7 +19,8 @@ const userReducer = (state=initialState,action)=>
             userName:action.payload.userName,
             userJwt:action.payload.userJwt,
             userMail:action.payload.userMail,
-            userPhone:action.payload.userPhone
+            userPhone:action.payload.userPhone,
+            userLogin:action.payload.userLogin
         }
         default : return state
     }

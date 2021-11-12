@@ -1,12 +1,40 @@
 import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2'
+import { userData } from '../../../redux/rootActions'
 
 function Navbar() {
-  const userData = useSelector(state => state.userData)
+  const dispatch = useDispatch()
+  const userDetails = useSelector(state => state.userData)
   useEffect(() => {
-    
   }, [])
+  const logout = ()=>
+  {
+    Swal.fire({
+      icon:"question",
+      title:"Are You Sure to Logout?",
+      showConfirmButton:true,
+      confirmButtonText:"Proceed to Logout",
+      confirmButtonColor:"red",
+      showCancelButton:true
+    }).then((result)=>
+    {
+      if(result.isConfirmed)
+      {
+        let userInfo = {
+          userId: "",
+          userName: "",
+          userMail: "",
+          userJwt:"",
+          userPhone: "",
+          userLogin: false
+        }
+        dispatch(userData(userInfo))
+        localStorage.removeItem('persist:root')
+      }
+    })
+  }
   return (
     <header className="header-01 sticky" id="navbarSch">
       <div className="container">
@@ -62,10 +90,10 @@ function Navbar() {
               </div>
               {/* Nav Menu End */}
               {/* User Btn */}
-              <Link to="/profile"><i className="ti-user" style={{ fontSize: "1.5em", color: "white" }} /></Link>
+              {userDetails.userLogin==true?<div id="Logout" style={{cursor:"pointer"}} onClick={logout}><span className="text-white" style={{fontWeight:"600"}} >Logout</span></div>:<div id="ProfileBtn"><Link to="/profile"><i className="ti-user" style={{ fontSize: "1.5em", color: "white" }} /></Link></div>}
               {/* User Btn */}
               {/* Join Btn */}
-              {userData.userLogin==true?<div id="UserBtn" ><Link to="/profile" className="join-btn">{userData.userName}</Link></div>:<div id="JoinBtn"><Link to="/signup" className="join-btn">Join for Free</Link></div>}
+              {userDetails.userLogin==true?<div id="UserBtn" ><Link to="/profile" className="join-btn">{userDetails.userName}</Link></div>:<div id="JoinBtn"><Link to="/signup" className="join-btn">Join for Free</Link></div>}
               {/* This feature is under maintainace...used for putting logout btn on profile hover*/}
               {/* <ul id="userProfile" className="navbar-nav">
                 <li className="menu-item-has-children">

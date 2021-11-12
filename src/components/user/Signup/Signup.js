@@ -56,44 +56,39 @@ export default function Signup(props) {
       "Content-Type": 'application/json'
     }
     try {
-
-
-
-      let { data } = await axios.post(`${API}` + '/signup', { fullName, email, phoneNumber, password }, { withCredentials: true })
-
-
-      console.log("apiresult", data);
-
-      let userInfo = {
-        userId: data._id,
-        userName: data.fullName,
-        userMail: data.email,
-        userPhone: data.mobileNumber,
-        userLogin:true
-      }
-      dispatch(userData(userInfo))
-
-
-
-      toast.success("Signup successfull enjoy !!",
-        {
-          style: {
-            minWidth: '250px'
-          },
-          success: {
-            duration: 5000,
-            icon: '🔥',
-          },
-        })
-
+      axios.post(process.env.REACT_APP_SERVER + '/signup', { fullName, email, phoneNumber, password }, { withCredentials: true }).then((response) => {
+        if (response.data.error === false) {
+          let userInfo = {
+            userId: response.data.data._id,
+            userName: response.data.data.fullName,
+            userMail: response.data.data.email,
+            userJwt:response.data.data.jwtToken,
+            userPhone: response.data.data.mobileNumber,
+            userLogin: true
+          }
+          console.log(userInfo,"userInfo");
+          dispatch(userData(userInfo))
+          toast.success("Signup successfull enjoy !!",
+            {
+              style: {
+                minWidth: '250px'
+              },
+              success: {
+                duration: 5000,
+                icon: '🔥',
+              },
+            })
+        } else if (response.data.error === true) {
+          toast.error(response.data.message)
+        }
+      }).catch((err) => {
+        toast.error("Something Went Wrong!")
+      })
     }
     catch (err) {
       console.log(err)
       toast.error("This didn't work.")
     }
-
-
-
   }
 
 

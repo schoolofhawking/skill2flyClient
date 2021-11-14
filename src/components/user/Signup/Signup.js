@@ -49,6 +49,60 @@ export default function Signup(props) {
   const handleChange = (name) => async (event) => {
     setFieldValues({ ...fieldValues, [name]: event.target.value })
   }
+
+
+
+
+  const userLogin=async(e)=>{
+e.preventDefault();
+
+try{
+
+  let {data}=await axios.post(process.env.REACT_APP_SERVER + '/login', {email,password }, { withCredentials: true })
+
+  console.log("this is data",data);
+  if(data.error){
+toast.error(data.message)
+  }
+
+  else
+
+  {
+    // login successfull
+
+    let userInfo = {
+      userId: data.data._id,
+      userName:data.data.fullName,
+      userMail:data.data.email,
+      userJwt:data.data.jwtToken,
+      userPhone:data.data.mobileNumber,
+      userLogin: true
+    }
+console.log(userInfo,"dd")
+dispatch(userData(userInfo))
+toast.success("Login sucess!!",
+  {
+    style: {
+      minWidth: '250px'
+    },
+    success: {
+      duration: 5000,
+      icon: '🔥',
+    },
+  })
+  }
+}
+catch(err)
+{
+  toast.error("something went wrong")
+  console.log("this is err",err);
+ 
+
+}
+
+  }
+
+
   const signupSubmit = async () => {
 
     const headers = {
@@ -365,6 +419,10 @@ export default function Signup(props) {
                   <h3 className="register-heading">Login Now</h3>
                   <div className="row register-form">
                     <div className="col-md-6">
+
+                      <form onSubmit={userLogin}>
+
+
                       <div className="form-group">
                         <label className="text-left">User Email</label>
                         <input
@@ -372,6 +430,7 @@ export default function Signup(props) {
                           className="form-control"
                           name="fname"
                           placeholder="Johndoe@gmail.com "
+                          onChange={handleChange('email')}
                         />
                       </div>
                       <div className="form-group">
@@ -381,6 +440,7 @@ export default function Signup(props) {
                           className="form-control"
                           name="lname"
                           placeholder="password"
+                          onChange={handleChange('password')}
                         />
                       </div>
                       <div className="form-group">
@@ -388,6 +448,7 @@ export default function Signup(props) {
                           Login{" "}
                         </button>
                       </div>
+                      </form>
                       <div class="or-container">
                         <div class="line-separator"></div>
                         <div class="or-label">or</div>

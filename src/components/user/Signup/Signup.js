@@ -7,8 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { userData } from "../../../redux/rootActions";
 import { API } from '../../../config/config'
 import toast, { Toaster } from 'react-hot-toast';
+import GoogleLogin from 'react-google-login';
 
 export default function Signup(props) {
+
+  const customStyle=()=>{
+
+
+
+  }
   const dispatch = useDispatch()
   const userDetails = useSelector(state => state.userData)
   // const [country, setCountry] = useState([]);
@@ -147,6 +154,100 @@ catch(err)
 
 
 
+const responseSuccessGoogleSignup = async(response) => {
+  console.log("signupsucess",response);
+let userName=response.profileObj.name;
+let email=response.profileObj.email;
+
+  try {
+    axios.post(process.env.REACT_APP_SERVER + '/googleSignup', { userName, email}, { withCredentials: true }).then((response) => {
+      if (response.data.error === false) {
+        let userInfo = {
+          userId: response.data.data._id,
+          userName: response.data.data.fullName,
+          userMail: response.data.data.email,
+          userJwt:response.data.data.jwtToken,
+          userPhone: response.data.data.mobileNumber,
+          userLogin: true
+        }
+        console.log(userInfo,"userInfo");
+        dispatch(userData(userInfo))
+        toast.success("Signup successfull enjoy !!",
+          {
+            style: {
+              minWidth: '250px'
+            },
+            success: {
+              duration: 5000,
+              icon: '🔥',
+            },
+          })
+      } else if (response.data.error === true) {
+        toast.error(response.data.message)
+      }
+    }).catch((err) => {
+      toast.error("Something Went Wrong!")
+    })
+  }
+  catch (err) {
+    console.log(err)
+    toast.error("This didn't work.")
+  }
+}
+const responseErrorGoogleSignup = (response) => {
+  console.log("signuperr",response);
+}
+const responseErrorGoogleLogin = (response) => {
+  console.log("login err",response);
+}
+
+// google login
+const responseSuccessGoogleLogin = (response) => {
+  console.log("Login success",response);
+
+  let userName=response.profileObj.name;
+let email=response.profileObj.email;
+
+  try {
+    axios.post(process.env.REACT_APP_SERVER + '/googleLogin', { userName, email}, { withCredentials: true }).then((response) => {
+      if (response.data.error === false) {
+        let userInfo = {
+          userId: response.data.data._id,
+          userName: response.data.data.fullName,
+          userMail: response.data.data.email,
+          userJwt:response.data.data.jwtToken,
+          userPhone: response.data.data.mobileNumber,
+          userLogin: true
+        }
+        console.log(userInfo,"userInfo");
+        dispatch(userData(userInfo))
+        toast.success("successfully Logged In !!",
+          {
+            style: {
+              minWidth: '250px'
+            },
+            success: {
+              duration: 5000,
+              icon: '🔥',
+            },
+          })
+      } else if (response.data.error === true) {
+        toast.error(response.data.message)
+      }
+    }).catch((err) => {
+      toast.error("Something Went Wrong!")
+    })
+  }
+  catch (err) {
+    console.log(err)
+    toast.error("This didn't work.")
+  }
+
+
+
+
+}
+
 
   // const getCountries = () => {
   //   var headers = new Headers();
@@ -222,10 +323,12 @@ catch(err)
 
   return (
     <div>
+           
       <Navbar />
 
       {!isLogin ? (
         <>
+  
           <div className="container register">
             <div className="row">
               <div className="col-md-3 register-left">
@@ -373,11 +476,19 @@ catch(err)
                       </div>
                       <div class="row">
                         <div class="col-md-12" style={{ paddingRight: "8px;" }}>
-                          {" "}
+                          {/* {" "}
                           <a class="btn  btn-google " href="#">
                             <img src="https://img.icons8.com/color/16/000000/google-logo.png" />{" "}
                             Signup Using Google
-                          </a>{" "}
+                          </a>{" "} */}
+                          <GoogleLogin
+    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+    buttonText="Sign up with Google"
+    onSuccess={responseSuccessGoogleSignup}
+    onFailure={responseErrorGoogleSignup}
+    cookiePolicy={'single_host_origin'}
+  />
+
                         </div>
                       </div>{" "}
                       <br></br>
@@ -457,11 +568,24 @@ catch(err)
                       <div class="row">
                         <div class="col-md-12" style={{ paddingRight: "8px;" }}>
                           {" "}
-                          <a class="btn  btn-google " href="#">
+                          {/* <a class="btn  btn-google " href="#" onClick={(e)=>signInwithGoogle()}>
                             <img src="https://img.icons8.com/color/16/000000/google-logo.png" />{" "}
+
+
                             Sign-in Using Google
-                          </a>{" "}
+                          </a>{" "} */}
+      
+<GoogleLogin
+    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+    buttonText="Login with Google"
+    onSuccess={responseSuccessGoogleLogin}
+    onFailure={responseErrorGoogleLogin}
+    cookiePolicy={'single_host_origin'}
+  />
+
+
                         </div>
+                
                       </div>{" "}
                       <br></br>
                     </div>

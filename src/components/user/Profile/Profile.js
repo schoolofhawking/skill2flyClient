@@ -1,12 +1,17 @@
+import axios from 'axios'
 import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
+import { profileData as profileAction } from '../../../redux/rootActions'
 import Swal from 'sweetalert2'
 import Footer from '../Footer/Footer'
 import Navbar from '../NavBar/Navbar'
+import './Profile.css'
 
 export default function Profile() {
+  const dispatch = useDispatch()
   const userData = useSelector(state => state.userData)
+  const profileData = useSelector(state => state.profileData)
   let history = useHistory()
   useEffect(() => {
     if (userData.userLogin === false) {
@@ -30,6 +35,19 @@ export default function Profile() {
         history.push('/signup')
       } else {
         swalFire()
+      }
+    })
+  }
+  const editProfile = ()=>
+  {
+    axios.get(process.env.REACT_APP_SERVER + '/getProfileData',{
+      headers:{
+        authorization : 'Bearer ' + userData.userJwt
+      }
+    }).then((response)=>{
+      if(response.data.error===false)
+      {
+        dispatch(profileAction(response.data.profileData))
       }
     })
   }
@@ -60,7 +78,7 @@ export default function Profile() {
                 </div>
                 <div className="teacher-meta">
                   {userData.userLogin === true ? <h5>{userData.userName}</h5> : <h5>User001</h5>}
-                  <p>Illustrator</p>
+                  <p>{profileData.profileDesignation=='-'?'My Designation':profileData.profileDesignation}</p>
                 </div>
                 <p>
                   Cup of char skive off bodge bobby blower tickety-boo quaint a blinding shot pear shaped squiffy harry, young delinquent grub so I said cuppa faff about bum bag bugger.
@@ -77,14 +95,55 @@ export default function Profile() {
             <div className="col-lg-9">
               {/* Tab Title */}
               <ul className="tab-title nav nav-tabs">
-                <li><a className="active" href="#owned" data-toggle="tab">Owned</a></li>
+                <li><a className="active" href="#myprofile" data-toggle="tab">My Profile</a></li>
+                <li><a href="#owned" data-toggle="tab">Owned</a></li>
                 <li><a href="#purchased" data-toggle="tab" className>Purchased</a></li>
+                <li><a href="#editprofile" onClick={()=>editProfile()} data-toggle="tab">Edit Profile</a></li>
               </ul>
               {/* Tab Title */}
               {/* Tab Content */}
               <div className="tab-content">
-                {/* Owned Tab */}
-                <div className="tab-pane fade show in active" id="owned" role="tabpanel">
+                {/* Profile Tab */}
+                <div className="tab-pane fade active show" id="myprofile" role="tabpanel">
+                  <h3 className="course-title">My Profile</h3>
+                  <div className="row" style={{ justifyContent: "center" }}>
+                    <div className="col-md-5 profileList">
+                      <label>Name : </label>
+                      <p className="profileName">{userData.userName}</p>
+                    </div>
+                    <div className="col-md-5 profileList">
+                      <label>Email : </label>
+                      <p className="profileName">{userData.userMail}</p>
+                    </div>
+                    <div className="col-md-5 profileList">
+                      <label>Mobile : </label>
+                      <p className="profileName">{userData.userPhone}</p>
+                    </div>
+                    <div className="col-md-5 profileList">
+                      <label>Country : </label>
+                      <p className="profileName">{profileData.profileCountry.length!=0?profileData.profileCountry:'-'}</p>
+                    </div>
+                    <div className="col-md-5 profileList">
+                      <label>State : </label>
+                      <p className="profileName">{profileData.profileState.length!=0?profileData.profileState:'-'}</p>
+                    </div>
+                    <div className="col-md-5 profileList">
+                      <label>City : </label>
+                      <p className="profileName">{profileData.profileCity.length!=0?profileData.profileCity:'-'}</p>
+                    </div>
+                    <div className="col-md-5 profileList">
+                      <label>Qualification : </label>
+                      <p className="profileName">{profileData.profileQualification.length!=0?profileData.profileQualification:'-'}</p>
+                    </div>
+                    <div className="col-md-5 profileList">
+                      <label>Designation : </label>
+                      <p className="profileName">{profileData.profileDesignation.length!=0?profileData.profileDesignation:'-'}</p>
+                    </div>
+
+                  </div>
+                </div>
+                {/* Profile Tab Ends */}
+                <div className="tab-pane fade in" id="owned" role="tabpanel">
                   <h3 className="course-title">My Courses</h3>
                   <div className="row">
                     <div className="col-lg-4 col-md-6">
@@ -372,6 +431,7 @@ export default function Profile() {
                   </div>
                   {/* Tab Content */}
                 </div>
+                <div className="tab-pane fade" id="editprofile" role="tabpanel">edit</div>
                 {/* Purchase Tab */}
               </div>
               {/* Tab Content */}

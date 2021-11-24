@@ -1,0 +1,19 @@
+.profileList {
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif;
+    align-items: flex-start;
+    /* border: 1.1px solid #5838fc; */
+    margin: .5em;
+    background-color: whitesmoke;
+    border-radius: 0.35em;
+    padding: 0.5em 1em;
+    box-shadow: 2px 2px 5px gray;
+}
+
+.profileName{
+    font-size: 1.3em;
+    color: black;
+    font-weight: 500;
+    margin: 4px;
+}

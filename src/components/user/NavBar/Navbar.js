@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { userData } from '../../../redux/rootActions'
 
 function Navbar() {
+  let history = useHistory()
   const dispatch = useDispatch()
   const userDetails = useSelector(state => state.userData)
   useEffect(() => {
@@ -32,6 +34,7 @@ function Navbar() {
         }
         dispatch(userData(userInfo))
         localStorage.removeItem('persist:root')
+        history.push('/')
       }
     })
   }

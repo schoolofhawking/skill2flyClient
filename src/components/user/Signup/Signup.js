@@ -8,14 +8,16 @@ import { userData } from "../../../redux/rootActions";
 import { API } from '../../../config/config'
 import toast, { Toaster } from 'react-hot-toast';
 import GoogleLogin from 'react-google-login';
+import { useHistory } from "react-router";
 
 export default function Signup(props) {
 
-  const customStyle=()=>{
+  const customStyle = () => {
 
 
 
   }
+  let history = useHistory()
   const dispatch = useDispatch()
   const userDetails = useSelector(state => state.userData)
   // const [country, setCountry] = useState([]);
@@ -57,55 +59,46 @@ export default function Signup(props) {
     setFieldValues({ ...fieldValues, [name]: event.target.value })
   }
 
-
-
-
-  const userLogin=async(e)=>{
-e.preventDefault();
-
-try{
-
-  let {data}=await axios.post(process.env.REACT_APP_SERVER + '/login', {email,password }, { withCredentials: true })
-
-  console.log("this is data",data);
-  if(data.error){
-toast.error(data.message)
-  }
-
-  else
-
-  {
-    // login successfull
-
-    let userInfo = {
-      userId: data.data._id,
-      userName:data.data.fullName,
-      userMail:data.data.email,
-      userJwt:data.data.jwtToken,
-      userPhone:data.data.mobileNumber,
-      userLogin: true
+  const userLogin = async (e) => {
+    e.preventDefault();
+    try {
+      let { data } = await axios.post(process.env.REACT_APP_SERVER + '/login', { email, password }, { withCredentials: true })
+      console.log("this is data", data);
+      if (data.error) {
+        toast.error(data.message)
+      }
+      else {
+        // login successfull
+        let userInfo = {
+          userId: data.data._id,
+          userName: data.data.fullName,
+          userMail: data.data.email,
+          userJwt: data.data.jwtToken,
+          userPhone: data.data.mobileNumber,
+          userLogin: true
+        }
+        console.log(userInfo, "dd")
+        dispatch(userData(userInfo))
+        toast.success("Login sucess!!",
+          {
+            style: {
+              minWidth: '250px'
+            },
+            success: {
+              duration: 5000,
+              icon: '🔥',
+            },
+          })
+          history.push('/')
+          //setInterval(()=>{history.push('/')},2000) 
+      }
     }
-console.log(userInfo,"dd")
-dispatch(userData(userInfo))
-toast.success("Login sucess!!",
-  {
-    style: {
-      minWidth: '250px'
-    },
-    success: {
-      duration: 5000,
-      icon: '🔥',
-    },
-  })
-  }
-}
-catch(err)
-{
-  toast.error("something went wrong")
-  console.log("this is err",err);
- 
+    catch (err) {
+      toast.error("something went wrong")
+      console.log("this is err", err);
 
-}
+
+    }
 
   }
 
@@ -123,11 +116,56 @@ catch(err)
             userId: response.data.data._id,
             userName: response.data.data.fullName,
             userMail: response.data.data.email,
-            userJwt:response.data.data.jwtToken,
+            userJwt: response.data.data.jwtToken,
             userPhone: response.data.data.mobileNumber,
             userLogin: true
           }
-          console.log(userInfo,"userInfo");
+          console.log(userInfo, "userInfo");
+          dispatch(userData(userInfo))
+          toast.success("Signup successfull enjoy !!",
+            {
+              style: {
+                minWidth: '250px'
+              },
+              success: {
+                duration: 5000,
+                icon: '🔥',
+              },
+            })
+            history.push('/')
+            //setInterval(()=>{history.push('/')},2000)
+        } else if (response.data.error === true) {
+          toast.error(response.data.message)
+        }
+      }).catch((err) => {
+        toast.error("Something Went Wrong!")
+      })
+    }
+    catch (err) {
+      console.log(err)
+      toast.error("This didn't work.")
+    }
+  }
+
+
+
+  const responseSuccessGoogleSignup = async (response) => {
+    console.log("signupsucess", response);
+    let userName = response.profileObj.name;
+    let email = response.profileObj.email;
+
+    try {
+      axios.post(process.env.REACT_APP_SERVER + '/googleSignup', { userName, email }, { withCredentials: true }).then((response) => {
+        if (response.data.error === false) {
+          let userInfo = {
+            userId: response.data.data._id,
+            userName: response.data.data.fullName,
+            userMail: response.data.data.email,
+            userJwt: response.data.data.jwtToken,
+            userPhone: response.data.data.mobileNumber,
+            userLogin: true
+          }
+          console.log(userInfo, "userInfo");
           dispatch(userData(userInfo))
           toast.success("Signup successfull enjoy !!",
             {
@@ -151,102 +189,59 @@ catch(err)
       toast.error("This didn't work.")
     }
   }
+  const responseErrorGoogleSignup = (response) => {
+    console.log("signuperr", response);
+  }
+  const responseErrorGoogleLogin = (response) => {
+    console.log("login err", response);
+  }
 
+  // google login
+  const responseSuccessGoogleLogin = (response) => {
+    console.log("Login success", response);
 
+    let userName = response.profileObj.name;
+    let email = response.profileObj.email;
 
-const responseSuccessGoogleSignup = async(response) => {
-  console.log("signupsucess",response);
-let userName=response.profileObj.name;
-let email=response.profileObj.email;
-
-  try {
-    axios.post(process.env.REACT_APP_SERVER + '/googleSignup', { userName, email}, { withCredentials: true }).then((response) => {
-      if (response.data.error === false) {
-        let userInfo = {
-          userId: response.data.data._id,
-          userName: response.data.data.fullName,
-          userMail: response.data.data.email,
-          userJwt:response.data.data.jwtToken,
-          userPhone: response.data.data.mobileNumber,
-          userLogin: true
+    try {
+      axios.post(process.env.REACT_APP_SERVER + '/googleLogin', { userName, email }, { withCredentials: true }).then((response) => {
+        if (response.data.error === false) {
+          let userInfo = {
+            userId: response.data.data._id,
+            userName: response.data.data.fullName,
+            userMail: response.data.data.email,
+            userJwt: response.data.data.jwtToken,
+            userPhone: response.data.data.mobileNumber,
+            userLogin: true
+          }
+          console.log(userInfo, "userInfo");
+          dispatch(userData(userInfo))
+          toast.success("successfully Logged In !!",
+            {
+              style: {
+                minWidth: '250px'
+              },
+              success: {
+                duration: 5000,
+                icon: '🔥',
+              },
+            })
+        } else if (response.data.error === true) {
+          toast.error(response.data.message)
         }
-        console.log(userInfo,"userInfo");
-        dispatch(userData(userInfo))
-        toast.success("Signup successfull enjoy !!",
-          {
-            style: {
-              minWidth: '250px'
-            },
-            success: {
-              duration: 5000,
-              icon: '🔥',
-            },
-          })
-      } else if (response.data.error === true) {
-        toast.error(response.data.message)
-      }
-    }).catch((err) => {
-      toast.error("Something Went Wrong!")
-    })
+      }).catch((err) => {
+        toast.error("Something Went Wrong!")
+      })
+    }
+    catch (err) {
+      console.log(err)
+      toast.error("This didn't work.")
+    }
+
+
+
+
   }
-  catch (err) {
-    console.log(err)
-    toast.error("This didn't work.")
-  }
-}
-const responseErrorGoogleSignup = (response) => {
-  console.log("signuperr",response);
-}
-const responseErrorGoogleLogin = (response) => {
-  console.log("login err",response);
-}
-
-// google login
-const responseSuccessGoogleLogin = (response) => {
-  console.log("Login success",response);
-
-  let userName=response.profileObj.name;
-let email=response.profileObj.email;
-
-  try {
-    axios.post(process.env.REACT_APP_SERVER + '/googleLogin', { userName, email}, { withCredentials: true }).then((response) => {
-      if (response.data.error === false) {
-        let userInfo = {
-          userId: response.data.data._id,
-          userName: response.data.data.fullName,
-          userMail: response.data.data.email,
-          userJwt:response.data.data.jwtToken,
-          userPhone: response.data.data.mobileNumber,
-          userLogin: true
-        }
-        console.log(userInfo,"userInfo");
-        dispatch(userData(userInfo))
-        toast.success("successfully Logged In !!",
-          {
-            style: {
-              minWidth: '250px'
-            },
-            success: {
-              duration: 5000,
-              icon: '🔥',
-            },
-          })
-      } else if (response.data.error === true) {
-        toast.error(response.data.message)
-      }
-    }).catch((err) => {
-      toast.error("Something Went Wrong!")
-    })
-  }
-  catch (err) {
-    console.log(err)
-    toast.error("This didn't work.")
-  }
-
-
-
-
-}
 
 
   // const getCountries = () => {
@@ -323,12 +318,12 @@ let email=response.profileObj.email;
 
   return (
     <div>
-           
+
       <Navbar />
 
       {!isLogin ? (
         <>
-  
+
           <div className="container register">
             <div className="row">
               <div className="col-md-3 register-left">
@@ -482,12 +477,12 @@ let email=response.profileObj.email;
                             Signup Using Google
                           </a>{" "} */}
                           <GoogleLogin
-    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-    buttonText="Sign up with Google"
-    onSuccess={responseSuccessGoogleSignup}
-    onFailure={responseErrorGoogleSignup}
-    cookiePolicy={'single_host_origin'}
-  />
+                            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                            buttonText="Sign up with Google"
+                            onSuccess={responseSuccessGoogleSignup}
+                            onFailure={responseErrorGoogleSignup}
+                            cookiePolicy={'single_host_origin'}
+                          />
 
                         </div>
                       </div>{" "}
@@ -534,31 +529,31 @@ let email=response.profileObj.email;
                       <form onSubmit={userLogin}>
 
 
-                      <div className="form-group">
-                        <label className="text-left">User Email</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="fname"
-                          placeholder="Johndoe@gmail.com "
-                          onChange={handleChange('email')}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label className="text-left">Password</label>
-                        <input
-                          type="password"
-                          className="form-control"
-                          name="lname"
-                          placeholder="password"
-                          onChange={handleChange('password')}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <button type="submit" className="btnLogin">
-                          Login{" "}
-                        </button>
-                      </div>
+                        <div className="form-group">
+                          <label className="text-left">User Email</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            name="fname"
+                            placeholder="Johndoe@gmail.com "
+                            onChange={handleChange('email')}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label className="text-left">Password</label>
+                          <input
+                            type="password"
+                            className="form-control"
+                            name="lname"
+                            placeholder="password"
+                            onChange={handleChange('password')}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <button type="submit" className="btnLogin">
+                            Login{" "}
+                          </button>
+                        </div>
                       </form>
                       <div class="or-container">
                         <div class="line-separator"></div>
@@ -574,18 +569,18 @@ let email=response.profileObj.email;
 
                             Sign-in Using Google
                           </a>{" "} */}
-      
-<GoogleLogin
-    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-    buttonText="Login with Google"
-    onSuccess={responseSuccessGoogleLogin}
-    onFailure={responseErrorGoogleLogin}
-    cookiePolicy={'single_host_origin'}
-  />
+
+                          <GoogleLogin
+                            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                            buttonText="Login with Google"
+                            onSuccess={responseSuccessGoogleLogin}
+                            onFailure={responseErrorGoogleLogin}
+                            cookiePolicy={'single_host_origin'}
+                          />
 
 
                         </div>
-                
+
                       </div>{" "}
                       <br></br>
                     </div>

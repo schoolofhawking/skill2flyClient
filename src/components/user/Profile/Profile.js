@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 import { profileData as profileAction } from '../../../redux/rootActions'
@@ -7,17 +7,35 @@ import Swal from 'sweetalert2'
 import Footer from '../Footer/Footer'
 import Navbar from '../NavBar/Navbar'
 import './Profile.css'
+import toast from 'react-hot-toast'
 
 export default function Profile() {
   const dispatch = useDispatch()
   const userData = useSelector(state => state.userData)
   const profileData = useSelector(state => state.profileData)
+
+  const [country, setCountry] = useState([]);
+  const [state, setState] = useState([]);
+  const [city, setCity] = useState([]);
+
   let history = useHistory()
+  const [fieldValues, setFieldValues] = useState({
+    fullName: '',
+    phoneNumber: '',
+    email: '',
+    country: '',
+    state: '',
+    city: '',
+    qualification: '',
+    designation: ''
+  })
   useEffect(() => {
     if (userData.userLogin === false) {
       swalFire()
     }
+    getCountries()
   }, [])
+
   function swalFire() {
     Swal.fire({
       icon: "warning",
@@ -38,19 +56,142 @@ export default function Profile() {
       }
     })
   }
-  const editProfile = ()=>
+
+  const editProfile = () => {
+    if (profileData.profileEnable == false) {
+      axios.get(process.env.REACT_APP_SERVER + '/getProfileData', {
+        headers: {
+          authorization: 'Bearer ' + userData.userJwt
+        }
+      }).then((response) => {
+        if (response.data.error === false) {
+          dispatch(profileAction(response.data.profileData))
+          let data = response.data.profileData
+          setFieldValues({
+            fullName:data.profileName,
+            phoneNumber:data.profilePhone,
+            email:data.profileEmail,
+            country:data.profileCountry,
+            state:data.profileState,
+            city:data.profileCity,
+            designation:data.profileDesignation,
+            qualification:data.profileQualification
+          })
+        }
+      })
+    }
+  }
+
+  const submitEditProfile=(e)=>
   {
-    axios.get(process.env.REACT_APP_SERVER + '/getProfileData',{
-      headers:{
-        authorization : 'Bearer ' + userData.userJwt
+    e.preventDefault()
+    console.log(fieldValues);
+    
+    axios.post(process.env.REACT_APP_SERVER+'/updateProfile',fieldValues,{
+      headers: {
+        authorization: 'Bearer ' + userData.userJwt
       }
-    }).then((response)=>{
-      if(response.data.error===false)
+    }).then((response)=>
+    {
+      if(response.data.error==true)
       {
+        toast.error(response.data.message)
+      }else{
+        toast.success(response.data.message)
         dispatch(profileAction(response.data.profileData))
       }
     })
   }
+
+  const handleChange = (name) => async (event) => {
+    if(name=='country' || name=='state' || name=='city' || name=='qualification')
+    {
+      let dropdown = document.getElementById(name)
+      let dropdownVal = dropdown.options[dropdown.selectedIndex].text
+      setFieldValues({ ...fieldValues, [name]: dropdownVal })
+    }else{
+      setFieldValues({ ...fieldValues, [name]: event.target.value })
+    }
+
+    if(name=='country')
+    {
+      getState()
+    }else if (name=='state')
+    {
+      getCity()
+    }
+    
+  }
+
+  const getCountries = () => {
+    var headers = new Headers();
+    headers.append(
+      "X-CSCAPI-KEY",
+      "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
+    );
+
+    var requestOptions = {
+      method: "GET",
+      headers: headers,
+      redirect: "follow",
+    };
+    fetch("https://api.countrystatecity.in/v1/countries", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        setCountry(result);
+      });
+  };
+  const getCity = () => {
+    let country = document.getElementById("country").value;
+    let state = document.getElementById("state").value;
+    var headers = new Headers();
+    headers.append(
+      "X-CSCAPI-KEY",
+      "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
+    );
+
+    var requestOptions = {
+      method: "GET",
+      headers: headers,
+      redirect: "follow",
+    };
+    fetch(
+      "https://api.countrystatecity.in/v1/countries/" +
+      country +
+      "/states/" +
+      state +
+      "/cities",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setCity(result);
+      });
+  };
+  const getState = () => {
+    let country = document.getElementById("country").value;
+
+    country = country;
+    var headers = new Headers();
+    headers.append(
+      "X-CSCAPI-KEY",
+      "NW8yR0prNjNXT1NrU0JmbnVDc2tUZDZldjdibHZMRXF6QnhVVVZSeg=="
+    );
+
+    var requestOptions = {
+      method: "GET",
+      headers: headers,
+      redirect: "follow",
+    };
+    fetch(
+      "https://api.countrystatecity.in/v1/countries/" + country + "/states",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setState(result);
+      });
+  };
   return (
     <div>
       <Navbar />
@@ -77,8 +218,8 @@ export default function Profile() {
                   <img src="assets/images/home2/teacher/1.png" alt="" />
                 </div>
                 <div className="teacher-meta">
-                  {userData.userLogin === true ? <h5>{userData.userName}</h5> : <h5>User001</h5>}
-                  <p>{profileData.profileDesignation=='-'?'My Designation':profileData.profileDesignation}</p>
+                  {profileData.profileEnable === true ? <h5>{profileData.profileName}</h5> : <h5>{userData.userName}</h5>}
+                  <p>{profileData.profileDesignation == '-' ? 'My Designation' : profileData.profileDesignation}</p>
                 </div>
                 <p>
                   Cup of char skive off bodge bobby blower tickety-boo quaint a blinding shot pear shaped squiffy harry, young delinquent grub so I said cuppa faff about bum bag bugger.
@@ -95,55 +236,58 @@ export default function Profile() {
             <div className="col-lg-9">
               {/* Tab Title */}
               <ul className="tab-title nav nav-tabs">
-                <li><a className="active" href="#myprofile" data-toggle="tab">My Profile</a></li>
-                <li><a href="#owned" data-toggle="tab">Owned</a></li>
+
+                <li><a className="active" href="#owned" data-toggle="tab">Owned</a></li>
                 <li><a href="#purchased" data-toggle="tab" className>Purchased</a></li>
-                <li><a href="#editprofile" onClick={()=>editProfile()} data-toggle="tab">Edit Profile</a></li>
+                <li><a onClick={() => editProfile()} href="#myprofile" data-toggle="tab">My Profile</a></li>
+                <li><a onClick={() => editProfile()} href="#editprofile" data-toggle="tab">Edit Profile</a></li>
               </ul>
               {/* Tab Title */}
               {/* Tab Content */}
               <div className="tab-content">
                 {/* Profile Tab */}
-                <div className="tab-pane fade active show" id="myprofile" role="tabpanel">
+                <div className="tab-pane fade" id="myprofile" role="tabpanel">
                   <h3 className="course-title">My Profile</h3>
                   <div className="row" style={{ justifyContent: "center" }}>
                     <div className="col-md-5 profileList">
                       <label>Name : </label>
-                      <p className="profileName">{userData.userName}</p>
-                    </div>
-                    <div className="col-md-5 profileList">
-                      <label>Email : </label>
-                      <p className="profileName">{userData.userMail}</p>
-                    </div>
-                    <div className="col-md-5 profileList">
-                      <label>Mobile : </label>
-                      <p className="profileName">{userData.userPhone}</p>
+                      <p className="profileName">{profileData.profileName}</p>
                     </div>
                     <div className="col-md-5 profileList">
                       <label>Country : </label>
-                      <p className="profileName">{profileData.profileCountry.length!=0?profileData.profileCountry:'-'}</p>
+                      <p className="profileName">{profileData.profileCountry}</p>
+                    </div>
+                    <div className="col-md-5 profileList">
+                      <label>Email : </label>
+                      <p className="profileName">{profileData.profileEmail}</p>
                     </div>
                     <div className="col-md-5 profileList">
                       <label>State : </label>
-                      <p className="profileName">{profileData.profileState.length!=0?profileData.profileState:'-'}</p>
+                      <p className="profileName">{profileData.profileState}</p>
                     </div>
                     <div className="col-md-5 profileList">
+                      <label>Mobile : </label>
+                      <p className="profileName">{profileData.profilePhone}</p>
+                    </div>
+                   
+                    
+                    <div className="col-md-5 profileList">
                       <label>City : </label>
-                      <p className="profileName">{profileData.profileCity.length!=0?profileData.profileCity:'-'}</p>
+                      <p className="profileName">{profileData.profileCity}</p>
                     </div>
                     <div className="col-md-5 profileList">
                       <label>Qualification : </label>
-                      <p className="profileName">{profileData.profileQualification.length!=0?profileData.profileQualification:'-'}</p>
+                      <p className="profileName">{profileData.profileQualification}</p>
                     </div>
                     <div className="col-md-5 profileList">
                       <label>Designation : </label>
-                      <p className="profileName">{profileData.profileDesignation.length!=0?profileData.profileDesignation:'-'}</p>
+                      <p className="profileName">{profileData.profileDesignation}</p>
                     </div>
 
                   </div>
                 </div>
                 {/* Profile Tab Ends */}
-                <div className="tab-pane fade in" id="owned" role="tabpanel">
+                <div className="tab-pane fade in  active show" id="owned" role="tabpanel">
                   <h3 className="course-title">My Courses</h3>
                   <div className="row">
                     <div className="col-lg-4 col-md-6">
@@ -431,7 +575,106 @@ export default function Profile() {
                   </div>
                   {/* Tab Content */}
                 </div>
-                <div className="tab-pane fade" id="editprofile" role="tabpanel">edit</div>
+                <div className="tab-pane fade" id="editprofile" role="tabpanel">
+                  <div className="row" style={{justifyContent:"center"}}>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="text-left">fullName</label>
+                        <input
+                          type="text"
+                          onChange={handleChange('fullName')}
+                          className="form-control"
+                          name="fname"
+                          defaultValue={profileData.profileName}
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label className="text-left">Email</label>
+                        <input
+                          type="email"
+                          className="form-control"
+                          name="email" readOnly
+                          defaultValue={profileData.profileEmail}
+                        
+                          onChange={handleChange('email')}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="text-left">Mobile Number</label>
+                        <input
+                          type="number"
+                          minLength={10}
+                          maxLength={10}
+                          name="phone"
+                          onChange={handleChange('phoneNumber')}
+                          className="form-control"
+                          
+                          defaultValue={profileData.profilePhone}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="text-left">Designation</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="designation"
+                          defaultValue={profileData.profileDesignation}
+                        
+                          onChange={handleChange('designation')}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="text-left">Country</label>
+                        <select name="country" className="form-control" id="country" placeholder="Country*" onChange={handleChange('country')}>
+                          <option value="country" selected disabled>{profileData.profileCountry}</option>
+                          {country.length > 0 ? country.map((data, index) => {
+                            return (
+                              <option value={data.iso2}>{data.name}</option>
+                            )
+                          }) : ''}
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label className="text-left">State</label>
+                        <select name="state" className="form-control" id="state" placeholder="State*" onChange={handleChange('state')}>
+                          <option value="state" selected disabled>{profileData.profileState}</option>
+                          {state.length > 0 ? state.map((data, index) => {
+                            return (
+                              <option value={data.iso2}>{data.name}</option>
+                            )
+                          }) : ''}
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label className="text-left">City</label>
+                        <select name="city" className="form-control" id="city" placeholder="City*" onChange={handleChange('city')} >
+                          <option value="-1" selected disabled>{profileData.profileCity}</option>
+                          {city.length > 0 ? city.map((data, index) => {
+                            return (
+                              <option value={data.iso2}>{data.name}</option>
+                            )
+                          }) : ''}
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label>Qualification</label>
+                        <select name="qualification" id="qualification"  placeholder="Qualification*" onChange={handleChange('qualification')} className="form-control">
+                          <option className="hidden" selected disabled>{profileData.profileQualification}</option>
+                          <option value="phd">PhD</option>
+                          <option value="mphil">MPhil</option>
+                          <option value="pg">Post Graduation</option>
+                          <option value="ug">Under Graduation</option>
+                          <option value="higher secondary">Higher Secondary</option>
+                          <option value="sslc">S S L C</option>
+                        </select>
+                      </div>
+                    </div>
+                    <button type="submit" style={{backgroundColor:"#5838fc",color:"white",fontWeight:"500"}} className="btn w-25 mt-3" onClick={(e)=>submitEditProfile(e)}>Submit</button>
+                  </div>
+                </div>
                 {/* Purchase Tab */}
               </div>
               {/* Tab Content */}

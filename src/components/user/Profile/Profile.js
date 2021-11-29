@@ -8,6 +8,7 @@ import Footer from '../Footer/Footer'
 import Navbar from '../NavBar/Navbar'
 import './Profile.css'
 import toast from 'react-hot-toast'
+import ProfilePicture from './ProfilePicture'
 
 export default function Profile() {
   const dispatch = useDispatch()
@@ -68,35 +69,32 @@ export default function Profile() {
           dispatch(profileAction(response.data.profileData))
           let data = response.data.profileData
           setFieldValues({
-            fullName:data.profileName,
-            phoneNumber:data.profilePhone,
-            email:data.profileEmail,
-            country:data.profileCountry,
-            state:data.profileState,
-            city:data.profileCity,
-            designation:data.profileDesignation,
-            qualification:data.profileQualification
+            fullName: data.profileName,
+            phoneNumber: data.profilePhone,
+            email: data.profileEmail,
+            country: data.profileCountry,
+            state: data.profileState,
+            city: data.profileCity,
+            designation: data.profileDesignation,
+            qualification: data.profileQualification
           })
         }
       })
     }
   }
 
-  const submitEditProfile=(e)=>
-  {
+  const submitEditProfile = (e) => {
     e.preventDefault()
     console.log(fieldValues);
-    
-    axios.post(process.env.REACT_APP_SERVER+'/updateProfile',fieldValues,{
+
+    axios.post(process.env.REACT_APP_SERVER + '/updateProfile', fieldValues, {
       headers: {
         authorization: 'Bearer ' + userData.userJwt
       }
-    }).then((response)=>
-    {
-      if(response.data.error==true)
-      {
+    }).then((response) => {
+      if (response.data.error == true) {
         toast.error(response.data.message)
-      }else{
+      } else {
         toast.success(response.data.message)
         dispatch(profileAction(response.data.profileData))
       }
@@ -104,23 +102,20 @@ export default function Profile() {
   }
 
   const handleChange = (name) => async (event) => {
-    if(name=='country' || name=='state' || name=='city' || name=='qualification')
-    {
+    if (name == 'country' || name == 'state' || name == 'city' || name == 'qualification') {
       let dropdown = document.getElementById(name)
       let dropdownVal = dropdown.options[dropdown.selectedIndex].text
       setFieldValues({ ...fieldValues, [name]: dropdownVal })
-    }else{
+    } else {
       setFieldValues({ ...fieldValues, [name]: event.target.value })
     }
 
-    if(name=='country')
-    {
+    if (name == 'country') {
       getState()
-    }else if (name=='state')
-    {
+    } else if (name == 'state') {
       getCity()
     }
-    
+
   }
 
   const getCountries = () => {
@@ -212,27 +207,7 @@ export default function Profile() {
       <section className="profile-section">
         <div className="container">
           <div className="row">
-            <div className="col-lg-3">
-              <div className="teacher-profile">
-                <div className="teacher-thumb">
-                  <img src="assets/images/home2/teacher/1.png" alt="" />
-                </div>
-                <div className="teacher-meta">
-                  {profileData.profileEnable === true ? <h5>{profileData.profileName}</h5> : <h5>{userData.userName}</h5>}
-                  <p>{profileData.profileDesignation == '-' ? 'My Designation' : profileData.profileDesignation}</p>
-                </div>
-                <p>
-                  Cup of char skive off bodge bobby blower tickety-boo quaint a blinding shot pear shaped squiffy harry, young delinquent grub so I said cuppa faff about bum bag bugger.
-                </p>
-                <div className="ab-social">
-                  <h5>Follow Us</h5>
-                  <a className="fac" href="#"><i className="social_facebook" /></a>
-                  <a className="twi" href="#"><i className="social_twitter" /></a>
-                  <a className="you" href="#"><i className="social_youtube" /></a>
-                  <a className="lin" href="#"><i className="social_linkedin" /></a>
-                </div>
-              </div>
-            </div>
+            <ProfilePicture/>
             <div className="col-lg-9">
               {/* Tab Title */}
               <ul className="tab-title nav nav-tabs">
@@ -269,8 +244,8 @@ export default function Profile() {
                       <label>Mobile : </label>
                       <p className="profileName">{profileData.profilePhone}</p>
                     </div>
-                   
-                    
+
+
                     <div className="col-md-5 profileList">
                       <label>City : </label>
                       <p className="profileName">{profileData.profileCity}</p>
@@ -576,7 +551,7 @@ export default function Profile() {
                   {/* Tab Content */}
                 </div>
                 <div className="tab-pane fade" id="editprofile" role="tabpanel">
-                  <div className="row" style={{justifyContent:"center"}}>
+                  <div className="row" style={{ justifyContent: "center" }}>
                     <div className="col-md-6">
                       <div className="form-group">
                         <label className="text-left">fullName</label>
@@ -596,7 +571,7 @@ export default function Profile() {
                           className="form-control"
                           name="email" readOnly
                           defaultValue={profileData.profileEmail}
-                        
+
                           onChange={handleChange('email')}
                         />
                       </div>
@@ -609,7 +584,7 @@ export default function Profile() {
                           name="phone"
                           onChange={handleChange('phoneNumber')}
                           className="form-control"
-                          
+
                           defaultValue={profileData.profilePhone}
                         />
                       </div>
@@ -620,7 +595,7 @@ export default function Profile() {
                           className="form-control"
                           name="designation"
                           defaultValue={profileData.profileDesignation}
-                        
+
                           onChange={handleChange('designation')}
                         />
                       </div>
@@ -661,7 +636,7 @@ export default function Profile() {
                       </div>
                       <div className="form-group">
                         <label>Qualification</label>
-                        <select name="qualification" id="qualification"  placeholder="Qualification*" onChange={handleChange('qualification')} className="form-control">
+                        <select name="qualification" id="qualification" placeholder="Qualification*" onChange={handleChange('qualification')} className="form-control">
                           <option className="hidden" selected disabled>{profileData.profileQualification}</option>
                           <option value="phd">PhD</option>
                           <option value="mphil">MPhil</option>
@@ -672,7 +647,7 @@ export default function Profile() {
                         </select>
                       </div>
                     </div>
-                    <button type="submit" style={{backgroundColor:"#5838fc",color:"white",fontWeight:"500"}} className="btn w-25 mt-3" onClick={(e)=>submitEditProfile(e)}>Submit</button>
+                    <button type="submit" style={{ backgroundColor: "#5838fc", color: "white", fontWeight: "500" }} className="btn w-25 mt-3" onClick={(e) => submitEditProfile(e)}>Submit</button>
                   </div>
                 </div>
                 {/* Purchase Tab */}

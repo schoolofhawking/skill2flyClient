@@ -11,9 +11,36 @@
     box-shadow: 2px 2px 5px gray;
 }
 
-.profileName{
+.profileName {
     font-size: 1.2em;
     color: black;
     font-weight: 500;
     margin: 4px;
+}
+
+.profile_wrap {
+    position: relative;
+    /* width: 210px;
+    height: 230px; */
+}
+
+.profile_file {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgb(129 70 246 / 38%);
+    color: #fff;
+    visibility: hidden;
+    opacity: 0;
+    margin: 0px;
+
+    /* transition effect. not necessary */
+    transition: opacity .2s, visibility .2s;
+}
+
+.profile_wrap:hover .profile_file {
+    visibility: visible;
+    opacity: 1;
 }

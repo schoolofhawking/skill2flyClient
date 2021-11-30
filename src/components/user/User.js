@@ -1,4 +1,7 @@
 import React from 'react'
+
+
+
 import {BrowserRouter as Router, Route} from 'react-router-dom'
 import Contact from './Contact/Contact'
 import CourseList from './CourseList/CourseList'
@@ -8,9 +11,12 @@ import Signup from './Signup/Signup'
 import SingleCourse from './SingleCourse/SingleCourse'
 
 
+
+
 function User() {
     return (
         <div>
+     
              <Route  path="/" exact ><Index/> </Route> 
              <Route path="/signup"><Signup login={false}/></Route>
              <Route path="/login"><Signup login={true} /></Route>

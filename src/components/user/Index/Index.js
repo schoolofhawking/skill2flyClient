@@ -9,9 +9,11 @@ import UpcomingEvents from "./Banners/UpcomingEvents";
 import Memberships from "./Banners/Memberships";
 import Blogs from "./Banners/Blogs";
 
+
 function Index() {
   return (
     <>
+   
       <Navbar />
 
       <BannerOne/>

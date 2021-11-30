@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from 'redux-persist/integration/react'
 import { store, persistor } from "./redux/store";
 import toast, { Toaster } from 'react-hot-toast';
+import Admin from "./components/admin/Admin";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Router>
           <PersistGate persistor={persistor}>
             <Route path="/"><User /></Route>
+            <Route path="/admin"><Admin /></Route>
           </PersistGate>
         </Router>
       </div>

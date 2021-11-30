@@ -1,41 +1,41 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router'
-import { profileData as profileAction } from '../../../redux/rootActions'
-import Swal from 'sweetalert2'
-import Footer from '../Footer/Footer'
-import Navbar from '../NavBar/Navbar'
-import './Profile.css'
-import toast from 'react-hot-toast'
-import ProfilePicture from './ProfilePicture'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
+import { profileData as profileAction } from "../../../redux/rootActions";
+import Swal from "sweetalert2";
+import Footer from "../Footer/Footer";
+import Navbar from "../NavBar/Navbar";
+import "./Profile.css";
+import toast from "react-hot-toast";
+import ProfilePicture from "./ProfilePicture";
 
 export default function Profile() {
-  const dispatch = useDispatch()
-  const userData = useSelector(state => state.userData)
-  const profileData = useSelector(state => state.profileData)
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.userData);
+  const profileData = useSelector((state) => state.profileData);
 
   const [country, setCountry] = useState([]);
   const [state, setState] = useState([]);
   const [city, setCity] = useState([]);
 
-  let history = useHistory()
+  let history = useHistory();
   const [fieldValues, setFieldValues] = useState({
-    fullName: '',
-    phoneNumber: '',
-    email: '',
-    country: '',
-    state: '',
-    city: '',
-    qualification: '',
-    designation: ''
-  })
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    country: "",
+    state: "",
+    city: "",
+    qualification: "",
+    designation: "",
+  });
   useEffect(() => {
     if (userData.userLogin === false) {
-      swalFire()
+      swalFire();
     }
-    getCountries()
-  }, [])
+    getCountries();
+  }, []);
 
   function swalFire() {
     Swal.fire({
@@ -45,78 +45,85 @@ export default function Profile() {
       showDenyButton: true,
       showCancelButton: false,
       confirmButtonText: "Go To Login",
-      denyButtonText: "Register Now"
+      denyButtonText: "Register Now",
     }).then((result) => {
-
       if (result.isConfirmed) {
-        history.push('/login')
+        history.push("/login");
       } else if (result.isDenied) {
-        history.push('/signup')
+        history.push("/signup");
       } else {
-        swalFire()
+        swalFire();
       }
-    })
+    });
   }
 
   const editProfile = () => {
     if (profileData.profileEnable == false) {
-      axios.get(process.env.REACT_APP_SERVER + '/getProfileData', {
-        headers: {
-          authorization: 'Bearer ' + userData.userJwt
-        }
-      }).then((response) => {
-        if (response.data.error === false) {
-          dispatch(profileAction(response.data.profileData))
-          let data = response.data.profileData
-          setFieldValues({
-            fullName: data.profileName,
-            phoneNumber: data.profilePhone,
-            email: data.profileEmail,
-            country: data.profileCountry,
-            state: data.profileState,
-            city: data.profileCity,
-            designation: data.profileDesignation,
-            qualification: data.profileQualification
-          })
-        }
-      })
+      axios
+        .get(process.env.REACT_APP_SERVER + "/getProfileData", {
+          headers: {
+            authorization: "Bearer " + userData.userJwt,
+          },
+        })
+        .then((response) => {
+          if (response.data.error === false) {
+            dispatch(profileAction(response.data.profileData));
+            let data = response.data.profileData;
+            setFieldValues({
+              fullName: data.profileName,
+              phoneNumber: data.profilePhone,
+              email: data.profileEmail,
+              country: data.profileCountry,
+              state: data.profileState,
+              city: data.profileCity,
+              designation: data.profileDesignation,
+              qualification: data.profileQualification,
+            });
+          }
+        });
     }
-  }
+  };
 
   const submitEditProfile = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     console.log(fieldValues);
 
-    axios.post(process.env.REACT_APP_SERVER + '/updateProfile', fieldValues, {
-      headers: {
-        authorization: 'Bearer ' + userData.userJwt
-      }
-    }).then((response) => {
-      if (response.data.error == true) {
-        toast.error(response.data.message)
-      } else {
-        toast.success(response.data.message)
-        dispatch(profileAction(response.data.profileData))
-      }
-    })
-  }
+    axios
+      .post(process.env.REACT_APP_SERVER + "/updateProfile", fieldValues, {
+        headers: {
+          authorization: "Bearer " + userData.userJwt,
+        },
+      })
+      .then((response) => {
+        if (response.data.error == true) {
+          toast.error(response.data.message);
+        } else {
+          toast.success(response.data.message);
+          dispatch(profileAction(response.data.profileData));
+        }
+      });
+  };
 
   const handleChange = (name) => async (event) => {
-    if (name == 'country' || name == 'state' || name == 'city' || name == 'qualification') {
-      let dropdown = document.getElementById(name)
-      let dropdownVal = dropdown.options[dropdown.selectedIndex].text
-      setFieldValues({ ...fieldValues, [name]: dropdownVal })
+    if (
+      name == "country" ||
+      name == "state" ||
+      name == "city" ||
+      name == "qualification"
+    ) {
+      let dropdown = document.getElementById(name);
+      let dropdownVal = dropdown.options[dropdown.selectedIndex].text;
+      setFieldValues({ ...fieldValues, [name]: dropdownVal });
     } else {
-      setFieldValues({ ...fieldValues, [name]: event.target.value })
+      setFieldValues({ ...fieldValues, [name]: event.target.value });
     }
 
-    if (name == 'country') {
-      getState()
-    } else if (name == 'state') {
-      getCity()
+    if (name == "country") {
+      getState();
+    } else if (name == "state") {
+      getCity();
     }
-
-  }
+  };
 
   const getCountries = () => {
     var headers = new Headers();
@@ -152,10 +159,10 @@ export default function Profile() {
     };
     fetch(
       "https://api.countrystatecity.in/v1/countries/" +
-      country +
-      "/states/" +
-      state +
-      "/cities",
+        country +
+        "/states/" +
+        state +
+        "/cities",
       requestOptions
     )
       .then((response) => response.json())
@@ -190,7 +197,10 @@ export default function Profile() {
   return (
     <div>
       <Navbar />
-      <section className="page-banner" style={{ backgroundImage: 'url(assets/images/banner.jpg)' }}>
+      <section
+        className="page-banner"
+        style={{ backgroundImage: "url(assets/images/banner.jpg)" }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -207,15 +217,38 @@ export default function Profile() {
       <section className="profile-section">
         <div className="container">
           <div className="row">
-            <ProfilePicture/>
+            <ProfilePicture />
             <div className="col-lg-9">
               {/* Tab Title */}
               <ul className="tab-title nav nav-tabs">
-
-                <li><a className="active" href="#owned" data-toggle="tab">Owned</a></li>
-                <li><a href="#purchased" data-toggle="tab" className>Purchased</a></li>
-                <li><a onClick={() => editProfile()} href="#myprofile" data-toggle="tab">My Profile</a></li>
-                <li><a onClick={() => editProfile()} href="#editprofile" data-toggle="tab">Edit Profile</a></li>
+                <li>
+                  <a className="active" href="#owned" data-toggle="tab">
+                    Owned
+                  </a>
+                </li>
+                <li>
+                  <a href="#purchased" data-toggle="tab" className>
+                    Purchased
+                  </a>
+                </li>
+                <li>
+                  <a
+                    onClick={() => editProfile()}
+                    href="#myprofile"
+                    data-toggle="tab"
+                  >
+                    My Profile
+                  </a>
+                </li>
+                <li>
+                  <a
+                    onClick={() => editProfile()}
+                    href="#editprofile"
+                    data-toggle="tab"
+                  >
+                    Edit Profile
+                  </a>
+                </li>
               </ul>
               {/* Tab Title */}
               {/* Tab Content */}
@@ -230,7 +263,9 @@ export default function Profile() {
                     </div>
                     <div className="col-md-5 profileList">
                       <label>Country : </label>
-                      <p className="profileName">{profileData.profileCountry}</p>
+                      <p className="profileName">
+                        {profileData.profileCountry}
+                      </p>
                     </div>
                     <div className="col-md-5 profileList">
                       <label>Email : </label>
@@ -245,37 +280,53 @@ export default function Profile() {
                       <p className="profileName">{profileData.profilePhone}</p>
                     </div>
 
-
                     <div className="col-md-5 profileList">
                       <label>City : </label>
                       <p className="profileName">{profileData.profileCity}</p>
                     </div>
                     <div className="col-md-5 profileList">
                       <label>Qualification : </label>
-                      <p className="profileName">{profileData.profileQualification}</p>
+                      <p className="profileName">
+                        {profileData.profileQualification}
+                      </p>
                     </div>
                     <div className="col-md-5 profileList">
                       <label>Designation : </label>
-                      <p className="profileName">{profileData.profileDesignation}</p>
+                      <p className="profileName">
+                        {profileData.profileDesignation}
+                      </p>
                     </div>
-
                   </div>
                 </div>
                 {/* Profile Tab Ends */}
-                <div className="tab-pane fade in  active show" id="owned" role="tabpanel">
+                <div
+                  className="tab-pane fade in  active show"
+                  id="owned"
+                  role="tabpanel"
+                >
                   <h3 className="course-title">My Courses</h3>
                   <div className="row">
                     <div className="col-lg-4 col-md-6">
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="assets/images/profile/1.jpg" alt="" />
-                          <a className="enroll" href="#">Enroll Now</a>
+                          <a className="enroll" href="#">
+                            Enroll Now
+                          </a>
                         </div>
                         <div className="fci-details">
-                          <a href="#" className="c-cate"><i className="icon_tag_alt" />Computer Science</a>
-                          <h4><a href="#">Using Creative Problem Solving</a></h4>
+                          <a href="#" className="c-cate">
+                            <i className="icon_tag_alt" />
+                            Computer Science
+                          </a>
+                          <h4>
+                            <a href="#">Using Creative Problem Solving</a>
+                          </h4>
                           <div className="author">
-                            <img src="assets/images/home3/course/a1.png" alt="" />
+                            <img
+                              src="assets/images/home3/course/a1.png"
+                              alt=""
+                            />
                             <a href="#">Anthony</a>
                           </div>
                           <div className="price-rate">
@@ -295,13 +346,25 @@ export default function Profile() {
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="assets/images/profile/2.jpg" alt="" />
-                          <a className="enroll" href="#">Enroll Now</a>
+                          <a className="enroll" href="#">
+                            Enroll Now
+                          </a>
                         </div>
                         <div className="fci-details">
-                          <a href="#" className="c-cate"><i className="icon_tag_alt" />Art &amp; Design</a>
-                          <h4><a href="#">The Art of Black and White Photography</a></h4>
+                          <a href="#" className="c-cate">
+                            <i className="icon_tag_alt" />
+                            Art &amp; Design
+                          </a>
+                          <h4>
+                            <a href="#">
+                              The Art of Black and White Photography
+                            </a>
+                          </h4>
                           <div className="author">
-                            <img src="assets/images/home3/course/a2.png" alt="" />
+                            <img
+                              src="assets/images/home3/course/a2.png"
+                              alt=""
+                            />
                             <a href="#">Giles Posture</a>
                           </div>
                           <div className="price-rate">
@@ -321,13 +384,23 @@ export default function Profile() {
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="assets/images/profile/3.jpg" alt="" />
-                          <a className="enroll" href="#">Enroll Now</a>
+                          <a className="enroll" href="#">
+                            Enroll Now
+                          </a>
                         </div>
                         <div className="fci-details">
-                          <a href="#" className="c-cate"><i className="icon_tag_alt" />Business Study</a>
-                          <h4><a href="#">Learning jQuery mobile for Beginners</a></h4>
+                          <a href="#" className="c-cate">
+                            <i className="icon_tag_alt" />
+                            Business Study
+                          </a>
+                          <h4>
+                            <a href="#">Learning jQuery mobile for Beginners</a>
+                          </h4>
                           <div className="author">
-                            <img src="assets/images/home3/course/a3.png" alt="" />
+                            <img
+                              src="assets/images/home3/course/a3.png"
+                              alt=""
+                            />
                             <a href="#">Hans Down</a>
                           </div>
                           <div className="price-rate">
@@ -347,13 +420,23 @@ export default function Profile() {
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="assets/images/profile/4.jpg" alt="" />
-                          <a className="enroll" href="#">Enroll Now</a>
+                          <a className="enroll" href="#">
+                            Enroll Now
+                          </a>
                         </div>
                         <div className="fci-details">
-                          <a href="#" className="c-cate"><i className="icon_tag_alt" />Data Science</a>
-                          <h4><a href="#">Buddhism and modern Psychology</a></h4>
+                          <a href="#" className="c-cate">
+                            <i className="icon_tag_alt" />
+                            Data Science
+                          </a>
+                          <h4>
+                            <a href="#">Buddhism and modern Psychology</a>
+                          </h4>
                           <div className="author">
-                            <img src="assets/images/home3/course/a4.png" alt="" />
+                            <img
+                              src="assets/images/home3/course/a4.png"
+                              alt=""
+                            />
                             <a href="#">Richard Tea</a>
                           </div>
                           <div className="price-rate">
@@ -373,13 +456,23 @@ export default function Profile() {
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="assets/images/profile/5.jpg" alt="" />
-                          <a className="enroll" href="#">Enroll Now</a>
+                          <a className="enroll" href="#">
+                            Enroll Now
+                          </a>
                         </div>
                         <div className="fci-details">
-                          <a href="#" className="c-cate"><i className="icon_tag_alt" />Web Development</a>
-                          <h4><a href="#">Making music with Other people</a></h4>
+                          <a href="#" className="c-cate">
+                            <i className="icon_tag_alt" />
+                            Web Development
+                          </a>
+                          <h4>
+                            <a href="#">Making music with Other people</a>
+                          </h4>
                           <div className="author">
-                            <img src="assets/images/home3/course/a6.png" alt="" />
+                            <img
+                              src="assets/images/home3/course/a6.png"
+                              alt=""
+                            />
                             <a href="#">Hilary Ouse</a>
                           </div>
                           <div className="price-rate">
@@ -399,16 +492,40 @@ export default function Profile() {
                 </div>
                 {/* Owned Tab */}
                 {/* Purchase Tab */}
-                <div className="tab-pane fade in" id="purchased" role="tabpanel">
+                <div
+                  className="tab-pane fade in"
+                  id="purchased"
+                  role="tabpanel"
+                >
                   <ul className="restult-tab-title nav nav-tabs">
-                    <li><a className="active" href="#all" data-toggle="tab">All</a></li>
-                    <li><a href="#finished" data-toggle="tab" className>Finished</a></li>
-                    <li><a href="#passed" data-toggle="tab" className>Passed</a></li>
-                    <li><a href="#failed" data-toggle="tab" className>Failed</a></li>
+                    <li>
+                      <a className="active" href="#all" data-toggle="tab">
+                        All
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#finished" data-toggle="tab" className>
+                        Finished
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#passed" data-toggle="tab" className>
+                        Passed
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#failed" data-toggle="tab" className>
+                        Failed
+                      </a>
+                    </li>
                   </ul>
                   {/* Tab Content */}
                   <div className="tab-content">
-                    <div className="tab-pane fade show in active" id="all" role="tabpanel">
+                    <div
+                      className="tab-pane fade show in active"
+                      id="all"
+                      role="tabpanel"
+                    >
                       <table className="result-table">
                         <thead>
                           <tr>
@@ -452,12 +569,18 @@ export default function Profile() {
                             <td className="progres">0% In Progress</td>
                           </tr>
                           <tr>
-                            <td className="show-item">Displaying 1 to 4 of 4 courses.</td>
+                            <td className="show-item">
+                              Displaying 1 to 4 of 4 courses.
+                            </td>
                           </tr>
                         </tbody>
                       </table>
                     </div>
-                    <div className="tab-pane show in" id="finished" role="tabpanel">
+                    <div
+                      className="tab-pane show in"
+                      id="finished"
+                      role="tabpanel"
+                    >
                       <table className="result-table">
                         <thead>
                           <tr>
@@ -487,7 +610,11 @@ export default function Profile() {
                         </tbody>
                       </table>
                     </div>
-                    <div className="tab-pane show in" id="passed" role="tabpanel">
+                    <div
+                      className="tab-pane show in"
+                      id="passed"
+                      role="tabpanel"
+                    >
                       <table className="result-table">
                         <thead>
                           <tr>
@@ -517,7 +644,11 @@ export default function Profile() {
                         </tbody>
                       </table>
                     </div>
-                    <div className="tab-pane show in" id="failed" role="tabpanel">
+                    <div
+                      className="tab-pane show in"
+                      id="failed"
+                      role="tabpanel"
+                    >
                       <table className="result-table">
                         <thead>
                           <tr>
@@ -557,7 +688,7 @@ export default function Profile() {
                         <label className="text-left">fullName</label>
                         <input
                           type="text"
-                          onChange={handleChange('fullName')}
+                          onChange={handleChange("fullName")}
                           className="form-control"
                           name="fname"
                           defaultValue={profileData.profileName}
@@ -569,10 +700,10 @@ export default function Profile() {
                         <input
                           type="email"
                           className="form-control"
-                          name="email" readOnly
+                          name="email"
+                          readOnly
                           defaultValue={profileData.profileEmail}
-
-                          onChange={handleChange('email')}
+                          onChange={handleChange("email")}
                         />
                       </div>
                       <div className="form-group">
@@ -582,9 +713,8 @@ export default function Profile() {
                           minLength={10}
                           maxLength={10}
                           name="phone"
-                          onChange={handleChange('phoneNumber')}
+                          onChange={handleChange("phoneNumber")}
                           className="form-control"
-
                           defaultValue={profileData.profilePhone}
                         />
                       </div>
@@ -595,59 +725,109 @@ export default function Profile() {
                           className="form-control"
                           name="designation"
                           defaultValue={profileData.profileDesignation}
-
-                          onChange={handleChange('designation')}
+                          onChange={handleChange("designation")}
                         />
                       </div>
                     </div>
                     <div className="col-md-6">
                       <div className="form-group">
                         <label className="text-left">Country</label>
-                        <select name="country" className="form-control" id="country" placeholder="Country*" onChange={handleChange('country')}>
-                          <option value="country" selected disabled>{profileData.profileCountry}</option>
-                          {country.length > 0 ? country.map((data, index) => {
-                            return (
-                              <option value={data.iso2}>{data.name}</option>
-                            )
-                          }) : ''}
+                        <select
+                          name="country"
+                          className="form-control"
+                          id="country"
+                          placeholder="Country*"
+                          onChange={handleChange("country")}
+                        >
+                          <option value="country" selected disabled>
+                            {profileData.profileCountry}
+                          </option>
+                          {country.length > 0
+                            ? country.map((data, index) => {
+                                return (
+                                  <option value={data.iso2}>{data.name}</option>
+                                );
+                              })
+                            : ""}
                         </select>
                       </div>
                       <div className="form-group">
                         <label className="text-left">State</label>
-                        <select name="state" className="form-control" id="state" placeholder="State*" onChange={handleChange('state')}>
-                          <option value="state" selected disabled>{profileData.profileState}</option>
-                          {state.length > 0 ? state.map((data, index) => {
-                            return (
-                              <option value={data.iso2}>{data.name}</option>
-                            )
-                          }) : ''}
+                        <select
+                          name="state"
+                          className="form-control"
+                          id="state"
+                          placeholder="State*"
+                          onChange={handleChange("state")}
+                        >
+                          <option value="state" selected disabled>
+                            {profileData.profileState}
+                          </option>
+                          {state.length > 0
+                            ? state.map((data, index) => {
+                                return (
+                                  <option value={data.iso2}>{data.name}</option>
+                                );
+                              })
+                            : ""}
                         </select>
                       </div>
                       <div className="form-group">
                         <label className="text-left">City</label>
-                        <select name="city" className="form-control" id="city" placeholder="City*" onChange={handleChange('city')} >
-                          <option value="-1" selected disabled>{profileData.profileCity}</option>
-                          {city.length > 0 ? city.map((data, index) => {
-                            return (
-                              <option value={data.iso2}>{data.name}</option>
-                            )
-                          }) : ''}
+                        <select
+                          name="city"
+                          className="form-control"
+                          id="city"
+                          placeholder="City*"
+                          onChange={handleChange("city")}
+                        >
+                          <option value="-1" selected disabled>
+                            {profileData.profileCity}
+                          </option>
+                          {city.length > 0
+                            ? city.map((data, index) => {
+                                return (
+                                  <option value={data.iso2}>{data.name}</option>
+                                );
+                              })
+                            : ""}
                         </select>
                       </div>
                       <div className="form-group">
                         <label>Qualification</label>
-                        <select name="qualification" id="qualification" placeholder="Qualification*" onChange={handleChange('qualification')} className="form-control">
-                          <option className="hidden" selected disabled>{profileData.profileQualification}</option>
+                        <select
+                          name="qualification"
+                          id="qualification"
+                          placeholder="Qualification*"
+                          onChange={handleChange("qualification")}
+                          className="form-control"
+                        >
+                          <option className="hidden" selected disabled>
+                            {profileData.profileQualification}
+                          </option>
                           <option value="phd">PhD</option>
                           <option value="mphil">MPhil</option>
                           <option value="pg">Post Graduation</option>
                           <option value="ug">Under Graduation</option>
-                          <option value="higher secondary">Higher Secondary</option>
+                          <option value="higher secondary">
+                            Higher Secondary
+                          </option>
                           <option value="sslc">S S L C</option>
                         </select>
                       </div>
                     </div>
-                    <button type="submit" style={{ backgroundColor: "#5838fc", color: "white", fontWeight: "500" }} className="btn w-25 mt-3" onClick={(e) => submitEditProfile(e)}>Submit</button>
+                    <button
+                      type="submit"
+                      style={{
+                        backgroundColor: "#5838fc",
+                        color: "white",
+                        fontWeight: "500",
+                      }}
+                      className="btn w-25 mt-3"
+                      onClick={(e) => submitEditProfile(e)}
+                    >
+                      Submit
+                    </button>
                   </div>
                 </div>
                 {/* Purchase Tab */}
@@ -659,5 +839,5 @@ export default function Profile() {
       </section>
       <Footer />
     </div>
-  )
+  );
 }

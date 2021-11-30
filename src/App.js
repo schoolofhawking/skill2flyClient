@@ -2,7 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import User from './components/user/Signup/User'
+import User from './components/user/User'
 import { Provider } from "react-redux";
 import { PersistGate } from 'redux-persist/integration/react'
 import { store, persistor } from "./redux/store";

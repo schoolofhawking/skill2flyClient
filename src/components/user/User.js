@@ -22,7 +22,7 @@ function User() {
                 <Route path="/course"><CourseList /></Route>
                 <Route path="/contact"><Contact /></Route>
                 <Route path="/profile"><Profile /></Route>
-                <Route path="*"><Error /></Route>
+              
             </Switch>
 
         </div>

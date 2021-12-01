@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { BrowserRouter as Router, Route,Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import User from './components/user/User'
 import { Provider } from "react-redux";
@@ -28,23 +28,21 @@ function App() {
 
           }}
         />
-     
+
         <Router>
-        <Switch>
-               <PersistGate persistor={persistor}>
-            <Route path="/"><User /></Route>
-            <Route path="/admin"><Admin /></Route>
-          </PersistGate>
-    
-   
-          <Route component={Error}/>
-        </Switch>
+          <Switch>
+            <PersistGate persistor={persistor}>
+              <Route path="/" ><User /></Route>
+              <Route path="/admin" ><Admin /></Route>
+            </PersistGate>
+            {/* <Route path=""><Error /></Route> */}
+          </Switch>
         </Router>
 
 
 
 
-        
+
       </div>
     </Provider>
 

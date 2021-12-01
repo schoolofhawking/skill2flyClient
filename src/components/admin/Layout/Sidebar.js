@@ -17,6 +17,7 @@ export default function Sidebar() {
 
   return (
     <>
+    {/* Make Sure To Put Link Instead of A Tag for Routing */}
       <div className="page-wrapper chiller-theme toggled" id="pageWrapper">
         <a style={{position:"absolute",left:"0px"}} id="show-sidebar" className="btn btn-sm btn-dark" onClick={showSideBar} id="showSideBar">
           <i className="fas fa-bars" />
@@ -72,11 +73,12 @@ export default function Sidebar() {
                   </a>
                   <Collapse in={dashboardBool}>
                     <div id="dashboardCollapse">
-                      <a href="/admin/usermanagement" className="sideElement">
+                      
+                      <Link to="/admin/usermanagement" className="sideElement">
                         <i className="fa fa-shopping-cart" />
                         <span>User Management</span>
                         <span className="badge badge-pill badge-danger">3</span>
-                      </a>
+                      </Link>
                       <a href="#" className="sideElement">
                         <i className="far fa-gem" />
                         <span>Components</span>

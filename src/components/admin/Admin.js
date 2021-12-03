@@ -13,6 +13,8 @@ export default function Admin() {
                 {/* <Route path="/admin/demo" > <Sidebar /> </Route> */}
                 <Route path="/admin" exact><AdminLogin /></Route>
                 <Route path="/admin/usermanagement"><Sidebar /></Route>
+                
+                <Route path="/admin/manageAdmin"><Sidebar /></Route>
                 {/* <Route path="/admin/*"><Error /></Route> */}
             </Switch>
         </div>

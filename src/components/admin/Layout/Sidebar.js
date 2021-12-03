@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Collapse } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, useHistory } from "react-router";
+import { Route, useHistory,Switch } from "react-router";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { adminData as adminAction } from "../../../redux/rootActions";
+import AdminManagement from "../AdminManagement/AdminManagement";
 import UserManagement from "../UserManagement/UserManagement";
 import './Sidebar.css'
 
@@ -116,10 +117,10 @@ export default function Sidebar() {
                         <span>User Management</span>
                         <span className="badge badge-pill badge-danger">3</span>
                       </Link>
-                      <a href="#" className="sideElement">
+                      <Link to="/admin/manageAdmin" className="sideElement">
                         <i className="far fa-gem" />
-                        <span>Components</span>
-                      </a>
+                        <span>Manage Admins</span>
+                        </Link>
                       <a href="#" className="sideElement">
                         <i className="fa fa-globe" />
                         <span>Maps</span>
@@ -190,11 +191,13 @@ export default function Sidebar() {
 
         <main className="page-content">
           <div >
-
+          <Switch>
             <Route>
               <Route path="/admin/usermanagement"> <UserManagement /></Route>
+              <Route path="/admin/manageAdmin"> <AdminManagement /></Route>
 
             </Route>
+</Switch>
 
           </div>
         </main>

@@ -17,7 +17,7 @@ export default function AdminLogin() {
         e.preventDefault()
         console.log("entered");
         let data = { username, password }
-        axios.post(process.env.REACT_APP_SERVER + '/adminLogin',data,{ withCredentials: true }).then((response)=>
+        axios.post(process.env.REACT_APP_SERVER + '/admin/adminLogin',data,{ withCredentials: true }).then((response)=>
         {
             if(response.data.error==true)
             {

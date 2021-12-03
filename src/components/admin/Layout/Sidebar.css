@@ -65,6 +65,12 @@ body {
   height: 100vh;
 } */
 
+.logoutIcon{
+    font-family: "Roboto", sans-serif;
+    font-weight: initial;
+    cursor: pointer;
+}
+
 .page-wrapper .theme {
   width: 40px;
   height: 40px;

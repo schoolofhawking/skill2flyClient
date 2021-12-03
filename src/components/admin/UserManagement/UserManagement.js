@@ -3,25 +3,35 @@ import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import Loader from "react-loader-spinner";
+import { useSelector } from 'react-redux';
 import './userManagement.css'
 function UserManagement() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(false)
   const [bool, setBool] = useState(false)
+  const adminDetails = useSelector(state=>state.adminData)
   useEffect(() => {
     loadUserData();
   }, [bool])
 
   const loadUserData = async () => {
     setLoading(true)
-    let { data } = await axios.get(process.env.REACT_APP_SERVER + '/getUsers')
+    let { data } = await axios.get(process.env.REACT_APP_SERVER + '/getUsers', {
+      headers: {
+        authorization: "AdminJwt " + adminDetails.adminJwt,
+      },
+    })
     setUsers(data.data)
     setLoading(false)
   }
 
   const BlockUser = async (id) => {
     setLoading(true)
-    let { data } = await axios.post(process.env.REACT_APP_SERVER + '/BlockUser', { id: id })
+    let { data } = await axios.post(process.env.REACT_APP_SERVER + '/BlockUser', { id: id }, {
+      headers: {
+        authorization: "AdminJwt " + adminDetails.adminJwt,
+      },
+    })
     loadUserData();
     setLoading(false)
     setBool(!bool)
@@ -29,7 +39,11 @@ function UserManagement() {
 
   const unBlockUser = async (id) => {
     setLoading(true)
-    let { data } = await axios.post(process.env.REACT_APP_SERVER + '/unBlockUser', { id: id })
+    let { data } = await axios.post(process.env.REACT_APP_SERVER + '/unBlockUser', { id: id }, {
+      headers: {
+        authorization: "AdminJwt " + adminDetails.adminJwt,
+      },
+    })
     loadUserData();
     setLoading(false)
     setBool(!bool)
@@ -48,7 +62,7 @@ function UserManagement() {
         />
         </> : <>
 
-          <table class="table">
+          <table class="table" id="userTable">
             <thead>
               <tr>
                 <th scope="col">#</th>

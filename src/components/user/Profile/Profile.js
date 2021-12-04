@@ -62,7 +62,7 @@ export default function Profile() {
       axios
         .get(process.env.REACT_APP_SERVER + "/getProfileData", {
           headers: {
-            authorization: "Bearer " + userData.userJwt,
+            
           },
         })
         .then((response) => {

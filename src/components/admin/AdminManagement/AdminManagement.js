@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import Loader from "react-loader-spinner";
 import { useSelector } from 'react-redux';
-import './userManagement.css'
-function UserManagement() {
+import './AdminManagement.css'
+function AdminManagement() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(false)
   const [bool, setBool] = useState(false)
@@ -16,7 +16,7 @@ function UserManagement() {
 
   const loadUserData = async () => {
     setLoading(true)
-    let { data } = await axios.get(process.env.REACT_APP_SERVER + '/admin/getUsers', {
+    let { data } = await axios.get(process.env.REACT_APP_SERVER + '/admin/getAdmins', {
       headers: {
         authorization: "AdminJwt " + adminDetails.adminJwt,
       },
@@ -49,6 +49,22 @@ function UserManagement() {
     setBool(!bool)
 
   }
+
+  const dismissAdmin=async(id)=>{
+
+
+    setLoading(true)
+    let { data } = await axios.post(process.env.REACT_APP_SERVER + '/admin/DismissAdmin', { id: id }, {
+      headers: {
+        authorization: "AdminJwt " + adminDetails.adminJwt,
+      },
+    })
+    loadUserData();
+    setLoading(false)
+    setBool(!bool)
+
+    
+  }
   return (
     <>
 
@@ -61,8 +77,40 @@ function UserManagement() {
 
         />
         </> : <>
+        
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Launch demo modal
+</button>
+
+
+{/* admin add modal */}
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 
           <table class="table" id="userTable">
+        
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -72,6 +120,7 @@ function UserManagement() {
                 <th scope="col">Type of Login</th>
                 <th scope="col">status</th>
                 <th scope="col">Block</th>
+                <th scope="col">Dismiss Admin</th>
               </tr>
             </thead>
             <tbody>
@@ -98,7 +147,7 @@ function UserManagement() {
                           <span class="slider round"></span>
                         </label></td>
                       </>}
-
+                      <td><button className="btn btn-danger" onClick={(e)=>{dismissAdmin(data._id)}}> Dismiss</button></td>
                     </tr>
                   </>
                 )
@@ -120,4 +169,4 @@ function UserManagement() {
   )
 }
 
-export default UserManagement
+export default AdminManagement

@@ -1,11 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { Collapse } from "react-bootstrap";
-import { Route, useHistory } from "react-router";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, useHistory,Switch } from "react-router";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { adminData as adminAction } from "../../../redux/rootActions";
+import AdminManagement from "../AdminManagement/AdminManagement";
 import UserManagement from "../UserManagement/UserManagement";
 import './Sidebar.css'
 
 export default function Sidebar() {
+  const adminDetails = useSelector(state => state.adminData)
+  const history = useHistory()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (adminDetails.adminLogin == false) {
+      toast.dismiss("You are not authorized to Access this page")
+      history.push('/admin')
+    }
+  })
+
   const [dashboardBool, setDashboardBool] = useState(false)
   const [othersBool, setOthersBool] = useState(false)
   function closeSideBar() {
@@ -15,11 +31,33 @@ export default function Sidebar() {
     document.getElementById('pageWrapper').classList.add('toggled')
   }
 
+  const logout = () => {
+    Swal.fire({
+      icon: "question",
+      title: "Are You Sure to Logout?",
+      showConfirmButton: true,
+      confirmButtonText: "Proceed to Logout",
+      confirmButtonColor: "red",
+      showCancelButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let adminInfo = {
+          adminId: '',
+          adminName: '',
+          adminEmail: '',
+          adminJwt: '',
+          adminLogin: false
+        }
+        dispatch(adminAction(adminInfo))
+        history.push('/admin')
+      }
+    })
+  }
   return (
     <>
-    {/* Make Sure To Put Link Instead of A Tag for Routing */}
+      {/* Make Sure To Put Link Instead of A Tag for Routing */}
       <div className="page-wrapper chiller-theme toggled" id="pageWrapper">
-        <a style={{position:"absolute",left:"0px"}} id="show-sidebar" className="btn btn-sm btn-dark" onClick={showSideBar} id="showSideBar">
+        <a style={{ position: "absolute", left: "0px" }} id="show-sidebar" className="btn btn-sm btn-dark" onClick={showSideBar} id="showSideBar">
           <i className="fas fa-bars" />
         </a>
         <nav id="sidebar" className="sidebar-wrapper">
@@ -32,14 +70,14 @@ export default function Sidebar() {
             </div>
             <div className="sidebar-header">
               <div className="user-pic">
-                <img className="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg" alt="User picture" />
+                <img className="img-responsive img-rounded" src="/assets/images/home2/teacher/1.png" alt="User picture" />
               </div>
               <div className="user-info">
                 <span className="user-name">
-                  <strong>Admin</strong>
+                  <strong>{adminDetails.adminName.length > 0 ? adminDetails.adminName : 'Admin'}</strong>
                 </span>
                 {/* <span className="user-role">Administrator</span> */}
-                <span className="user-status">
+                <span className="user-status text-left">
                   <i className="fa fa-circle" />
                   <span>Online</span>
                 </span>
@@ -65,24 +103,24 @@ export default function Sidebar() {
                   <span>General</span>
                 </li>
                 <li className="sidebar-dropdown">
-                  <a onClick={() => {setDashboardBool(!dashboardBool);setOthersBool(false)}} aria-controls="dashboardCollapse"
-                      aria-expanded={dashboardBool} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start",cursor:"pointer" }} >
+                  <a onClick={() => { setDashboardBool(!dashboardBool); setOthersBool(false) }} aria-controls="dashboardCollapse"
+                    aria-expanded={dashboardBool} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", cursor: "pointer" }} >
                     <i className="fa fa-tachometer-alt" />
                     <span >Dashboard</span>
                     <span className="badge badge-pill badge-warning">New</span>
                   </a>
                   <Collapse in={dashboardBool}>
                     <div id="dashboardCollapse">
-                      
+
                       <Link to="/admin/usermanagement" className="sideElement">
                         <i className="fa fa-shopping-cart" />
                         <span>User Management</span>
                         <span className="badge badge-pill badge-danger">3</span>
                       </Link>
-                      <a href="#" className="sideElement">
+                      <Link to="/admin/manageAdmin" className="sideElement">
                         <i className="far fa-gem" />
-                        <span>Components</span>
-                      </a>
+                        <span>Manage Admins</span>
+                        </Link>
                       <a href="#" className="sideElement">
                         <i className="fa fa-globe" />
                         <span>Maps</span>
@@ -96,8 +134,8 @@ export default function Sidebar() {
                 </li>
 
                 <li className="sidebar-dropdown">
-                  <a onClick={() => {setOthersBool(!othersBool);setDashboardBool(false)}} aria-controls="othersCollapse"
-                      aria-expanded={othersBool} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start",cursor:"pointer" }} >
+                  <a onClick={() => { setOthersBool(!othersBool); setDashboardBool(false) }} aria-controls="othersCollapse"
+                    aria-expanded={othersBool} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", cursor: "pointer" }} >
                     <i className="fa fa-tachometer-alt" />
                     <span >Others</span>
                     <span className="badge badge-pill badge-primary">Beta</span>
@@ -133,31 +171,33 @@ export default function Sidebar() {
               <i className="fa fa-bell" />
               <span className="badge badge-pill badge-warning notification">3</span>
             </a>
-            <a href="#">
+            <a href="#" style={{display:"none"}}>
               <i className="fa fa-envelope" />
               <span className="badge badge-pill badge-success notification">7</span>
             </a>
-            <a href="#">
+            <a href="#" style={{marginRight:"-2em"}}>
               <i className="fa fa-cog" />
               <span className="badge-sonar" />
             </a>
-            <a href="#">
-              <i className="fa fa-power-off" />
+            <a className="logoutIcon" onClick={logout}>
+              <i className="fa fa-power-off"  ><span className="logoutIcon pl-2">Logout</span></i>
             </a>
           </div>
         </nav>
 
-      
+
         {/* sidebar-wrapper  */}
 
-        
+
         <main className="page-content">
           <div >
-
+          <Switch>
             <Route>
-            <Route path="/admin/usermanagement"> <UserManagement/></Route>      
+              <Route path="/admin/usermanagement"> <UserManagement /></Route>
+              <Route path="/admin/manageAdmin"> <AdminManagement /></Route>
 
-</Route>
+            </Route>
+</Switch>
 
           </div>
         </main>
@@ -166,7 +206,7 @@ export default function Sidebar() {
 
 
       </div>
-      
+
       {/* page-wrapper */}
     </>
   )

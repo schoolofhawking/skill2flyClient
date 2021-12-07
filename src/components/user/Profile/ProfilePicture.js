@@ -13,7 +13,7 @@ export default function ProfilePicture() {
   const [upImg, setUpImg] = useState();
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
-  const [crop, setCrop] = useState({ unit: '%', width: 30, aspect: 16 / 9 });
+  const [crop, setCrop] = useState({ unit: '%', width: 30, aspect: 1 / 1 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const [show, setShow] = useState(false);
   const [fileName, setFileName] = useState()
@@ -62,8 +62,10 @@ export default function ProfilePicture() {
       reader.addEventListener('load', () => setUpImg(reader.result));
       handleShow()
       reader.readAsDataURL(e.target.files[0]);
-      console.log('filelelel', e.target.files[0])
-      setFileName(e.target.files[0].name)
+      let splittedName = e.target.files[0].name.split(".");
+      splittedName.splice(splittedName.length-1, 1);
+      let name = splittedName.join('')
+      setFileName(name+'.jpg')
     }
   };
 

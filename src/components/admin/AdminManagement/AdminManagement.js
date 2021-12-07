@@ -5,10 +5,20 @@ import { useEffect } from 'react';
 import Loader from "react-loader-spinner";
 import { useSelector } from 'react-redux';
 import './AdminManagement.css'
+import { Modal, Button ,Form} from 'react-bootstrap';
+import toast from "react-hot-toast"
 function AdminManagement() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(false)
   const [bool, setBool] = useState(false)
+  const [show, setShow] = useState(false);
+
+ 
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+
   const adminDetails = useSelector(state=>state.adminData)
   useEffect(() => {
     loadUserData();
@@ -62,8 +72,39 @@ function AdminManagement() {
     loadUserData();
     setLoading(false)
     setBool(!bool)
+  }
+  const addNewAdmin=async()=>{
 
-    
+
+
+let { data } = await axios.post(process.env.REACT_APP_SERVER + '/admin/addNewAdmin', { name:fieldValues.name,email: fieldValues.email,password:fieldValues.password }, {
+  headers: {
+    authorization: "AdminJwt " + adminDetails.adminJwt,
+  },
+})
+console.log("last",data)
+if(data.error)
+{
+  toast.error(data.message)
+}
+else
+{
+  toast.success(data.message)
+  loadUserData();
+  setShow(false)
+}
+  }
+
+  const [fieldValues, setFieldValues] = useState({
+
+    email: '',
+    password: '',
+    name:''
+
+  })
+
+  const handleChange = (name) => async (event) => {
+    setFieldValues({ ...fieldValues, [name]: event.target.value })
   }
   return (
     <>
@@ -78,34 +119,51 @@ function AdminManagement() {
         />
         </> : <>
         
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  Launch demo modal
-</button>
+        <Button variant="primary" onClick={handleShow} className="float-right">
+      Add A New Admin
+      </Button>
 
 
 {/* admin add modal */}
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
+<Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add A New Admin</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
 
+        <Form>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+    <Form.Label>Admin Name (fullName)</Form.Label>
+    <Form.Control type="text" placeholder="Enter Name" onChange={handleChange('name')}  required/>
+  </Form.Group>
+  <Form.Group className="mb-3" controlId="formBasicEmail">
+    <Form.Label>Email address</Form.Label>
+    <Form.Control type="email" placeholder="Enter email" onChange={handleChange('email')}  required/>
+    <Form.Text className="text-muted">
+      Beware! admin will have all rights!!!!!
+    </Form.Text>
+  </Form.Group>
 
+  <Form.Group className="mb-3" controlId="formBasicPassword">
+    <Form.Label>Password</Form.Label>
+    <Form.Control type="password" placeholder="Password" onChange={handleChange('password')} required />
+  </Form.Group>
+  <Form.Group className="mb-3" controlId="formBasicCheckbox">
+    <Form.Check type="checkbox" label="Check me out" />
+  </Form.Group>
+
+</Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" type="submit" onClick={addNewAdmin}>
+    Submit
+  </Button>
+        </Modal.Footer>
+      </Modal>
 
 
 

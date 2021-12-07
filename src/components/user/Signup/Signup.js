@@ -12,11 +12,7 @@ import { useHistory } from "react-router";
 
 export default function Signup(props) {
 
-  const customStyle = () => {
-
-
-
-  }
+ 
   let history = useHistory()
   const dispatch = useDispatch()
   const userDetails = useSelector(state => state.userData)
@@ -33,7 +29,7 @@ export default function Signup(props) {
     password: ''
 
   })
-
+const [loading,setLoading]=useState(false)
 
   const {
     fullName,
@@ -62,6 +58,7 @@ export default function Signup(props) {
   const userLogin = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true)
       let { data } = await axios.post(process.env.REACT_APP_SERVER + '/login', { email, password }, { withCredentials: true })
       console.log("this is data", data);
       if (data.error) {
@@ -91,9 +88,13 @@ export default function Signup(props) {
           })
           history.push('/')
           //setInterval(()=>{history.push('/')},2000) 
+      
       }
+      setLoading(false)
     }
     catch (err) {
+      setLoading(false)
+
       toast.error("something went wrong")
       console.log("this is err", err);
 
@@ -110,6 +111,8 @@ export default function Signup(props) {
       "Content-Type": 'application/json'
     }
     try {
+            setLoading(true)
+
       axios.post(process.env.REACT_APP_SERVER + '/signup', { fullName, email, phoneNumber, password }, { withCredentials: true }).then((response) => {
         if (response.data.error === false) {
           let userInfo = {
@@ -140,8 +143,12 @@ export default function Signup(props) {
       }).catch((err) => {
         toast.error("Something Went Wrong!")
       })
+
+      setLoading(false)
     }
     catch (err) {
+      setLoading(false)
+
       console.log(err)
       toast.error("This didn't work.")
     }
@@ -460,9 +467,12 @@ export default function Signup(props) {
 
                     <div className="col-md-6">
                       <div className="form-group">
-                        <button type="submit" onClick={() => signupSubmit()} className="btnLogin">
-                          Signup{" "}
+                
+                {!loading?<>    <button type="submit" onClick={() => signupSubmit()} className="btnLogin">
+                    Signup
                         </button>
+                        </>:<> <button type="submit" className="btnLogin"> please wait.. <i class="fa fa-circle-o-notch fa-spin"></i></button> </>}
+                    
                       </div>
                       <div class="or-container">
                         <div class="line-separator"></div>
@@ -550,9 +560,14 @@ export default function Signup(props) {
                           />
                         </div>
                         <div className="form-group">
-                          <button type="submit" className="btnLogin">
+
+                        {!loading?<>    <button type="submit" className="btnLogin">
                             Login{" "}
                           </button>
+                        </>:<> <button className="btnLogin"> please wait.. <i class="fa fa-circle-o-notch fa-spin"></i></button> </>}
+
+
+                         
                         </div>
                       </form>
                       <div class="or-container">

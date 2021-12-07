@@ -59,11 +59,11 @@ function Navbar() {
               {/* Nav Menu Start */}
               <div className="collapse navbar-collapse">
                 <ul className="navbar-nav">
-                  <li className="menu-item-has-children">
+                  <li className="menu-item">
                     <Link to="/">Home</Link>
                   </li>
-                  <li className="menu-item-has-children">
-                    <Link to="/course">Courses</Link>
+                  <li className="menu-item">
+                    <Link to="/profile">Profile</Link>
                   </li>
                   {/* <li className="menu-item-has-children">
                       <a href="javascript:void(0);">Pages</a>

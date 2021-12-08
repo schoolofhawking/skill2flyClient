@@ -3,8 +3,10 @@ import { useSelector } from 'react-redux'
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { Modal, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios'
+import toast from 'react-hot-toast';
+import { useHistory } from 'react-router';
 
 export default function ProfilePicture() {
   const userData = useSelector(state => state.userData)
@@ -17,6 +19,7 @@ export default function ProfilePicture() {
   const [completedCrop, setCompletedCrop] = useState(null);
   const [show, setShow] = useState(false);
   const [fileName, setFileName] = useState()
+  const history = useHistory()
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -48,7 +51,13 @@ export default function ProfilePicture() {
           data: formData
         }).then(response => {
           handleClose()
-          alert(response.data.message)
+          if(response.data.error==true)
+          {
+            toast.error(response.data.message)
+          }else{
+            toast.success(response.data.message)
+            window.location.reload()
+          }
         });
       },
       'image/png',
@@ -58,14 +67,25 @@ export default function ProfilePicture() {
 
   const onSelectFile = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.addEventListener('load', () => setUpImg(reader.result));
-      handleShow()
-      reader.readAsDataURL(e.target.files[0]);
-      let splittedName = e.target.files[0].name.split(".");
-      splittedName.splice(splittedName.length-1, 1);
-      let name = splittedName.join('')
-      setFileName(name+'.jpg')
+      let file = e.target.files[0]
+      if (file.size < 2097152) {
+        if ((file.type == 'image/jpeg') || (file.type == 'image/jpg') || (file.type == 'image/png')) {
+          const reader = new FileReader();
+          reader.addEventListener('load', () => setUpImg(reader.result));
+          handleShow()
+          reader.readAsDataURL(e.target.files[0]);
+          let splittedName = e.target.files[0].name.split(".");
+          splittedName.splice(splittedName.length - 1, 1);
+          let name = splittedName.join('')
+          setFileName(name + '.jpg')
+        } else {
+          toast.error("Please Select an Image File")
+        }
+      } else {
+        toast.error("File Size is More than 2 MB.")
+      }
+    } else {
+      toast.error("No File Selected")
     }
   };
 
@@ -104,6 +124,7 @@ export default function ProfilePicture() {
       crop.width * scaleX,
       crop.height * scaleY
     );
+    console.log("rendered");
   }, [completedCrop]);
 
   return (
@@ -112,8 +133,8 @@ export default function ProfilePicture() {
         <div className="teacher-profile">
           <div className="teacher-thumb">
             <div className="profile_wrap">
-              <img className="profile_img" src="assets/images/home2/teacher/1.png" alt="" />
-              <label for="profilePic" style={{ paddingTop: "50%" }} className="profile_file" ><i id="postIcon" style={{ fontSize: "xx-large" }} className="far fa-file-image"></i></label>
+              <img className="profile_img" src={process.env.REACT_APP_S3_USER_BUCKET+userData.userId+'.jpg'} onError={(e)=>{e.target.onerror = null; e.target.src="assets/images/home2/teacher/1.png"}}  alt="" />
+              <label for="profilePic" style={{ paddingTop: "50%",cursor:"pointer" }} className="profile_file" ><i id="postIcon" style={{ fontSize: "xx-large" }} className="far fa-file-image"></i></label>
               <input onChange={onSelectFile} type="file" id="profilePic" name="profilePic" style={{ display: "none" }}></input>
             </div>
 

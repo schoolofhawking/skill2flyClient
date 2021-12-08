@@ -60,9 +60,9 @@ export default function Profile() {
   const editProfile = () => {
     if (profileData.profileEnable == false) {
       axios
-        .get(process.env.REACT_APP_SERVER + "/getProfileData", {
+        .get(process.env.REACT_APP_SERVER + "/getProfileData",  {
           headers: {
-            
+            authorization: "Bearer " + userData.userJwt,
           },
         })
         .then((response) => {
@@ -79,6 +79,8 @@ export default function Profile() {
               designation: data.profileDesignation,
               qualification: data.profileQualification,
             });
+          }else{
+            toast.error(response.data.message);
           }
         });
     }

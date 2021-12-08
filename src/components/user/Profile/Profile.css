@@ -37,7 +37,7 @@
     margin: 0px;
 
     /* transition effect. not necessary */
-    transition: opacity .2s, visibility .2s;
+    transition: opacity 1s, visibility 2s;
 }
 
 .profile_wrap:hover .profile_file {

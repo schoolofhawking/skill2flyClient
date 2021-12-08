@@ -184,6 +184,7 @@ const [loading,setLoading]=useState(false)
                 icon: '🔥',
               },
             })
+            history.push('/')
         } else if (response.data.error === true) {
           toast.error(response.data.message)
         }
@@ -233,6 +234,7 @@ const [loading,setLoading]=useState(false)
                 icon: '🔥',
               },
             })
+            history.push('/')
         } else if (response.data.error === true) {
           toast.error(response.data.message)
         }

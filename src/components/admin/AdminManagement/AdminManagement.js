@@ -153,15 +153,20 @@ else
     <Form.Check type="checkbox" label="Check me out" />
   </Form.Group>
 
+
 </Form>
+
+<Button variant="primary" type="submit" onClick={addNewAdmin}>
+    Submit
+  </Button>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" type="submit" onClick={addNewAdmin}>
+          {/* <Button variant="primary" type="submit" onClick={addNewAdmin}>
     Submit
-  </Button>
+  </Button> */}
         </Modal.Footer>
       </Modal>
 

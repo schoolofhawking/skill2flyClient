@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { adminData as adminAction } from "../../../redux/rootActions";
 import AdminManagement from "../AdminManagement/AdminManagement";
+import CourseCategoryManagement from "../CourseCategoryManagement/CourseCategoryManagement";
+import CourseManagement from "../CourseManagement/CourseManagement";
 import UserManagement from "../UserManagement/UserManagement";
 import './Sidebar.css'
 
@@ -121,10 +123,17 @@ export default function Sidebar() {
                         <i className="far fa-gem" />
                         <span>Manage Admins</span>
                         </Link>
-                      <a href="#" className="sideElement">
-                        <i className="fa fa-globe" />
-                        <span>Maps</span>
-                      </a>
+
+                        <Link to="/admin/courses" className="sideElement">
+                        <i className="far fa-gem" />
+                        <span>Course Management</span>
+                        </Link>
+
+                        <Link to="/admin/category" className="sideElement">
+                        <i className="far fa-gem" />
+                        <span>Course Categories</span>
+                        </Link>
+                    
                       <a href="#" className="sideElement">
                         <i className="fa fa-chart-line" />
                         <span>Charts</span>
@@ -195,7 +204,8 @@ export default function Sidebar() {
             <Route>
               <Route path="/admin/usermanagement"> <UserManagement /></Route>
               <Route path="/admin/manageAdmin"> <AdminManagement /></Route>
-
+              <Route path="/admin/courses"><CourseManagement /></Route>
+              <Route path="/admin/category"><CourseCategoryManagement /></Route>
             </Route>
 </Switch>
 

@@ -60,10 +60,10 @@ function Navbar() {
               <div className="collapse navbar-collapse">
                 <ul className="navbar-nav">
                   <li className="menu-item">
-                    <Link to="/">Home</Link>
+                    <Link to="/" style={{textDecoration:"none"}}>Home</Link>
                   </li>
                   <li className="menu-item">
-                    <Link to="/profile">Profile</Link>
+                    <Link to="/profile" style={{textDecoration:"none"}}>Profile</Link>
                   </li>
                   {/* <li className="menu-item-has-children">
                       <a href="javascript:void(0);">Pages</a>
@@ -88,7 +88,7 @@ function Navbar() {
                       </ul>
                     </li> */}
                   <li>
-                    <Link to="/contact">Contact</Link>
+                    <Link to="/contact" style={{textDecoration:"none"}}>Contact</Link>
                   </li>
                 </ul>
               </div>
@@ -97,7 +97,7 @@ function Navbar() {
               {userDetails.userLogin==true?<div id="Logout" style={{cursor:"pointer"}} onClick={logout}><span className="text-white" style={{fontWeight:"600"}} >Logout</span></div>:<div id="ProfileBtn"><Link to="/profile"><i className="ti-user" style={{ fontSize: "1.5em", color: "white" }} /></Link></div>}
               {/* User Btn */}
               {/* Join Btn */}
-              {userDetails.userLogin==true?<div id="UserBtn" ><Link to="/profile" className="join-btn">{profileDetails.profileEnable==true?profileDetails.profileName:userDetails.userName}</Link></div>:<div id="JoinBtn"><Link to="/signup" className="join-btn">Join for Free</Link></div>}
+              {userDetails.userLogin==true?<div id="UserBtn" ><Link to="/profile" style={{textDecoration:"none"}} className="join-btn">{profileDetails.profileEnable==true?profileDetails.profileName:userDetails.userName}</Link></div>:<div id="JoinBtn"><Link to="/signup" style={{textDecoration:"none"}} className="join-btn">Join for Free</Link></div>}
               {/* This feature is under maintainace...used for putting logout btn on profile hover*/}
               {/* <ul id="userProfile" className="navbar-nav">
                 <li className="menu-item-has-children">

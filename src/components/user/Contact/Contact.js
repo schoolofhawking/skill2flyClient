@@ -33,22 +33,22 @@ export default function Contact() {
                                     <h5>Headquaters</h5>
                                     <p>
                                         <i className="icon_house_alt" />
-                                        744 New York Ave, Brooklyn, Kings,<br /> New York 10224
+                                        Hilite Business Park, 5th floor (codelattice) Craft Square<br /> Kozhikode, Kerala 673014
                                     </p>
                                 </div>
-                                <div className="single-info">
+                                {/* <div className="single-info">
                                     <h5>Phone</h5>
                                     <p>
                                         <i className="icon_phone" />
-                                        (+642) 245 356 432<br />
+                                        <a href="tel:12345678">schoolofhawking@gmail.com</a>(+642) 245 356 432<br />
                                         (+420) 336 476 328
                                     </p>
-                                </div>
+                                </div> */}
                                 <div className="single-info">
                                     <h5>Support</h5>
                                     <p>
                                         <i className="icon_mail_alt" />
-                                        schoolofhawking@gmail.com<br />
+                                        <a href="mailto:schoolofhawking@gmail.com">schoolofhawking@gmail.com</a> <br />
                                        
                                     </p>
                                 </div>
@@ -104,7 +104,7 @@ export default function Contact() {
             {/* Contact End */}
             {/* Gamps Start */}
             <div className="bisylms-map">
-                <iframe src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=business park kozhikode&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" />
+                <iframe src="https://maps.google.com/maps?q=School%20of%20Hawking%20Kozhikode&t=&z=13&ie=UTF8&iwloc=&output=embed" />
             </div>
             <Footer />
         </div>

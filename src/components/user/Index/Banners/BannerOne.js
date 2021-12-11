@@ -25,16 +25,16 @@ function BannerOne() {
           <div className="row">
             <div className="col-lg-5 col-md-5">
               <div className="hero-content">
-                <h2>Your Course To Success</h2>
+              <h2> SKILL2FLY</h2>
                 <p>
-                  Loo you mug lurgy baking cakes boot cracking goal morish up the duff haggle hotpot faff about no biggie burke, is bleeder bamboozled bite your.
+               we are under development!!!!!!!!! 
                 </p>
                 <a href="#" className="bisylms-btn">Ready to Get Started?</a>
               </div>
             </div>
             <div className="col-lg-7 col-md-7">
               <div className="banner-thumb">
-                <img src="assets/images/home/layer.png" alt="" />
+                <img src="assets/images/newSvg/undraw_education_f8ru.svg" alt="" />
               </div>
             </div>
           </div>

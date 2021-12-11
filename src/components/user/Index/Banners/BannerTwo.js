@@ -58,7 +58,7 @@ export default function BannerTwo() {
           <div className="row mt-120">
             <div className="col-lg-7 col-md-6">
               <div className="ab-thumb">
-                <img src="assets/images/home/1.png" alt="" />
+                <img src="assets/images/newSvg/bannertwo.svg" alt="" />
               </div>
             </div>
             <div className="col-lg-5 col-md-6">

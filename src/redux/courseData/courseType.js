@@ -1,0 +1,1 @@
+export const COURSE_TYPE = 'COURSE_TYPE'

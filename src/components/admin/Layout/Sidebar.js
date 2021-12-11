@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Collapse } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, useHistory,Switch } from "react-router";
+import { Route, useHistory, Switch } from "react-router";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { adminData as adminAction } from "../../../redux/rootActions";
@@ -72,7 +72,7 @@ export default function Sidebar() {
             </div>
             <div className="sidebar-header">
               <div className="user-pic">
-                <img className="img-responsive img-rounded" src="/assets/images/home2/teacher/1.png" alt="User picture" />
+              <img className="profile_img" src={process.env.REACT_APP_S3_USER_BUCKET+adminDetails.adminId+'.jpg'} onError={(e)=>{e.target.onerror = null; e.target.src="assets/images/home2/teacher/1.png"}}  alt="" />
               </div>
               <div className="user-info">
                 <span className="user-name">
@@ -107,37 +107,23 @@ export default function Sidebar() {
                 <li className="sidebar-dropdown">
                   <a onClick={() => { setDashboardBool(!dashboardBool); setOthersBool(false) }} aria-controls="dashboardCollapse"
                     aria-expanded={dashboardBool} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", cursor: "pointer" }} >
-                    <i className="fa fa-tachometer-alt" />
-                    <span >Dashboard</span>
-                    <span className="badge badge-pill badge-warning">New</span>
+                    <i className="fas fa-tachometer-alt" />
+                    <span >User Dashboard</span>
+                    {/* <span className="badge badge-pill badge-warning">New</span> */}
                   </a>
                   <Collapse in={dashboardBool}>
                     <div id="dashboardCollapse">
 
                       <Link to="/admin/usermanagement" className="sideElement">
-                        <i className="fa fa-shopping-cart" />
+                        <i className="fas fa-user" />
                         <span>User Management</span>
                         <span className="badge badge-pill badge-danger">3</span>
                       </Link>
                       <Link to="/admin/manageAdmin" className="sideElement">
-                        <i className="far fa-gem" />
+                        <i className="fas fa-user-shield" />
                         <span>Manage Admins</span>
-                        </Link>
+                      </Link>
 
-                        <Link to="/admin/courses" className="sideElement">
-                        <i className="far fa-gem" />
-                        <span>Course Management</span>
-                        </Link>
-
-                        <Link to="/admin/category" className="sideElement">
-                        <i className="far fa-gem" />
-                        <span>Course Categories</span>
-                        </Link>
-                    
-                      <a href="#" className="sideElement">
-                        <i className="fa fa-chart-line" />
-                        <span>Charts</span>
-                      </a>
                     </div>
                   </Collapse>
                 </li>
@@ -145,13 +131,22 @@ export default function Sidebar() {
                 <li className="sidebar-dropdown">
                   <a onClick={() => { setOthersBool(!othersBool); setDashboardBool(false) }} aria-controls="othersCollapse"
                     aria-expanded={othersBool} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", cursor: "pointer" }} >
-                    <i className="fa fa-tachometer-alt" />
-                    <span >Others</span>
-                    <span className="badge badge-pill badge-primary">Beta</span>
+                    <i className="fas fa-university" />
+                    <span >Course Dashboard</span>
+                    {/* <span className="badge badge-pill badge-primary">Beta</span> */}
                   </a>
                   <Collapse in={othersBool}>
                     <div id="othersCollapse">
-                      <a href="#" className="sideElement">
+                      <Link to="/admin/courses" className="sideElement">
+                        <i className="far fa-gem" />
+                        <span>Course Management</span>
+                      </Link>
+
+                      <Link to="/admin/category" className="sideElement">
+                        <i className="fas fa-sitemap" />
+                        <span>Category Management</span>
+                      </Link>
+                      {/* <a href="#" className="sideElement">
                         <i className="fa fa-calendar" />
                         <span>Calendar</span>
                       </a>
@@ -159,7 +154,7 @@ export default function Sidebar() {
                         <i className="fa fa-folder" />
                         <span>Examples</span>
                       </a>
-                      {/* <a href="#" className="sideElement">
+                      <a href="#" className="sideElement">
                         <i className="fa fa-globe" />
                         <span>Maps</span>
                       </a>
@@ -180,11 +175,11 @@ export default function Sidebar() {
               <i className="fa fa-bell" />
               <span className="badge badge-pill badge-warning notification">3</span>
             </a>
-            <a href="#" style={{display:"none"}}>
+            <a href="#" style={{ display: "none" }}>
               <i className="fa fa-envelope" />
               <span className="badge badge-pill badge-success notification">7</span>
             </a>
-            <a href="#" style={{marginRight:"-2em"}}>
+            <a href="#" style={{ marginRight: "-2em" }}>
               <i className="fa fa-cog" />
               <span className="badge-sonar" />
             </a>
@@ -200,14 +195,14 @@ export default function Sidebar() {
 
         <main className="page-content">
           <div >
-          <Switch>
-            <Route>
-              <Route path="/admin/usermanagement"> <UserManagement /></Route>
-              <Route path="/admin/manageAdmin"> <AdminManagement /></Route>
-              <Route path="/admin/courses"><CourseManagement /></Route>
-              <Route path="/admin/category"><CourseCategoryManagement /></Route>
-            </Route>
-</Switch>
+            <Switch>
+              <Route>
+                <Route path="/admin/usermanagement"> <UserManagement /></Route>
+                <Route path="/admin/manageAdmin"> <AdminManagement /></Route>
+                <Route path="/admin/courses"><CourseManagement /></Route>
+                <Route path="/admin/category"><CourseCategoryManagement /></Route>
+              </Route>
+            </Switch>
 
           </div>
         </main>

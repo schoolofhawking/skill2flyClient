@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage'
 import userReducer from "./userData/userReducer";
 import profileReducer from "./profileData/profileReducer";
 import adminReducer from "./adminData/adminReducer";
+import courseReducer from "./courseData/courseReducer";
 
 
 const persistConfig = {
@@ -14,6 +15,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
     userData:userReducer,
     profileData:profileReducer,
-    adminData:adminReducer
+    adminData:adminReducer,
+    courseData:courseReducer
 })
 export default persistReducer(persistConfig,rootReducer)

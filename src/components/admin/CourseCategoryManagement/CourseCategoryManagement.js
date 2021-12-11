@@ -12,6 +12,7 @@ function CourseCategoryManagement() {
   const adminDetails = useSelector((state) => state.adminData);
   const [categories, setCategories] = useState([]);
   const [show, setShow] = useState(false);
+  
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -128,7 +129,7 @@ function CourseCategoryManagement() {
 
                   {data.status=="1" ? <>
                         <td><label class="switch">
-                          <input type="checkbox" onChange={(e) => { deactivateCategory(data._id) }} />
+                          <input type="checkbox" onChange={(e) => {deactivateCategory(data._id) }} />
                           <span class="slider round"></span>
                         </label></td>
                       </> : <>

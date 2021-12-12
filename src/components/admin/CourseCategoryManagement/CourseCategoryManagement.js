@@ -103,7 +103,7 @@ function CourseCategoryManagement() {
         Add A New Category
       </Button>
 
-      <table class="table" id="userTable">
+      <table class="table table-striped" id="userTable">
         <thead>
           <tr>
             <th scope="col">#</th>

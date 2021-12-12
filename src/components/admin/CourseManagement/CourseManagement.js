@@ -280,7 +280,7 @@ function CourseManagement() {
 
 
 
-                    <table class="table" id="userTable">
+                    <table class="table table-striped" id="userTable">
 
                         <thead>
                             <tr>

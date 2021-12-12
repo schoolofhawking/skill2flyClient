@@ -33,6 +33,25 @@ export default function Sidebar() {
     document.getElementById('pageWrapper').classList.add('toggled')
   }
 
+  const searchMenu = () => {
+    let inputVal = document.getElementById('searchInput').value.toUpperCase()
+    let div = document.getElementById('searchMenu')
+    let list = div.getElementsByClassName('sideElement')
+    for (let i = 0; i < list.length; i++) {
+      let txtValue = list[i].textContent || list[i].innerText;
+      if (txtValue.toUpperCase().indexOf(inputVal) > -1) {
+        list[i].style.display = "";
+        if ((txtValue == 'User Dashboard') || (txtValue == 'Course Dashboard')) {
+          list[i].style.marginLeft = "0em"
+        } else {
+          list[i].setAttribute('style', 'marginLeft:2em !important')
+        }
+      } else {
+        list[i].setAttribute('style', 'display:none !important')
+      }
+    }
+  }
+
   const logout = () => {
     Swal.fire({
       icon: "question",
@@ -72,7 +91,7 @@ export default function Sidebar() {
             </div>
             <div className="sidebar-header">
               <div className="user-pic">
-              <img className="profile_img" src={process.env.REACT_APP_S3_USER_BUCKET+adminDetails.adminId+'.jpg'} onError={(e)=>{e.target.onerror = null; e.target.src="assets/images/home2/teacher/1.png"}}  alt="" />
+                <img className="profile_img" src={process.env.REACT_APP_S3_USER_BUCKET + adminDetails.adminId + '.jpg'} onError={(e) => { e.target.onerror = null; e.target.src = "assets/images/home2/teacher/1.png" }} alt="" />
               </div>
               <div className="user-info">
                 <span className="user-name">
@@ -89,7 +108,7 @@ export default function Sidebar() {
             <div className="sidebar-search">
               <div>
                 <div className="input-group">
-                  <input type="text" className="form-control search-menu" placeholder="Search..." />
+                  <input type="text" className="form-control search-menu" id="searchInput" onKeyUp={searchMenu} placeholder="Search..." />
                   <div className="input-group-append">
                     <span className="input-group-text">
                       <i className="fa fa-search" aria-hidden="true" />
@@ -100,13 +119,13 @@ export default function Sidebar() {
             </div>
             {/* sidebar-search  */}
             <div className="sidebar-menu">
-              <ul>
+              <ul id="searchMenu">
                 <li className="header-menu">
                   <span>General</span>
                 </li>
                 <li className="sidebar-dropdown">
                   <a onClick={() => { setDashboardBool(!dashboardBool); setOthersBool(false) }} aria-controls="dashboardCollapse"
-                    aria-expanded={dashboardBool} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", cursor: "pointer" }} >
+                    aria-expanded={dashboardBool} style={{ marginLeft: "0em" }} className="sideElement" >
                     <i className="fas fa-tachometer-alt" />
                     <span >User Dashboard</span>
                     {/* <span className="badge badge-pill badge-warning">New</span> */}
@@ -130,7 +149,7 @@ export default function Sidebar() {
 
                 <li className="sidebar-dropdown">
                   <a onClick={() => { setOthersBool(!othersBool); setDashboardBool(false) }} aria-controls="othersCollapse"
-                    aria-expanded={othersBool} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", cursor: "pointer" }} >
+                    aria-expanded={othersBool} style={{ marginLeft: "0em" }} className="sideElement" >
                     <i className="fas fa-university" />
                     <span >Course Dashboard</span>
                     {/* <span className="badge badge-pill badge-primary">Beta</span> */}

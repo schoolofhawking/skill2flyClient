@@ -102,9 +102,11 @@ function CourseManagement() {
                 }
                 else {
                     toast.error("Please Choose a Image File")
+                    return setLoading(false)
                 }
             } else {
                 toast.error("Please Choose a File with size less than 2MB")
+                return setLoading(false)
             }
         } else {
             toast.error('Please Select a File')
@@ -130,7 +132,7 @@ function CourseManagement() {
         }).then((response) => {
             console.log(response);
             if (response.data.error) {
-                
+
                 toast.error(response.data.message)
             }
             else {
@@ -144,10 +146,16 @@ function CourseManagement() {
 
     }
 
-   
+
 
     const handleChange = (name) => async (event) => {
         if (name == 'thumbnail') {
+            let img = event.target.files[0]
+            if ((img.type == 'image/jpeg') || (img.type == 'image/jpg') || (img.type == 'image/png')) {
+                document.getElementById('thumbnailPreview').src = URL.createObjectURL(img)
+            }else{
+                document.getElementById('thumbnailPreview').src=''
+            }
             setFieldValues({ ...fieldValues, file: event.target.files[0] })
 
         } else {
@@ -243,17 +251,15 @@ function CourseManagement() {
                                         <Form.Control type="number" placeholder="Enter The Discount Price" onChange={handleChange('discountPrice')} required />
                                     </Form.Group>
                                 </Row>
-
-                                <Form.Group controlId="formFileMultiple" className="mb-3">
-                                    <Form.Label>Select A Thumbnail Image</Form.Label>
-                                    <Form.Control onChange={handleChange('thumbnail')} type="file" id="thumbnail" />
-                                </Form.Group>
-
-
-
-
-
-
+                                <Row className='mb-3'>
+                                    <Form.Group controlId="formFileMultiple" className="mb-3 w-50">
+                                        <Form.Label>Select A Thumbnail Image</Form.Label>
+                                        <Form.Control onChange={handleChange('thumbnail')} type="file" id="thumbnail" />
+                                    </Form.Group>
+                                    <div className='previewImg w-50' style={{ display: "flex", justifyContent: "center" }}>
+                                        <img id='thumbnailPreview' style={{ width: "11vw" }} src=""></img>
+                                    </div>
+                                </Row>
 
 
                             </Form>
@@ -300,8 +306,8 @@ function CourseManagement() {
                                             <td>{data.courseName}</td>
                                             <td>{data.author}</td>
                                             <td>{data.discountPercentage + '%'}</td>
-                                            <td>{'₹ '+data.actualPrice}</td>
-                                            <td>{'₹ '+data.discountPrice}</td>
+                                            <td>{'₹ ' + data.actualPrice}</td>
+                                            <td>{'₹ ' + data.discountPrice}</td>
                                             <td>{data.demoVideo}</td>
                                             <td><button className="btn btn-danger" onClick={(e) => { editCourse(data._id) }}> Edit</button></td>
                                         </tr>

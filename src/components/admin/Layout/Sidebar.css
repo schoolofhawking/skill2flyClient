@@ -108,7 +108,8 @@ body {
   display: flex !important;
   flex-direction: row;
   justify-content: flex-start;
-  margin-left: 2em;
+  margin-left: 2em ;
+  cursor: pointer;
 }
 .page-wrapper.toggled #show-sidebar {
   left: -40px;

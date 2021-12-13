@@ -8,7 +8,10 @@ import { courseAction } from '../../../redux/rootActions';
 import './CourseManagement.css'
 import { Modal, Button, Form, Row } from 'react-bootstrap';
 import toast from "react-hot-toast"
+import { Route, useHistory, Switch } from "react-router";
+
 function CourseManagement() {
+    const history = useHistory() 
     const [course, setCourse] = useState([])
     const [category, setCategory] = useState([])
     const [loading, setLoading] = useState(false)
@@ -79,6 +82,8 @@ function CourseManagement() {
 
     const editCourse = async (id) => {
 
+        history.push('/admin/editCourse')
+
         //the course data is present in redux..filter the course from redux and put in the edit modal popup...
 
         // setLoading(true)
@@ -90,6 +95,8 @@ function CourseManagement() {
         // loadCourseData();
         // setLoading(false)
         // setBool(!bool)
+
+
     }
     const addNewCourse = async () => {
         setLoading(true)

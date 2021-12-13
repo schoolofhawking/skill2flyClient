@@ -6,9 +6,10 @@ import { Button, Form, Modal } from "react-bootstrap";
 import toast from "react-hot-toast";
 import Loader from "react-loader-spinner";
 import { useSelector } from "react-redux";
+import { Route, useHistory, Switch } from "react-router";
 
 function CourseCategoryManagement() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const adminDetails = useSelector((state) => state.adminData);
   const [categories, setCategories] = useState([]);
   const [show, setShow] = useState(false);
@@ -29,6 +30,7 @@ function CourseCategoryManagement() {
 
   const loadCategory = async () => {
     try {
+      setLoading(true)
       let { data } = await axios.get(
         process.env.REACT_APP_SERVER + "/admin/getCategories",
         {
@@ -40,7 +42,10 @@ function CourseCategoryManagement() {
       if (data) 
       setCategories(data.data);
       console.log("!!!!!",data);
+      setLoading(false)
     } catch (err) {
+      setLoading(false)
+
       toast.error("something went wrong");
     }
   };
@@ -103,6 +108,7 @@ function CourseCategoryManagement() {
         Add A New Category
       </Button>
 
+{!loading?<>
       <table class="table" id="userTable">
         <thead>
           <tr>
@@ -120,6 +126,7 @@ function CourseCategoryManagement() {
           {categories?.map((data, i) => {
             return (
               <>
+           
                 <tr>
                   <th scope="row">{i + 1}</th>
                   <td>{data.categoryName}</td>
@@ -145,7 +152,16 @@ function CourseCategoryManagement() {
         </tbody>
       </table>
 
+      </>:<>
+      
+      <Loader
+          type="Circles"
+          color="#00BFFF"
+          height={100}
+          width={100}
 
+        />
+        </>}
       
 <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

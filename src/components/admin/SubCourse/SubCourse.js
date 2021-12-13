@@ -6,10 +6,13 @@ import { courseAction } from '../../../redux/rootActions';
 import Loader from "react-loader-spinner";
 import { useDispatch, useSelector } from 'react-redux';
 import './SubCourse.css'
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Row } from 'react-bootstrap';
 import toast from "react-hot-toast"
 function SubCourse() {
+    //This is used to Display all Sub Courses in Component
     const [subCourse, setSubCourse] = useState([])
+    //This is used to Display Sub Courses of a Particular Main Course in Modal
+    const [privateSub, setPrivateSub] = useState([])
     const [loading, setLoading] = useState(false)
     const [bool, setBool] = useState(false)
     const [addShow, setAddShow] = useState(false);
@@ -89,32 +92,14 @@ function SubCourse() {
         // setBool(!bool)
     }
 
-    const unBlockUser = async (id) => {
-        // setLoading(true)
-        // let { data } = await axios.post(process.env.REACT_APP_SERVER + '/admin/unBlockUser', { id: id }, {
-        //     headers: {
-        //         authorization: "AdminJwt " + adminDetails.adminJwt,
-        //     },
-        // })
-        // loadUserData();
-        // setLoading(false)
-        // setBool(!bool)
-
-    }
-
-    const dismissAdmin = async (id) => {
-
-
+    const getPrivateSub = async (id) => {
         setLoading(true)
-        let { data } = await axios.post(process.env.REACT_APP_SERVER + '/admin/DismissAdmin', { id: id }, {
-            headers: {
-                authorization: "AdminJwt " + adminDetails.adminJwt,
-            },
-        })
-        //loadUserData();
+        console.log(id, "id of main course");
+        const newArr = subCourse.filter(sub => sub.mainCourseId._id == id)
+        setPrivateSub(newArr)
         setLoading(false)
-        setBool(!bool)
     }
+
     const createSubCourse = async () => {
         setLoading(true)
 
@@ -130,6 +115,26 @@ function SubCourse() {
                 toast.success(response.data.message)
                 loadSubCourse();
                 setAddShow(false)
+            }
+        })
+        setLoading(false)
+
+    }
+
+    const updateSubCourse = async () => {
+        setLoading(true)
+        axios.post(process.env.REACT_APP_SERVER + '/admin/subCourseAddVideo', updateSub, {
+            headers: {
+                authorization: "AdminJwt " + adminDetails.adminJwt,
+            },
+        }).then((response) => {
+            if (response.data.error == true) {
+                toast.error(response.data.message)
+            }
+            else {
+                toast.success(response.data.message)
+                loadSubCourse();
+                setUpdateShow(false)
             }
         })
         setLoading(false)
@@ -169,6 +174,65 @@ function SubCourse() {
 
                     {/* admin add modal */}
 
+                    <Modal show={updateShow} onHide={() => setUpdateShow(!updateShow)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Add Videos To Sub Course</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+
+                            <Form>
+                                <Form.Group className="m-2 pl-2">
+                                    <Form.Label> Select Main Course</Form.Label><br></br>
+                                    <Form.Select className='form-control' onChange={(e) => getPrivateSub(e.target.value)}>
+                                        <option value="">Choose The Main Course  </option>
+                                        {courseDetails.course.length > 0 ? courseDetails.course.map((data, i) => {
+                                            return (
+                                                <option value={data._id}>{data.courseName}</option>
+                                            )
+                                        }) : <option value="None">No Category Available</option>}
+
+                                    </Form.Select>
+                                </Form.Group>
+
+                                <Form.Group className="m-2 pl-2">
+                                    <Form.Label> Select Your Sub Course For Video Adding</Form.Label><br></br>
+                                    <Form.Select className='form-control' onChange={handleChange('subCourseId', 'updateSub')}>
+                                        <option value="">Choose The Sub-Course  </option>
+                                        {privateSub.length > 0 ? privateSub.map((data, i) => {
+                                            return (
+                                                <option value={data._id}>{data.subCourseName}</option>
+                                            )
+                                        }) : <option value="">No Category Available</option>}
+
+                                    </Form.Select>
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="formBasicEmail">
+                                    <Form.Label>Video Name</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter Name of Video" onChange={handleChange('vimeoName', 'updateSub')} required />
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="formBasicEmail">
+                                    <Form.Label>Video ID</Form.Label>
+                                    <Form.Control type="number" placeholder="Enter Vimeo Id (9 Digits)" onChange={handleChange('vimeoId', 'updateSub')} required />
+                                    <Form.Text className="text-muted">
+                                        Please Be Aware of The Vimeo ID & Name. There is no Edit Option For Now
+                                    </Form.Text>
+                                </Form.Group>
+                            </Form>
+
+                            <Row className="text-center" style={{ justifyContent: "center" }}>
+                                <Button variant="primary" type="submit" className='text-center w-25' onClick={updateSubCourse}>
+                                    Submit
+                                </Button>
+                            </Row>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setUpdateShow(!updateShow)}>
+                                Close
+                            </Button>
+
+                        </Modal.Footer>
+                    </Modal>
+
                     <Modal show={addShow} onHide={() => setAddShow(!addShow)}>
                         <Modal.Header closeButton>
                             <Modal.Title>Create a New Sub Course</Modal.Title>
@@ -194,19 +258,21 @@ function SubCourse() {
                                 </Form.Group>
                             </Form>
 
-                            <Button variant="primary" type="submit" onClick={createSubCourse}>
-                                Submit
-                            </Button>
+                            <Row className="text-center" style={{ justifyContent: "center" }}>
+                                <Button variant="primary" type="submit" className='text-center w-25' onClick={createSubCourse}>
+                                    Submit
+                                </Button>
+                            </Row>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={() => setAddShow(!addShow)}>
                                 Close
                             </Button>
-                            {/* <Button variant="primary" type="submit" onClick={addNewAdmin}>
-    Submit
-  </Button> */}
+
                         </Modal.Footer>
                     </Modal>
+
+
 
 
 
@@ -230,9 +296,9 @@ function SubCourse() {
                                             <th scope="row">{i + 1}</th>
                                             <td>{data.subCourseName}</td>
                                             <td>{data.mainCourseId.courseName}</td>
-                                            <td><ul style={{margin:"0px"}}>{data.videoList.map((vid, i) => {
+                                            <td><ul style={{ margin: "0px",paddingLeft:"1em" }}>{data.videoList.map((vid, i) => {
                                                 return (
-                                                    <li>{vid.videoId + "  - " + vid.videoName}</li>
+                                                    <li className='text-left'>{vid.videoId + "  - " + vid.videoName}</li>
                                                 )
                                             })}</ul></td>
 

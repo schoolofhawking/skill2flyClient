@@ -1,8 +1,39 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { courseAction } from '../../../redux/rootActions'
 import Footer from '../Footer/Footer'
 import Navbar from '../NavBar/Navbar'
 
 export default function CourseList() {
+
+    const courseDetails = useSelector(state => state.courseData)
+    const userData = useSelector((state) => state.userData);
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (courseDetails.course.length < 1) {
+            loadCourseData();
+        }
+
+    }, [])
+    const loadCourseData = async () => {
+        axios.get(process.env.REACT_APP_SERVER + '/getCourses', {
+            headers: {
+                authorization: "Bearer " + userData.userJwt,
+            },
+        }).then((response) => {
+            if (response.data.error == false) {
+                let courseData = response.data.data.reverse()
+                //setCourse(courseData)
+                let data = {
+                    courseData
+                }
+                dispatch(courseAction(data))
+            }
+        })
+
+    }
     return (
         <div>
             <Navbar />
@@ -29,7 +60,7 @@ export default function CourseList() {
                                     <li><a className="active" href="#grid" data-toggle="tab"><i className="icon_grid-2x2" />Grid</a></li>
                                     <li><a href="#list" data-toggle="tab"><i className="icon_menu" />List</a></li>
                                 </ul>
-                                <div className="sorting">
+                                <div className="sorting" style={{display:"none"}}>
                                     <p>Sort by:</p>
                                     <select name="orderby" className="orderby">
                                         <option value="menu_order" selected="selected">Default</option>
@@ -46,7 +77,7 @@ export default function CourseList() {
                                 {/* Grid Tab */}
                                 <div className="tab-pane fade show in active" id="grid" role="tabpanel">
                                     {/* Filter Title */}
-                                    <ul className="shaf-filter course-filter">
+                                    <ul className="shaf-filter course-filter" style={{display:"none"}}>
                                         <li className="active" data-group="all">All</li>
                                         <li data-group="development">Web Development</li>
                                         <li data-group="architecture">Architecture</li>

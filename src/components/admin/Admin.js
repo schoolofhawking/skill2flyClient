@@ -16,6 +16,8 @@ export default function Admin() {
                 <Route path="/admin/category"><Sidebar /></Route>
                 <Route path="/admin/manageAdmin"><Sidebar /></Route>
                 <Route path="/admin/courses"><Sidebar /></Route>
+                <Route path="/admin/subCourse"><Sidebar /></Route>
+                <Route path="/admin/editCourse/:id"><Sidebar /></Route>
                 {/* <Route path="/admin/*"><Error /></Route> */}
             </Switch>
         </div>

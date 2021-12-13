@@ -82,7 +82,7 @@ function CourseManagement() {
 
     const editCourse = async (id) => {
 
-        history.push('/admin/editCourse')
+        history.push('/admin/editCourse/'+id)
 
         //the course data is present in redux..filter the course from redux and put in the edit modal popup...
 
@@ -287,7 +287,7 @@ function CourseManagement() {
 
 
 
-                    <table class="table" id="userTable">
+                    <table class="table table-striped" id="userTable">
 
                         <thead>
                             <tr>

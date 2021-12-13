@@ -52,6 +52,7 @@ function CourseCategoryManagement() {
 
   const handleChange = (name) => async (event) => {
     setFieldValues({ ...fieldValues, [name]: event.target.value })
+    
   }
   const submitCategory=async()=>{
 

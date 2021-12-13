@@ -9,6 +9,8 @@ import { adminData as adminAction } from "../../../redux/rootActions";
 import AdminManagement from "../AdminManagement/AdminManagement";
 import CourseCategoryManagement from "../CourseCategoryManagement/CourseCategoryManagement";
 import CourseManagement from "../CourseManagement/CourseManagement";
+import EditCourse from "../CourseManagement/EditCourse";
+import SubCourse from "../SubCourse/SubCourse";
 import UserManagement from "../UserManagement/UserManagement";
 import './Sidebar.css'
 
@@ -161,6 +163,12 @@ export default function Sidebar() {
                         <span>Course Management</span>
                       </Link>
 
+                      <Link to="/admin/subCourse" className="sideElement">
+                        <i className="far fa-gem" />
+                        <span>Sub-Course Manage</span>
+                      </Link>
+
+
                       <Link to="/admin/category" className="sideElement">
                         <i className="fas fa-sitemap" />
                         <span>Category Management</span>
@@ -220,6 +228,8 @@ export default function Sidebar() {
                 <Route path="/admin/manageAdmin"> <AdminManagement /></Route>
                 <Route path="/admin/courses"><CourseManagement /></Route>
                 <Route path="/admin/category"><CourseCategoryManagement /></Route>
+                <Route path="/admin/subCourse"><SubCourse /></Route>
+                <Route path="/admin/editCourse/:id"><EditCourse /></Route>
               </Route>
             </Switch>
 

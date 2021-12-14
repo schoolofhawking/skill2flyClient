@@ -24,7 +24,8 @@ function SubCourse() {
     const [updateSub, setUpdateSub] = useState({
         subCourseId: '',
         vimeoId: '',
-        vimeoName: ''
+        vimeoName: '',
+        subDuration:''
     })
 
 
@@ -73,7 +74,8 @@ function SubCourse() {
                 }
             );
             if (data) {
-                setSubCourse(data.data);
+                console.log(data.data,"sub course ");
+                setSubCourse(data.data.reverse());
             }
         } catch (err) {
             toast.error("something went wrong");
@@ -211,6 +213,10 @@ function SubCourse() {
                                     <Form.Control type="text" placeholder="Enter Name of Video" onChange={handleChange('vimeoName', 'updateSub')} required />
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="formBasicEmail">
+                                    <Form.Label>Video Duration</Form.Label>
+                                    <Form.Control type="text" placeholder="Duration (Eg: 3Hr 40Min)" onChange={handleChange('subDuration', 'updateSub')} required />
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="formBasicEmail">
                                     <Form.Label>Video ID</Form.Label>
                                     <Form.Control type="number" placeholder="Enter Vimeo Id (9 Digits)" onChange={handleChange('vimeoId', 'updateSub')} required />
                                     <Form.Text className="text-muted">
@@ -298,7 +304,7 @@ function SubCourse() {
                                             <td>{data.mainCourseId.courseName}</td>
                                             <td><ul style={{ margin: "0px",paddingLeft:"1em" }}>{data.videoList.map((vid, i) => {
                                                 return (
-                                                    <li className='text-left'>{vid.videoId + "  - " + vid.videoName}</li>
+                                                    <li className='text-left'>{vid.videoId + "  - " + vid.videoName+"  ( "}{vid.videoDuration?vid.videoDuration+" )":"No Duration"+" )"}</li>
                                                 )
                                             })}</ul></td>
 

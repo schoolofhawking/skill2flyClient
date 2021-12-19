@@ -18,10 +18,10 @@ function User() {
                 <Route path="/" exact ><Index /> </Route>
                 <Route path="/signup"><Signup login={false} /></Route>
                 <Route path="/login"><Signup login={true} /></Route>
-                <Route path="/singlecourse"><SingleCourse /></Route>
                 <Route path="/course"><CourseList /></Route>
                 <Route path="/contact"><Contact /></Route>
                 <Route path="/profile"><Profile /></Route>
+                <Route path="/singlecourse/:id"><SingleCourse /></Route>
                 {/* <Route path="/*"><Error /></Route>  */}
             </Switch>
 

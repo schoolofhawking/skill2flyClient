@@ -2,14 +2,14 @@ import React from 'react'
 import Navbar from '../NavBar/Navbar'
 
 function SingleCourse() {
-    return (
+  return (
 
-        <div>
-            <Navbar/>
+    <div>
+      <Navbar />
 
 
-                  {/* Banner Start */}
-      <section className="page-banner" style={{backgroundImage: 'url(assets/images/banner5.jpg)'}}>
+      {/* Banner Start */}
+      <section className="page-banner" style={{ backgroundImage: 'url(assets/images/banner5.jpg)' }}>
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -20,10 +20,10 @@ function SingleCourse() {
             </div>
           </div>
         </div>
-      </section>  
+      </section>
       {/* Banner End */}
-      
-            <section className="course-details-section">
+
+      <section className="course-details-section">
         <div className="container">
           <div className="row">
             <div className="col-lg-9">
@@ -32,7 +32,7 @@ function SingleCourse() {
                   <h4>Using Creative Problem Solving</h4>
                   <div className="course-meta">
                     <div className="author">
-                      <img src="assets/images/home3/course/a1.png" alt="" />
+                      <img src="/assets/images/home3/course/a1.png" alt="" />
                       <span>Teacher</span>
                       <a href="#">Anthony</a>
                     </div>
@@ -55,7 +55,7 @@ function SingleCourse() {
                   </div>
                 </div>
                 <div className="sc-thumb">
-                  <img src="assets/images/single-course/1.jpg" alt="" />
+                  <img src="/assets/images/single-course/1.jpg" alt="" />
                 </div>
                 <div className="course-tab-wrapper">
                   <ul className="course-tab-btn nav nav-tabs">
@@ -71,7 +71,7 @@ function SingleCourse() {
                       <div className="overview-content">
                         <h4>Course Description</h4>
                         <p>
-                          You mug tickety-boo bite your arm off David bamboozled easy peasy in my flat bugger argy-bargy, Oxford starkers barney bender haggle barmy A bit of how's your father, pear shaped arse over tit dropped a clanger cup of char bloke mufty pukka. He legged it some dodgy chav pardon you vagabond old bubble and squeak posh young delinquent mufty Charles quaint, bloke spend a penny sloshed Harry car boot bugger all mate bamboozled blatant cack, skive off hanky panky cheeky chap hotpot burke such a fibber cheeky bugger blag. Chinwag Eaton owt to do with me Charles excuse my French cor blimey guvnor bender give us a bell gosh bamboozled, wind up in my flat David bog lurgy the full monty cup of char cockup, brolly bevvy super bubble and squeak well starkers cobblers smashing. Only a quid amongst well argy-bargy hotpot bugger all mate chimney pot cup of char do one barmy fantastic, Eaton bloke barney blower haggle cheesed off Elizabeth daft. 
+                          You mug tickety-boo bite your arm off David bamboozled easy peasy in my flat bugger argy-bargy, Oxford starkers barney bender haggle barmy A bit of how's your father, pear shaped arse over tit dropped a clanger cup of char bloke mufty pukka. He legged it some dodgy chav pardon you vagabond old bubble and squeak posh young delinquent mufty Charles quaint, bloke spend a penny sloshed Harry car boot bugger all mate bamboozled blatant cack, skive off hanky panky cheeky chap hotpot burke such a fibber cheeky bugger blag. Chinwag Eaton owt to do with me Charles excuse my French cor blimey guvnor bender give us a bell gosh bamboozled, wind up in my flat David bog lurgy the full monty cup of char cockup, brolly bevvy super bubble and squeak well starkers cobblers smashing. Only a quid amongst well argy-bargy hotpot bugger all mate chimney pot cup of char do one barmy fantastic, Eaton bloke barney blower haggle cheesed off Elizabeth daft.
                         </p>
                         <p>
                           Chimney pot barmy easy peasy he lost his bottle nancy boy old cor blimey guvnor bog tickety-boo geeza, Richard on your bike mate down the pub are you taking the piss cack super hunky-dory haggle I spend a penny, hanky panky zonked cobblers spiffing good time cup of tea in my flat faff about the full monty.
@@ -266,7 +266,7 @@ function SingleCourse() {
                     <div className="tab-pane fade in show active" id="instructors" role="tabpanel">
                       <div className="teacher-item-3">
                         <div className="teacher-thumb">
-                          <img src="assets/images/single-course/i1.jpg" alt="" />
+                          <img src="/assets/images/single-course/i1.jpg" alt="" />
                         </div>
                         <div className="teacher-meta">
                           <h5><a href="#">Dianne Ameter</a></h5>
@@ -283,7 +283,7 @@ function SingleCourse() {
                       </div>
                       <div className="teacher-item-3">
                         <div className="teacher-thumb">
-                          <img src="assets/images/single-course/i2.jpg" alt="" />
+                          <img src="/assets/images/single-course/i2.jpg" alt="" />
                         </div>
                         <div className="teacher-meta">
                           <h5><a href="#">Hugh Saturation</a></h5>
@@ -300,7 +300,7 @@ function SingleCourse() {
                       </div>
                       <div className="teacher-item-3">
                         <div className="teacher-thumb">
-                          <img src="assets/images/single-course/i3.jpg" alt="" />
+                          <img src="/assets/images/single-course/i3.jpg" alt="" />
                         </div>
                         <div className="teacher-meta">
                           <h5><a href="#">Jim Séchen</a></h5>
@@ -342,35 +342,35 @@ function SingleCourse() {
                               <div className="rate-item">
                                 <p>5</p>
                                 <div className="progress">
-                                  <div className="progress-bar" role="progressbar" style={{width: '100%'}} aria-valuenow={100} aria-valuemin={0} aria-valuemax={100} />
+                                  <div className="progress-bar" role="progressbar" style={{ width: '100%' }} aria-valuenow={100} aria-valuemin={0} aria-valuemax={100} />
                                 </div>
                                 <span>100%</span>
                               </div>
                               <div className="rate-item">
                                 <p>4</p>
                                 <div className="progress">
-                                  <div className="progress-bar" role="progressbar" style={{width: '30%'}} aria-valuenow={30} aria-valuemin={0} aria-valuemax={30} />
+                                  <div className="progress-bar" role="progressbar" style={{ width: '30%' }} aria-valuenow={30} aria-valuemin={0} aria-valuemax={30} />
                                 </div>
                                 <span>30%</span>
                               </div>
                               <div className="rate-item">
                                 <p>3</p>
                                 <div className="progress">
-                                  <div className="progress-bar" role="progressbar" style={{width: '20%'}} aria-valuenow={20} aria-valuemin={0} aria-valuemax={20} />
+                                  <div className="progress-bar" role="progressbar" style={{ width: '20%' }} aria-valuenow={20} aria-valuemin={0} aria-valuemax={20} />
                                 </div>
                                 <span>20%</span>
                               </div>
                               <div className="rate-item">
                                 <p>2</p>
                                 <div className="progress">
-                                  <div className="progress-bar" role="progressbar" style={{width: '10%'}} aria-valuenow={10} aria-valuemin={0} aria-valuemax={10} />
+                                  <div className="progress-bar" role="progressbar" style={{ width: '10%' }} aria-valuenow={10} aria-valuemin={0} aria-valuemax={10} />
                                 </div>
                                 <span>10%</span>
                               </div>
                               <div className="rate-item">
                                 <p>1</p>
                                 <div className="progress">
-                                  <div className="progress-bar" role="progressbar" style={{width: '0%'}} aria-valuenow={0} aria-valuemin={0} aria-valuemax={0} />
+                                  <div className="progress-bar" role="progressbar" style={{ width: '0%' }} aria-valuenow={0} aria-valuemin={0} aria-valuemax={0} />
                                 </div>
                                 <span>0%</span>
                               </div>
@@ -382,7 +382,7 @@ function SingleCourse() {
                           <ol>
                             <li>
                               <div className="single-comment">
-                                <img src="assets/images/single-course/r1.png" alt="" />
+                                <img src="/assets/images/single-course/r1.png" alt="" />
                                 <h5><a href="#">Dianne Ameter</a></h5>
                                 <span>August 8, 2012 at 9:22 am</span>
                                 <div className="comment">
@@ -402,7 +402,7 @@ function SingleCourse() {
                             </li>
                             <li>
                               <div className="single-comment">
-                                <img src="assets/images/single-course/r2.png" alt="" />
+                                <img src="/assets/images/single-course/r2.png" alt="" />
                                 <h5><a href="#">Hugh Saturation</a></h5>
                                 <span>March 14, 2012 at 10:13 am</span>
                                 <div className="comment">
@@ -422,7 +422,7 @@ function SingleCourse() {
                             </li>
                             <li>
                               <div className="single-comment">
-                                <img src="assets/images/single-course/r3.png" alt="" />
+                                <img src="/assets/images/single-course/r3.png" alt="" />
                                 <h5><a href="#">Jim Séchen</a></h5>
                                 <span>April 16, 2012 at 12:15 pm</span>
                                 <div className="comment">
@@ -496,14 +496,14 @@ function SingleCourse() {
                   <div className="related-course-slider owl-carousel">
                     <div className="feature-course-item-4">
                       <div className="fcf-thumb">
-                        <img src="assets/images/profile/1.jpg" alt="" />
+                        <img src="/assets/images/profile/1.jpg" alt="" />
                         <a className="enroll" href="#">Enroll Now</a>
                       </div>
                       <div className="fci-details">
                         <a href="#" className="c-cate"><i className="icon_tag_alt" />Computer Science</a>
                         <h4><a href="single-course.html">Using Creative Problem Solving</a></h4>
                         <div className="author">
-                          <img src="assets/images/home3/course/a1.png" alt="" />
+                          <img src="/assets/images/home3/course/a1.png" alt="" />
                           <a href="#">Anthony</a>
                         </div>
                         <div className="price-rate">
@@ -520,14 +520,14 @@ function SingleCourse() {
                     </div>
                     <div className="feature-course-item-4">
                       <div className="fcf-thumb">
-                        <img src="assets/images/profile/2.jpg" alt="" />
+                        <img src="/assets/images/profile/2.jpg" alt="" />
                         <a className="enroll" href="#">Enroll Now</a>
                       </div>
                       <div className="fci-details">
                         <a href="#" className="c-cate"><i className="icon_tag_alt" />Art &amp; Design</a>
                         <h4><a href="single-course.html">The Art of Black and White Photography</a></h4>
                         <div className="author">
-                          <img src="assets/images/home3/course/a2.png" alt="" />
+                          <img src="/assets/images/home3/course/a2.png" alt="" />
                           <a href="#">Giles Posture</a>
                         </div>
                         <div className="price-rate">
@@ -544,14 +544,14 @@ function SingleCourse() {
                     </div>
                     <div className="feature-course-item-4">
                       <div className="fcf-thumb">
-                        <img src="assets/images/profile/3.jpg" alt="" />
+                        <img src="/assets/images/profile/3.jpg" alt="" />
                         <a className="enroll" href="#">Enroll Now</a>
                       </div>
                       <div className="fci-details">
                         <a href="#" className="c-cate"><i className="icon_tag_alt" />Business Study</a>
                         <h4><a href="single-course.html">Learning jQuery mobile for Beginners</a></h4>
                         <div className="author">
-                          <img src="assets/images/home3/course/a3.png" alt="" />
+                          <img src="/assets/images/home3/course/a3.png" alt="" />
                           <a href="#">Hans Down</a>
                         </div>
                         <div className="price-rate">
@@ -568,14 +568,14 @@ function SingleCourse() {
                     </div>
                     <div className="feature-course-item-4">
                       <div className="fcf-thumb">
-                        <img src="assets/images/profile/4.jpg" alt="" />
+                        <img src="/assets/images/profile/4.jpg" alt="" />
                         <a className="enroll" href="#">Enroll Now</a>
                       </div>
                       <div className="fci-details">
                         <a href="#" className="c-cate"><i className="icon_tag_alt" />Data Science</a>
                         <h4><a href="single-course.html">Buddhism and modern Psychology</a></h4>
                         <div className="author">
-                          <img src="assets/images/home3/course/a4.png" alt="" />
+                          <img src="/assets/images/home3/course/a4.png" alt="" />
                           <a href="#">Richard Tea</a>
                         </div>
                         <div className="price-rate">
@@ -592,14 +592,14 @@ function SingleCourse() {
                     </div>
                     <div className="feature-course-item-4">
                       <div className="fcf-thumb">
-                        <img src="assets/images/profile/5.jpg" alt="" />
+                        <img src="/assets/images/profile/5.jpg" alt="" />
                         <a className="enroll" href="#">Enroll Now</a>
                       </div>
                       <div className="fci-details">
                         <a href="#" className="c-cate"><i className="icon_tag_alt" />Web Development</a>
                         <h4><a href="single-course.html">Making music with Other people</a></h4>
                         <div className="author">
-                          <img src="assets/images/home3/course/a6.png" alt="" />
+                          <img src="/assets/images/home3/course/a6.png" alt="" />
                           <a href="#">Hilary Ouse</a>
                         </div>
                         <div className="price-rate">
@@ -636,14 +636,14 @@ function SingleCourse() {
                 <aside className="widget">
                   <h3 className="widget-title">Latest Courses</h3>
                   <div className="latest-course">
-                    <a href="single-course.html"><img src="assets/images/course/1.jpg" alt="" /></a>
+                    <a href="single-course.html"><img src="/assets/images/course/1.jpg" alt="" /></a>
                     <h5><a href="single-course.html">Using creative problem Solving</a></h5>
                     <div className="course-price">
                       $24.00
                     </div>
                   </div>
                   <div className="latest-course">
-                    <a href="single-course.html"><img src="assets/images/course/2.jpg" alt="" /></a>
+                    <a href="single-course.html"><img src="/assets/images/course/2.jpg" alt="" /></a>
                     <h5><a href="single-course.html">Fundamentals of UI Design</a></h5>
                     <div className="course-price">
                       Free
@@ -651,7 +651,7 @@ function SingleCourse() {
                     </div>
                   </div>
                   <div className="latest-course">
-                    <a href="single-course.html"><img src="assets/images/course/3.jpg" alt="" /></a>
+                    <a href="single-course.html"><img src="/assets/images/course/3.jpg" alt="" /></a>
                     <h5><a href="single-course.html">Making music Other people</a></h5>
                     <div className="course-price">
                       $46
@@ -659,7 +659,7 @@ function SingleCourse() {
                     </div>
                   </div>
                   <div className="latest-course">
-                    <a href="single-course.html"><img src="assets/images/course/4.jpg" alt="" /></a>
+                    <a href="single-course.html"><img src="/assets/images/course/4.jpg" alt="" /></a>
                     <h5><a href="single-course.html">Learning jQuery mobile.</a></h5>
                     <div className="course-price">
                       $74
@@ -672,8 +672,8 @@ function SingleCourse() {
           </div>
         </div>
       </section>
-        </div>
-    )
+    </div>
+  )
 }
 
 export default SingleCourse

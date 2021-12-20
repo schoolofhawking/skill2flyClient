@@ -47,8 +47,8 @@ function Navbar() {
             <nav className="navbar navbar-expand-lg">
               {/* logo Start*/}
               <a className="navbar-brand" href="index.html">
-                <img src="assets/images/logo4.png" alt="" />
-                <img className="sticky-logo" src="assets/images/logo4.png" alt="" />
+                <img src="/assets/images/logo4.png" alt="" />
+                <img className="sticky-logo" src="/assets/images/logo4.png" alt="" />
               </a>
               {/* logo End*/}
               {/* Moblie Btn Start */}

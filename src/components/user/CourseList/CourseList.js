@@ -6,6 +6,8 @@ import { useHistory } from 'react-router-dom'
 import { courseAction } from '../../../redux/rootActions'
 import Footer from '../Footer/Footer'
 import Navbar from '../NavBar/Navbar'
+import Loader from "react-loader-spinner";
+import { useState } from 'react'
 
 export default function CourseList() {
 
@@ -13,7 +15,7 @@ export default function CourseList() {
     const userData = useSelector((state) => state.userData);
     const dispatch = useDispatch()
     const history = useHistory()
-
+const [loading,setLoading]=useState(false)
     useEffect(() => {
         if (courseDetails.course.length < 1) {
             loadCourseData();
@@ -21,6 +23,7 @@ export default function CourseList() {
 
     }, [])
     const loadCourseData = async () => {
+setLoading(true)
         axios.get(process.env.REACT_APP_SERVER + '/getCourses', {
             headers: {
                 authorization: "Bearer " + userData.userJwt,
@@ -33,6 +36,7 @@ export default function CourseList() {
                     courseData
                 }
                 dispatch(courseAction(data))
+                setLoading(false)
             }
         })
 
@@ -80,6 +84,8 @@ export default function CourseList() {
                                 </div>
                             </div>
                             {/* Tab Content */}
+
+                         {!loading?   
                             <div className="tab-content">
                                 {/* Grid Tab */}
                                 <div className="tab-pane fade show in active" id="grid" role="tabpanel">
@@ -94,11 +100,11 @@ export default function CourseList() {
                                     {/* Filter Title */}
                                     {/* Filter Content */}
                                     {/* data-groups="[&quot;all&quot;, &quot;science&quot;, &quot;engineering&quot;]" */}
-                                    <div className="row shafull-container">
+                                    <div className="row ">
                                         {courseDetails.course.length > 0 ? courseDetails.course.map((data, i) => {
                                             return (
                                                 <div className="col-lg-4 col-md-6 shaf-item" >
-                                                    <div className="feature-course-item">
+                                                    <div className="feature-course-item" style={{ cursor: "pointer" }} onClick={() => courseClick(data._id)}>
                                                         <div className="flipper">
                                                             <div className="front">
                                                                 <div className="fcf-thumb">
@@ -116,7 +122,7 @@ export default function CourseList() {
                                                                     <img src={process.env.REACT_APP_S3_COURSE_BUCKET + data._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "assets/images/home/course/1.png" }} alt="" />
                                                                 </div>
                                                                 <a target="_blank" href={'https://www.google.com/search?q=' + data.courseCategory.categoryName} className="c-cate">{data.courseCategory.categoryName}</a>
-                                                                <h4 style={{ cursor: "pointer" }} onClick={() => courseClick(data._id)}>{data.courseName}</h4>
+                                                                <h4>{data.courseName}</h4>
                                                                 {/* <div className="ratings">
                                                                     <i className="icon_star" />
                                                                     <i className="icon_star" />
@@ -168,12 +174,12 @@ export default function CourseList() {
                                 <div className="tab-pane fade in" id="list" role="tabpanel">
                                     {courseDetails.course.length > 0 ? courseDetails.course.map((data, i) => {
                                         return (
-                                            <div className="course-item-3 ci-3-color">
+                                            <div className="course-item-3 ci-3-color"  style={{ cursor: "pointer" }} onClick={() => courseClick(data._id)}>
                                                 <div className="ci-thumb" style={{ display: "flex", justifyContent: "center", flexDirection: "column" }}>
                                                     <img style={{ width: "400px", height: "auto" }} src={process.env.REACT_APP_S3_COURSE_BUCKET + data._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "assets/images/home/course/1.png" }} alt="" />
                                                     <a style={{ top: "auto" }} target="_blank" href={'https://www.google.com/search?q=' + data.courseCategory.categoryName} className="c-cate">{data.courseCategory.categoryName}</a>
                                                 </div>
-                                                <div className="course-details">
+                                                <div className="course-details" >
                                                     <img className="line-bg" src="assets/images/home3/line.jpg" alt="" />
                                                     <div className="fcf-bottom">
                                                         <a ><i className="icon_book_alt" />{data.subCourses.length + " Sections"}</a>
@@ -223,6 +229,10 @@ export default function CourseList() {
                                 </div>
                                 {/* Grid Tab */}
                             </div>
+                            :<>  <Loader  type="ThreeDots" 
+                            color="#5838fc"
+                            height={100}
+                            width={100}/></>}
                             {/* Tab Content */}
                         </div>
                     </div>

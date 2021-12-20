@@ -1,8 +1,40 @@
-import React from 'react'
+import React, { useEffect ,useState} from 'react'
 import Navbar from '../NavBar/Navbar'
+import { useParams, useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux'
 
 function SingleCourse() {
-  
+  const params = useParams();
+  const courseDetails = useSelector(state => state.courseData)
+  const [courseDetail, setCourseDetail] = useState("")
+
+useEffect(()=>{
+
+  loadCourse(params.id)
+
+
+
+},[])
+
+
+
+
+
+const loadCourse = async () => {
+
+  console.log(courseDetails);
+  await courseDetails.course.filter(course => course._id == params.id).map(data => {
+    
+
+    setCourseDetail(data)
+
+  })
+}
+useEffect(()=>{
+
+  if(courseDetail)
+  console.log("",courseDetail);
+},[courseDetail])
   return (
 
     <div>
@@ -23,6 +55,7 @@ function SingleCourse() {
         </div>
       </section>
       {/* Banner End */}
+      {courseDetail?<>
 
       <section className="course-details-section">
         <div className="container">
@@ -30,19 +63,19 @@ function SingleCourse() {
             <div className="col-lg-9">
               <div className="single-course-area">
                 <div className="course-top">
-                  <h4>Using Creative Problem Solving</h4>
+                  <h4>{courseDetail.courseName}</h4>
                   <div className="course-meta">
                     <div className="author">
                       <img src="/assets/images/home3/course/a1.png" alt="" />
-                      <span>Teacher</span>
-                      <a href="#">Anthony</a>
+                      <span>Author</span>
+                      <a href="#">{courseDetail.author}</a>
                     </div>
                     <div className="categories">
                       <span>Categories:</span>
-                      <a href="#">Art &amp; Design</a>
+                      <a href="#">{courseDetail.courseCategory.categoryName} </a>
                     </div>
                     <div className="ratings">
-                      <span>4.5 (9 Reviews)</span>
+                      <span>4.5 (9 Reviews(Not actual!!!!!!))</span>
                       <i className="icon_star" />
                       <i className="icon_star" />
                       <i className="icon_star" />
@@ -51,8 +84,8 @@ function SingleCourse() {
                     </div>
                   </div>
                   <div className="course-price">
-                    $75.00
-                    <span>$92.00</span>
+                  ₹  {courseDetail.discountPrice}
+                    <span>₹{courseDetail.actualPrice}</span>
                   </div>
                 </div>
                 <div className="sc-thumb">
@@ -624,12 +657,12 @@ function SingleCourse() {
                 <aside className="widget">
                   <div className="info-course">
                     <ul>
-                      <li><i className="icon_house_alt" /><span>Instructor: </span> Justin Case</li>
-                      <li><i className="icon_document_alt" /><span>Lectures: </span> 14</li>
-                      <li><i className="icon_clock_alt" /><span>Duration: </span> 10 weeks</li>
-                      <li><i className="icon_profile" /><span>Enrolled: </span> 75 students</li>
-                      <li><i className="icon_cog" /><span>Language: </span> English</li>
-                      <li><i className="icon_calendar" /><span>Deadline: </span> 16 April 2020</li>
+                      <li><i className="icon_house_alt" /><span>Instructor: </span> {courseDetail.author}</li>
+                      <li><i className="icon_document_alt" /><span>Lectures: </span> {courseDetail.subCourses.length}</li>
+                      <li><i className="icon_clock_alt" /><span>Duration: </span> {courseDetail.duration}</li>
+                      {/* <li><i className="icon_profile" /><span>Enrolled: </span> 75 students</li> */}
+                      {courseDetail.language?<>  <li><i className="icon_cog" /><span>Language: </span> </li>courseDetail.language</>:<></>}
+                      {/* <li><i className="icon_calendar" /><span>Deadline: </span> 16 April 2020</li> */}
                     </ul>
                     <a className="bisylms-btn" href="#">Enroll Course</a>
                   </div>
@@ -673,6 +706,8 @@ function SingleCourse() {
           </div>
         </div>
       </section>
+
+      </>:<></>}
     </div>
   )
 }

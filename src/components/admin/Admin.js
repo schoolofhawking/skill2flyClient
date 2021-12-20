@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Error from '../Error'
 import AdminLogin from './AdminLogin/AdminLogin'
 import Sidebar from './Layout/Sidebar'
+import ManageQuestion from './QuestionManagement/ManageQuestion'
 import UserManagement from './UserManagement/UserManagement'
 
 
@@ -18,6 +19,8 @@ export default function Admin() {
                 <Route path="/admin/courses"><Sidebar /></Route>
                 <Route path="/admin/subCourse"><Sidebar /></Route>
                 <Route path="/admin/editCourse/:id"><Sidebar /></Route>
+                <Route path="/admin/questions"><Sidebar /></Route>
+
                 {/* <Route path="/admin/*"><Error /></Route> */}
             </Switch>
         </div>

@@ -12,6 +12,7 @@ import CourseManagement from "../CourseManagement/CourseManagement";
 import EditCourse from "../CourseManagement/EditCourse";
 import SubCourse from "../SubCourse/SubCourse";
 import UserManagement from "../UserManagement/UserManagement";
+import MangeQuestion from '../QuestionManagement/ManageQuestion'
 import './Sidebar.css'
 
 export default function Sidebar() {
@@ -173,6 +174,10 @@ export default function Sidebar() {
                         <i className="fas fa-sitemap" />
                         <span>Category Management</span>
                       </Link>
+                      <Link to="/admin/questions" className="sideElement">
+                        <i className="fas fa-sitemap" />
+                        <span>Question Management</span>
+                      </Link>
                       {/* <a href="#" className="sideElement">
                         <i className="fa fa-calendar" />
                         <span>Calendar</span>
@@ -230,6 +235,7 @@ export default function Sidebar() {
                 <Route path="/admin/category"><CourseCategoryManagement /></Route>
                 <Route path="/admin/subCourse"><SubCourse /></Route>
                 <Route path="/admin/editCourse/:id"><EditCourse /></Route>
+                <Route path="/admin/questions"><MangeQuestion /></Route>
               </Route>
             </Switch>
 

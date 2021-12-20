@@ -2,17 +2,17 @@ import React, { useEffect ,useState} from 'react'
 import Navbar from '../NavBar/Navbar'
 import { useParams, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
 
 function SingleCourse() {
   const params = useParams();
   const courseDetails = useSelector(state => state.courseData)
   const [courseDetail, setCourseDetail] = useState("")
+  const userData = useSelector((state) => state.userData);
 
 useEffect(()=>{
 
   loadCourse(params.id)
-
-
 
 },[])
 
@@ -20,15 +20,30 @@ useEffect(()=>{
 
 
 
-const loadCourse = async () => {
+const loadCourse = async (id) => {
 
   console.log(courseDetails);
-  await courseDetails.course.filter(course => course._id == params.id).map(data => {
+
+  axios.post(process.env.REACT_APP_SERVER + '/getSingleCourse',{id:id}, {
+    headers: {
+        authorization: "Bearer " + userData.userJwt,
+    },
+}).then((response) => {
+
+
+    // if (response.data.error == false) {
+    //     let courseData = response.data.data.reverse()
+    //     //setCourse(courseData)
+    //     // setLoading(false)
+    // }
+})
+
+// await courseDetails.course.filter(course => course._id == params.id).map(data => {
     
 
-    setCourseDetail(data)
+//     setCourseDetail(data)
 
-  })
+//   })
 }
 useEffect(()=>{
 
@@ -95,29 +110,28 @@ useEffect(()=>{
                   <ul className="course-tab-btn nav nav-tabs">
                     <li><a href="#overview" data-toggle="tab"><i className="icon_ribbon_alt" />Overview</a></li>
                     <li><a href="#curriculum" data-toggle="tab"><i className="icon_book_alt" />Curriculum</a></li>
-                    <li><a className="active" href="#instructors" data-toggle="tab"><i className="icon_profile" />Instructors</a></li>
-                    <li><a href="#reviews" data-toggle="tab"><i className="icon_star" />Reviews</a></li>
+                    {/* <li><a className="active" href="#instructors" data-toggle="tab"><i className="icon_profile" />Instructors</a></li>
+                    <li><a href="#reviews" data-toggle="tab"><i className="icon_star" />Reviews</a></li> */}
                   </ul>
                   {/* Tab Content */}
                   <div className="tab-content">
                     {/* Overview Tab */}
                     <div className="tab-pane fade in" id="overview" role="tabpanel">
                       <div className="overview-content">
-                        <h4>Course Description</h4>
+                        {/* <h4>Course Description</h4>
                         <p>
-                          You mug tickety-boo bite your arm off David bamboozled easy peasy in my flat bugger argy-bargy, Oxford starkers barney bender haggle barmy A bit of how's your father, pear shaped arse over tit dropped a clanger cup of char bloke mufty pukka. He legged it some dodgy chav pardon you vagabond old bubble and squeak posh young delinquent mufty Charles quaint, bloke spend a penny sloshed Harry car boot bugger all mate bamboozled blatant cack, skive off hanky panky cheeky chap hotpot burke such a fibber cheeky bugger blag. Chinwag Eaton owt to do with me Charles excuse my French cor blimey guvnor bender give us a bell gosh bamboozled, wind up in my flat David bog lurgy the full monty cup of char cockup, brolly bevvy super bubble and squeak well starkers cobblers smashing. Only a quid amongst well argy-bargy hotpot bugger all mate chimney pot cup of char do one barmy fantastic, Eaton bloke barney blower haggle cheesed off Elizabeth daft.
+                        {courseDetail.courseDescription}
                         </p>
                         <p>
                           Chimney pot barmy easy peasy he lost his bottle nancy boy old cor blimey guvnor bog tickety-boo geeza, Richard on your bike mate down the pub are you taking the piss cack super hunky-dory haggle I spend a penny, hanky panky zonked cobblers spiffing good time cup of tea in my flat faff about the full monty.
-                        </p>
+                        </p> */}
                         <h4>Course Description</h4>
                         <ul>
                           <li><i className="icon_check_alt2" />Learn The Latest Skills
                             <span>
-                              He lost his bottle starkers up the duff wind up easy peasy cracking goal cheers I butty only a quid he legged it, cuppa the little rotter bevvy bugger all mate spiffing good time.
-                            </span>
+                            {courseDetail.courseDescription}                            </span>
                           </li>
-                          <li><i className="icon_check_alt2" />Earn a Certificate or Degree
+                          {/* <li><i className="icon_check_alt2" />Earn a Certificate or Degree
                             <span>
                               Chimney pot barmy easy peasy he lost his bottle nancy boy old cor blimey guvnor bog tickety-boo geeza, Richard on your bike mate down the pub are you taking.
                             </span>
@@ -126,7 +140,7 @@ useEffect(()=>{
                             <span>
                               Lost the plot plastered he lost his bottle blatant barney butty are you taking the piss porkies me old mucker young delinquent smashing so I said pear shaped cheeky say.
                             </span>
-                          </li>
+                          </li> */}
                         </ul>
                       </div>
                     </div>

@@ -15,7 +15,7 @@ export default function CourseList() {
     const userData = useSelector((state) => state.userData);
     const dispatch = useDispatch()
     const history = useHistory()
-const [loading,setLoading]=useState(false)
+    const [loading, setLoading] = useState(false)
     useEffect(() => {
         if (courseDetails.course.length < 1) {
             loadCourseData();
@@ -23,7 +23,7 @@ const [loading,setLoading]=useState(false)
 
     }, [])
     const loadCourseData = async () => {
-setLoading(true)
+        setLoading(true)
         axios.get(process.env.REACT_APP_SERVER + '/getCourses', {
             headers: {
                 authorization: "Bearer " + userData.userJwt,
@@ -85,45 +85,45 @@ setLoading(true)
                             </div>
                             {/* Tab Content */}
 
-                         {!loading?   
-                            <div className="tab-content">
-                                {/* Grid Tab */}
-                                <div className="tab-pane fade show in active" id="grid" role="tabpanel">
-                                    {/* Filter Title */}
-                                    <ul className="shaf-filter course-filter" style={{ display: "none" }}>
-                                        <li className="active" data-group="all">All</li>
-                                        <li data-group="development">Web Development</li>
-                                        <li data-group="architecture">Architecture</li>
-                                        <li data-group="engineering">Engineering</li>
-                                        <li data-group="science">Data Science</li>
-                                    </ul>
-                                    {/* Filter Title */}
-                                    {/* Filter Content */}
-                                    {/* data-groups="[&quot;all&quot;, &quot;science&quot;, &quot;engineering&quot;]" */}
-                                    <div className="row ">
-                                        {courseDetails.course.length > 0 ? courseDetails.course.map((data, i) => {
-                                            return (
-                                                <div className="col-lg-4 col-md-6 shaf-item" >
-                                                    <div className="feature-course-item" style={{ cursor: "pointer" }} onClick={() => courseClick(data._id)}>
-                                                        <div className="flipper">
-                                                            <div className="front">
-                                                                <div className="fcf-thumb">
-                                                                    <img src={process.env.REACT_APP_S3_COURSE_BUCKET + data._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "assets/images/home/course/2.png" }} alt="" />
+                            {!loading ?
+                                <div className="tab-content">
+                                    {/* Grid Tab */}
+                                    <div className="tab-pane fade show in active" id="grid" role="tabpanel">
+                                        {/* Filter Title */}
+                                        <ul className="shaf-filter course-filter" style={{ display: "none" }}>
+                                            <li className="active" data-group="all">All</li>
+                                            <li data-group="development">Web Development</li>
+                                            <li data-group="architecture">Architecture</li>
+                                            <li data-group="engineering">Engineering</li>
+                                            <li data-group="science">Data Science</li>
+                                        </ul>
+                                        {/* Filter Title */}
+                                        {/* Filter Content */}
+                                        {/* data-groups="[&quot;all&quot;, &quot;science&quot;, &quot;engineering&quot;]" */}
+                                        <div className="row ">
+                                            {courseDetails.course.length > 0 ? courseDetails.course.map((data, i) => {
+                                                return (
+                                                    <div className="col-lg-4 col-md-6 shaf-item" >
+                                                        <div className="feature-course-item" style={{ cursor: "pointer" }} onClick={() => courseClick(data._id)}>
+                                                            <div className="flipper">
+                                                                <div className="front">
+                                                                    <div className="fcf-thumb">
+                                                                        <img src={process.env.REACT_APP_S3_COURSE_BUCKET + data._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "assets/images/home/course/2.png" }} alt="" />
+                                                                    </div>
+                                                                    <p target="_blank" href={'https://www.google.com/search?q=' + data.courseCategory.categoryName}>{data.courseCategory.categoryName}</p>
+                                                                    <h4>{data.courseName}</h4>
+                                                                    <div className="fcf-bottom">
+                                                                        <a><i className="icon_book_alt" />{data.subCourses.length + " Sections"}</a>
+                                                                        <a><i className="far fa-clock" />{data.duration}</a>
+                                                                    </div>
                                                                 </div>
-                                                                <p target="_blank" href={'https://www.google.com/search?q=' + data.courseCategory.categoryName}>{data.courseCategory.categoryName}</p>
-                                                                <h4>{data.courseName}</h4>
-                                                                <div className="fcf-bottom">
-                                                                    <a><i className="icon_book_alt" />{data.subCourses.length + " Sections"}</a>
-                                                                    <a><i className="far fa-clock" />{data.duration}</a>
-                                                                </div>
-                                                            </div>
-                                                            <div className="back">
-                                                                <div className="fcf-thumb">
-                                                                    <img src={process.env.REACT_APP_S3_COURSE_BUCKET + data._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "assets/images/home/course/1.png" }} alt="" />
-                                                                </div>
-                                                                <a target="_blank" href={'https://www.google.com/search?q=' + data.courseCategory.categoryName} className="c-cate">{data.courseCategory.categoryName}</a>
-                                                                <h4>{data.courseName}</h4>
-                                                                {/* <div className="ratings">
+                                                                <div className="back">
+                                                                    <div className="fcf-thumb">
+                                                                        <img src={process.env.REACT_APP_S3_COURSE_BUCKET + data._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "assets/images/home/course/1.png" }} alt="" />
+                                                                    </div>
+                                                                    
+                                                                    <h4>{data.courseName}</h4>
+                                                                    {/* <div className="ratings">
                                                                     <i className="icon_star" />
                                                                     <i className="icon_star" />
                                                                     <i className="icon_star" />
@@ -131,33 +131,34 @@ setLoading(true)
                                                                     <i className="icon_star" />
                                                                     <span>4.5 (1 Reviews)</span>
                                                                 </div> */}
-                                                                <div className="course-price">
-                                                                    {'₹' + data.discountPrice + '.00'}
-                                                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
-                                                                        <span>{'₹' + data.actualPrice + '.00'}</span>
-                                                                        <a style={{ fontSize: "medium", margin: "5px 10px" }}>{data.discountPercentage + '% OFF'}</a>
+                                                                    <div className="course-price">
+                                                                        {'₹' + data.discountPrice + '.00'}
+                                                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
+                                                                            <span>{'₹' + data.actualPrice + '.00'}</span>
+                                                                            <a style={{ fontSize: "medium", margin: "5px 10px" }}>{data.discountPercentage + '% OFF'}</a>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div className="author">
-                                                                    <img src="assets/images/home/course/author.png" alt="" />
-                                                                    <a>{data.author}</a>
-                                                                </div>
-                                                                <div className="fcf-bottom">
-                                                                    <a ><i className="icon_book_alt" />{data.subCourses.length + " Sections"}</a>
-                                                                    <a><i className="far fa-clock" />{data.duration}</a>
+                                                                    <a target="_blank" href={'https://www.google.com/search?q=' + data.courseCategory.categoryName} className="c-cate">{data.courseCategory.categoryName}</a>
+                                                                    <div className="author" style={{display:"block"}}>
+                                                                        <img src="assets/images/home/course/author.png" alt="" />
+                                                                        <a>{data.author}</a>
+                                                                    </div>
+                                                                    <div className="fcf-bottom">
+                                                                        <a ><i className="icon_book_alt" />{data.subCourses.length + " Sections"}</a>
+                                                                        <a><i className="far fa-clock" />{data.duration}</a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            )
-                                        }) : <h1>No courses Available</h1>}
+                                                )
+                                            }) : <h1>No courses Available</h1>}
 
-                                    </div>
-                                    {/* Filter Content */}
-                                    {/* Pagination */}
+                                        </div>
+                                        {/* Filter Content */}
+                                        {/* Pagination */}
 
-                                    {/* <div className="row">
+                                        {/* <div className="row">
                                         <div className="col-lg-12">
                                             <div className="bisylms-pagination">
                                                 <span className="current">01</span>
@@ -167,41 +168,41 @@ setLoading(true)
                                         </div>
                                     </div> */}
 
-                                    {/* Pagination */}
-                                </div>
-                                {/* Grid Tab */}
-                                {/* List Tab */}
-                                <div className="tab-pane fade in" id="list" role="tabpanel">
-                                    {courseDetails.course.length > 0 ? courseDetails.course.map((data, i) => {
-                                        return (
-                                            <div className="course-item-3 ci-3-color"  style={{ cursor: "pointer" }} onClick={() => courseClick(data._id)}>
-                                                <div className="ci-thumb" style={{ display: "flex", justifyContent: "center", flexDirection: "column" }}>
-                                                    <img style={{ width: "400px", height: "auto" }} src={process.env.REACT_APP_S3_COURSE_BUCKET + data._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "assets/images/home/course/1.png" }} alt="" />
-                                                    <a style={{ top: "auto" }} target="_blank" href={'https://www.google.com/search?q=' + data.courseCategory.categoryName} className="c-cate">{data.courseCategory.categoryName}</a>
-                                                </div>
-                                                <div className="course-details" >
-                                                    <img className="line-bg" src="assets/images/home3/line.jpg" alt="" />
-                                                    <div className="fcf-bottom">
-                                                        <a ><i className="icon_book_alt" />{data.subCourses.length + " Sections"}</a>
-                                                        <a><i className="far fa-clock" />{data.duration}</a>
+                                        {/* Pagination */}
+                                    </div>
+                                    {/* Grid Tab */}
+                                    {/* List Tab */}
+                                    <div className="tab-pane fade in" id="list" role="tabpanel">
+                                        {courseDetails.course.length > 0 ? courseDetails.course.map((data, i) => {
+                                            return (
+                                                <div className="course-item-3 ci-3-color" style={{ cursor: "pointer" }} onClick={() => courseClick(data._id)}>
+                                                    <div className="ci-thumb" style={{ display: "flex", justifyContent: "center", flexDirection: "column" }}>
+                                                        <img style={{ width: "400px", height: "auto" }} src={process.env.REACT_APP_S3_COURSE_BUCKET + data._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "assets/images/home/course/1.png" }} alt="" />
+                                                        <a style={{ top: "auto" }} target="_blank" href={'https://www.google.com/search?q=' + data.courseCategory.categoryName} className="c-cate">{data.courseCategory.categoryName}</a>
                                                     </div>
-                                                    <h4>{data.courseName}</h4>
-                                                    <p>
-                                                        {data.courseDescription.split('. ', 1)[0]}
-                                                    </p>
-                                                    <div className="author">
-                                                       
-                                                        <a>{data.author}</a>
-                                                    </div>
-                                                    <div className="price-rate">
-                                                    <div className="course-price">
-                                                                    {'₹' + data.discountPrice + '.00'}
-                                                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
-                                                                        <span>{'₹' + data.actualPrice + '.00'}</span>
-                                                                        <a style={{ fontSize: "medium", marginLeft: "10px" }}>{data.discountPercentage + '% OFF'}</a>
-                                                                    </div>
+                                                    <div className="course-details" >
+                                                        <img className="line-bg" style={{maxHeight:"300px"}} src="assets/images/home3/line.jpg" alt="" />
+                                                        <div className="fcf-bottom">
+                                                            <a ><i className="icon_book_alt" />{data.subCourses.length + " Sections"}</a>
+                                                            <a><i className="far fa-clock" />{data.duration}</a>
+                                                        </div>
+                                                        <h4>{data.courseName}</h4>
+                                                        <p>
+                                                            {data.courseDescription.split('. ', 1)[0]}
+                                                        </p>
+                                                        <div className="author">
+
+                                                            <a>{data.author}</a>
+                                                        </div>
+                                                        <div className="price-rate">
+                                                            <div className="course-price">
+                                                                {'₹' + data.discountPrice + '.00'}
+                                                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
+                                                                    <span>{'₹' + data.actualPrice + '.00'}</span>
+                                                                    <a style={{ fontSize: "medium", marginLeft: "10px" }}>{data.discountPercentage + '% OFF'}</a>
                                                                 </div>
-                                                        {/* <div className="ratings">
+                                                            </div>
+                                                            {/* <div className="ratings">
                                                             <i className="icon_star" />
                                                             <i className="icon_star" />
                                                             <i className="icon_star" />
@@ -209,14 +210,14 @@ setLoading(true)
                                                             <i className="icon_star" />
                                                             <span>4.5 (2 Reviews)</span>
                                                         </div> */}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        )
-                                    }) : <p>No course Available</p>}
+                                            )
+                                        }) : <p>No course Available</p>}
 
-                                    {/* Pagination */}
-                                    {/* <div className="row">
+                                        {/* Pagination */}
+                                        {/* <div className="row">
                                         <div className="col-lg-12">
                                             <div className="bisylms-pagination">
                                                 <span className="current">01</span>
@@ -225,14 +226,14 @@ setLoading(true)
                                             </div>
                                         </div>
                                     </div> */}
-                                    {/* Pagination */}
+                                        {/* Pagination */}
+                                    </div>
+                                    {/* Grid Tab */}
                                 </div>
-                                {/* Grid Tab */}
-                            </div>
-                            :<>  <Loader  type="ThreeDots" 
-                            color="#5838fc"
-                            height={100}
-                            width={100}/></>}
+                                : <>  <Loader type="ThreeDots"
+                                    color="#5838fc"
+                                    height={100}
+                                    width={100} /></>}
                             {/* Tab Content */}
                         </div>
                     </div>

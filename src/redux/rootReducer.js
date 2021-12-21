@@ -5,7 +5,7 @@ import userReducer from "./userData/userReducer";
 import profileReducer from "./profileData/profileReducer";
 import adminReducer from "./adminData/adminReducer";
 import courseReducer from "./courseData/courseReducer";
-
+import purchaseCourseReducer from './purchaseCourseData/purchaseCourseReducer'
 
 const persistConfig = {
     key:'root',
@@ -16,6 +16,7 @@ const rootReducer = combineReducers({
     userData:userReducer,
     profileData:profileReducer,
     adminData:adminReducer,
-    courseData:courseReducer
+    courseData:courseReducer,
+    purchaseCourseData:purchaseCourseReducer
 })
 export default persistReducer(persistConfig,rootReducer)

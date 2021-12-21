@@ -4,6 +4,7 @@ import { useParams, useHistory } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
+import { purchaseCourseAction } from '../../../redux/rootActions'
 
 function SingleCourse() {
   const params = useParams();
@@ -14,6 +15,8 @@ function SingleCourse() {
   const [userPurchase, setUserPurchase] = useState(false)
   const userData = useSelector((state) => state.userData);
   const courseData = useSelector(state => state.courseData)
+  const dispatch = useDispatch()
+  const history = useHistory()
 
   useEffect(() => {
 
@@ -42,6 +45,27 @@ function SingleCourse() {
       }
 
     })
+  }
+
+  const enrollCourseNow=async()=>{
+
+    let data={
+      courseName: courseDetail.courseName,
+      categoryName: courseDetail.courseCategory.categoryName,
+      discountPrice: courseDetail.discountPrice,
+      actualPrice: courseDetail.actualPrice,
+      discountPercentage: courseDetail.discountPercentage ,
+      courseId: courseDetail._id,
+    }
+    console.log("disssp",data);
+    // await 
+dispatch(purchaseCourseAction(data))
+history.push('/make-payment')
+
+  }
+
+  function hai(){
+alert("")
   }
   return (
 
@@ -509,7 +533,7 @@ function SingleCourse() {
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="/assets/images/profile/1.jpg" alt="" />
-                          <a className="enroll" href="#">Enroll Now</a>
+                          <a  onClick={enrollCourseNow}>Enroll Now</a>
                         </div>
                         <div className="fci-details">
                           <a href="#" className="c-cate"><i className="icon_tag_alt" />Computer Science</a>
@@ -533,7 +557,7 @@ function SingleCourse() {
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="/assets/images/profile/2.jpg" alt="" />
-                          <a className="enroll" href="#">Enroll Now</a>
+                          <a className="enroll" onClick={enrollCourseNow}>Enroll Now</a>
                         </div>
                         <div className="fci-details">
                           <a href="#" className="c-cate"><i className="icon_tag_alt" />Art &amp; Design</a>
@@ -557,7 +581,7 @@ function SingleCourse() {
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="/assets/images/profile/3.jpg" alt="" />
-                          <a className="enroll" href="#">Enroll Now</a>
+                          <a className="enroll" onClick={enrollCourseNow}>Enroll Now</a>
                         </div>
                         <div className="fci-details">
                           <a href="#" className="c-cate"><i className="icon_tag_alt" />Business Study</a>
@@ -581,7 +605,7 @@ function SingleCourse() {
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="/assets/images/profile/4.jpg" alt="" />
-                          <a className="enroll" href="#">Enroll Now</a>
+                          <a className="enroll"  onClick={enrollCourseNow}>Enroll Now</a>
                         </div>
                         <div className="fci-details">
                           <a href="#" className="c-cate"><i className="icon_tag_alt" />Data Science</a>
@@ -642,7 +666,7 @@ function SingleCourse() {
                         {courseDetail.language ? <>  <li><i className="icon_cog" /><span>Language: </span> </li>courseDetail.language</> : <></>}
                         {/* <li><i className="icon_calendar" /><span>Deadline: </span> 16 April 2020</li> */}
                       </ul>
-                      <a className="bisylms-btn" href="#">Enroll Course</a>
+                      <a className="bisylms-btn" onClick={enrollCourseNow}>Enroll Course</a>
                     </div>
                   </aside>
                   <aside className="widget">

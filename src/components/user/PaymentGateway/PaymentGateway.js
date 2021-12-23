@@ -44,7 +44,7 @@ function PaymentGateway() {
   async function displayRazorpay() {
     let { data } = await axios.post(
       process.env.REACT_APP_SERVER + "/createOrder",
-      { id: userData.userId },
+      { id: userData.userId,courseData },
       {
         headers: {
           authorization: "Bearer " + userData.userJwt,
@@ -64,9 +64,12 @@ function PaymentGateway() {
         image: "https://example.com/your_logo",
         order_id: data.data.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
         handler: function (response) {
+          console.log("resppp",response)
           alert(response.razorpay_payment_id);
           alert(response.razorpay_order_id);
           alert(response.razorpay_signature);
+//to backend update the course purchase
+          PaymentSuccess(response);
         },
         prefill: {
           name: userData.userName,
@@ -85,6 +88,33 @@ function PaymentGateway() {
     }
   }
 
+  const PaymentSuccess=async(razorpayResponse)=>{
+
+    try{
+
+   let {data}= await axios.post( process.env.REACT_APP_SERVER + '/purchaseSuccess',{razorpayResponse,courseData,userData}, { headers: {
+      authorization: "Bearer " + userData.userJwt,
+    },
+  }
+  )
+  console.log("data",data)
+  if(data.error)
+  {
+    toast.error("something went wrong in payment please contact our team...")
+  }
+  else
+  {
+    toast.success("Payment success!!!!! need to update in redux");
+  }
+}
+catch(err)
+{
+  toast.error("something went wrong in payment please contact our team...")
+
+}
+  }
+
+  
   return (
     <div>
       <Navbar />
@@ -96,7 +126,7 @@ function PaymentGateway() {
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <h2 className="banner-title" onClick={displayRazorpay}>
+              <h2 className="banner-title">
                 Payment gateway
               </h2>
               <div className="bread-crumbs">
@@ -106,6 +136,64 @@ function PaymentGateway() {
           </div>
         </div>
       </section>
+
+
+      <section className="contact-section">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-4">
+                            <div className="contact--info-area">
+                                <h3>Enroll the course For ₹
+{courseData.actualPrice}</h3>
+                                <p>
+                                    Any issues with purchase..? feel free to contact us for purchase related queries.
+                                </p>
+                                <div className="single-info">
+                                    <h5>Headquaters</h5>
+                                    <p>
+                                        <i className="icon_house_alt" />
+                                        Hilite Business Park, 5th floor (codelattice) Craft Square<br /> Kozhikode, Kerala 673014
+                                    </p>
+                                </div>
+                                {/* <div className="single-info">
+                                    <h5>Phone</h5>
+                                    <p>
+                                        <i className="icon_phone" />
+                                        <a href="tel:12345678">schoolofhawking@gmail.com</a>(+642) 245 356 432<br />
+                                        (+420) 336 476 328
+                                    </p>
+                                </div> */}
+                                <div className="single-info">
+                                    <h5>Support</h5>
+                                    <p>
+                                        <i className="icon_mail_alt" />
+                                        <a href="mailto:schoolofhawking@gmail.com">schoolofhawking@gmail.com</a> <br />
+                                       
+                                    </p>
+                                </div>
+                                <div className="ab-social">
+                                    <h5>Follow Us</h5>
+                                    <a className="fac" href="#"><i className="social_facebook" /></a>
+                                    <a className="twi" href="#"><i className="social_twitter" /></a>
+                                    <a className="you" href="#"><i className="social_youtube" /></a>
+                                    <a className="lin" href="#"><i className="social_linkedin" /></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-8">
+                            <div className="contact-form">
+                                <h4>Pay Now</h4>
+                                <p>You can use any payment modes through Razorpay!</p>
+                               
+                                    <div className="col-md-6" style={{alignItems:"center"}}>
+                                    <button className="btn btn-primary btn-lg btn-block"  onClick={displayRazorpay}>Pay ₹ {courseData.actualPrice}</button>
+                                    </div>
+                                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
       <Footer />
     </div>

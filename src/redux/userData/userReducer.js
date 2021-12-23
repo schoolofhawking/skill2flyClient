@@ -20,7 +20,8 @@ const userReducer = (state=initialState,action)=>
             userJwt:action.payload.userJwt,
             userMail:action.payload.userMail,
             userPhone:action.payload.userPhone,
-            userLogin:action.payload.userLogin
+            userLogin:action.payload.userLogin,
+            purchasedCourses:action.payload.purchasedCourses
         }
         default : return state
     }

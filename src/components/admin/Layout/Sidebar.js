@@ -14,6 +14,7 @@ import SubCourse from "../SubCourse/SubCourse";
 import UserManagement from "../UserManagement/UserManagement";
 import MangeQuestion from '../QuestionManagement/ManageQuestion'
 import './Sidebar.css'
+import ManageReferalAgents from "../ReferalAgents/ManageReferalAgents";
 
 export default function Sidebar() {
   const adminDetails = useSelector(state => state.adminData)
@@ -197,6 +198,55 @@ export default function Sidebar() {
                     </div>
                   </Collapse>
                 </li>
+
+                <li className="sidebar-dropdown">
+                  <a onClick={() => { setOthersBool(!othersBool); setDashboardBool(false) }} aria-controls="othersCollapse"
+                    aria-expanded={othersBool} style={{ marginLeft: "0em" }} className="sideElement" >
+                    <i className="fas fa-university" />
+                    <span >Referal Agents</span>
+                    {/* <span className="badge badge-pill badge-primary">Beta</span> */}
+                  </a>
+                  <Collapse in={othersBool}>
+                    <div id="othersCollapse">
+                      <Link to="/admin/referals" className="sideElement">
+                        <i className="far fa-gem" />
+                        <span>View all agents</span>
+                      </Link>
+
+                      <Link to="/admin/subCourse" className="sideElement">
+                        <i className="far fa-gem" />
+                        <span>Create a new agent</span>
+                      </Link>
+
+
+                      {/* <Link to="/admin/category" className="sideElement">
+                        <i className="fas fa-sitemap" />
+                        <span>Category Management</span>
+                      </Link>
+                      <Link to="/admin/questions" className="sideElement">
+                        <i className="fas fa-sitemap" />
+                        <span>Question Management</span>
+                      </Link> */}
+                      {/* <a href="#" className="sideElement">
+                        <i className="fa fa-calendar" />
+                        <span>Calendar</span>
+                      </a>
+                      <a href="#" className="sideElement">
+                        <i className="fa fa-folder" />
+                        <span>Examples</span>
+                      </a>
+                      <a href="#" className="sideElement">
+                        <i className="fa fa-globe" />
+                        <span>Maps</span>
+                      </a>
+                      <a href="#" className="sideElement">
+                        <i className="fa fa-chart-line" />
+                        <span>Charts</span>
+                      </a> */}
+                    </div>
+                  </Collapse>
+                </li>
+
               </ul>
             </div>
             {/* sidebar-menu  */}
@@ -236,6 +286,8 @@ export default function Sidebar() {
                 <Route path="/admin/subCourse"><SubCourse /></Route>
                 <Route path="/admin/editCourse/:id"><EditCourse /></Route>
                 <Route path="/admin/questions"><MangeQuestion /></Route>
+                <Route path="/admin/referals"><ManageReferalAgents /></Route>
+
               </Route>
             </Switch>
 

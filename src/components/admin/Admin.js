@@ -4,6 +4,7 @@ import Error from '../Error'
 import AdminLogin from './AdminLogin/AdminLogin'
 import Sidebar from './Layout/Sidebar'
 import ManageQuestion from './QuestionManagement/ManageQuestion'
+import ManageReferalAgents from './ReferalAgents/ManageReferalAgents'
 import UserManagement from './UserManagement/UserManagement'
 
 
@@ -20,7 +21,7 @@ export default function Admin() {
                 <Route path="/admin/subCourse"><Sidebar /></Route>
                 <Route path="/admin/editCourse/:id"><Sidebar /></Route>
                 <Route path="/admin/questions"><Sidebar /></Route>
-
+                <Route path="/admin/referals"><Sidebar /></Route>
                 {/* <Route path="/admin/*"><Error /></Route> */}
             </Switch>
         </div>

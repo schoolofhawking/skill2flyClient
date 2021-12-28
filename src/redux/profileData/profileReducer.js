@@ -9,6 +9,7 @@ const initialState = {
     profileCity: '',
     profileQualification: '',
     profileDesignation:'',
+    profileCourse:[],
     profileEnable: false
 }
 
@@ -24,6 +25,7 @@ const profileReducer = (state = initialState, action) => {
             profileCity: action.payload.profileCity,
             profileQualification: action.payload.profileQualification,
             profileDesignation:action.payload.profileDesignation,
+            profileCourse:action.payload.profileCourse,
             profileEnable: action.payload.profileEnable
 
         }

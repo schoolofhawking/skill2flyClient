@@ -5,6 +5,9 @@ import Loader from "react-loader-spinner";
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { purchaseCourseAction } from '../../../redux/rootActions'
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
+import { Modal } from 'react-bootstrap';
 
 function SingleCourse() {
   const params = useParams();
@@ -12,7 +15,9 @@ function SingleCourse() {
   const [courseDetail, setCourseDetail] = useState("")
   const [otherCourse, setOtherCourse] = useState([])
   const [subCourse, setSubCourse] = useState([])
+  const [videoPlayer, setVideoPlayer] = useState({ videoId: "", videoName: "" })
   const [userPurchase, setUserPurchase] = useState(false)
+  const [bool, setBool] = useState(false)
   const userData = useSelector((state) => state.userData);
   const courseData = useSelector(state => state.courseData)
   const dispatch = useDispatch()
@@ -47,25 +52,33 @@ function SingleCourse() {
     })
   }
 
-  const enrollCourseNow=async()=>{
+  const enrollCourseNow = async () => {
 
-    let data={
+    let data = {
       courseName: courseDetail.courseName,
       categoryName: courseDetail.courseCategory.categoryName,
       discountPrice: courseDetail.discountPrice,
       actualPrice: courseDetail.actualPrice,
-      discountPercentage: courseDetail.discountPercentage ,
+      discountPercentage: courseDetail.discountPercentage,
       courseId: courseDetail._id,
     }
-    console.log("disssp",data);
+    console.log("disssp", data);
     // await 
-dispatch(purchaseCourseAction(data))
-history.push('/make-payment')
+    dispatch(purchaseCourseAction(data))
+    history.push('/make-payment')
 
   }
 
-  function hai(){
-alert("")
+  const videoPlay = (data) => {
+    setVideoPlayer({
+      videoId:data.videoId,
+      videoName:data.videoName
+    })
+    setBool(!bool)
+  }
+
+  function hai() {
+    alert("")
   }
   return (
 
@@ -119,7 +132,17 @@ alert("")
                     </div>
                   </div>
                   <div className="sc-thumb">
-                    <img src={process.env.REACT_APP_S3_COURSE_BUCKET + courseDetail._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "/assets/images/single-course/1.jpg" }} alt="" />
+                    <Carousel>
+                      <div>
+                        <img src={process.env.REACT_APP_S3_COURSE_BUCKET + courseDetail._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "/assets/images/single-course/1.jpg" }} alt="" />
+                      </div>
+                      <div>
+                        <iframe style={{ height: "80vh" }}
+                          src={"https://player.vimeo.com/video/" + courseDetail.demoVideo + "?autoplay=0&controls=1&loop=1&title=0"}
+                          scrolling="no" frameborder="0" allow="autoplay; fullscreen" webkitallowfullscreen
+                          mozallowfullscreen allowfullscreen></iframe>
+                      </div>
+                    </Carousel>
                   </div>
                   <div className="course-tab-wrapper">
                     <ul className="course-tab-btn nav nav-tabs">
@@ -170,7 +193,7 @@ alert("")
                               <div className="curriculum-item" id={'id_' + (i + 1)}>
                                 <div className="card-header" id={'cc_' + (i + 1)}>
                                   <h5 className="mb-0">
-                                    <button className="btn btn-link" style={{textDecoration:"none"}} data-toggle="collapse" data-target={'#acc_' + (i + 1)} aria-expanded="true" aria-controls={'acc_' + (i + 1)}>
+                                    <button className="btn btn-link" style={{ textDecoration: "none" }} data-toggle="collapse" data-target={'#acc_' + (i + 1)} aria-expanded="true" aria-controls={'acc_' + (i + 1)}>
                                       {data.subCourseName}
                                     </button>
                                   </h5>
@@ -185,8 +208,8 @@ alert("")
                                             <a >{item.videoName}</a>
                                           </h5>
                                           <div className="ci-tools">
-                                            <a style={{width:"100px"}}  className="time">{item.videoDuration??''}</a>
-                                            <a  className="lock"><i className="icon_lock_alt" /></a>
+                                            <a style={{ width: "100px" }} className="time">{item.videoDuration ?? ''}</a>
+                                            <a className="lock"><i className="icon_lock_alt" /></a>
                                           </div>
                                         </div>
                                       )
@@ -195,7 +218,61 @@ alert("")
                                 </div>
                               </div>
                             )
-                          }) : 'no sub course' : 'course purchased'}
+                          }) : 'no sub course' :
+                          subCourse.length > 0 ? subCourse.map((data, i) => {
+                            return (
+                              <div className="curriculum-item" id={'id_' + (i + 1)}>
+                                <div className="card-header" id={'cc_' + (i + 1)}>
+                                  <h5 className="mb-0">
+                                    <button className="btn btn-link" style={{ textDecoration: "none" }} data-toggle="collapse" data-target={'#acc_' + (i + 1)} aria-expanded="true" aria-controls={'acc_' + (i + 1)}>
+                                      {data.subCourseName}
+                                    </button>
+                                  </h5>
+                                </div>
+                                <div id={'acc_' + (i + 1)} className="collapse show" aria-labelledby={'cc_' + (i + 1)} data-parent={'#id_' + (i + 1)}>
+                                  <div className="card-body">
+                                    {data.videoList.length > 0 ? data.videoList.map((item, j) => {
+                                      return (
+                                        <div className="ci-item with-bg">
+                                          <h5>
+                                            <i className="icon_menu-square_alt2" />
+                                            <a >{item.videoName}</a>
+                                          </h5>
+                                          <div className="ci-tools">
+
+                                            <a className="">{item.videoDuration ?? ''}</a>
+                                            <i className="fas fa-unlock ml-2" />
+                                            <a style={{ width: "100px", cursor: "pointer" }} onClick={() => videoPlay(item)} className="time">Play Video</a>
+                                          </div>
+                                        </div>
+                                      )
+                                    }) : 'no Videos'}
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          }) : 'no sub course'}
+
+                        <div>
+                          <Modal size='lg' show={bool} onHide={() => setBool(!bool)} >
+                            <Modal.Header>
+                              <Modal.Title>{videoPlayer.videoName}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body><div>
+                              <iframe style={{ width: "100%", height: "70vh" }}
+                                src={"https://player.vimeo.com/video/"+videoPlayer.videoId+"?autoplay=1&controls=1&loop=1&title=0"}
+                                scrolling="no" frameborder="0" allow="autoplay; fullscreen" webkitallowfullscreen
+                                mozallowfullscreen allowfullscreen></iframe>
+                            </div>
+                              <div className='row' style={{ display: "flex", justifyContent: "center" }}>
+                                <button type='button' onClick={() => setBool(!bool)} className='btn btn-danger'>Close</button></div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                            </Modal.Footer>
+                          </Modal>
+
+
+                        </div>
                         {/* <div className="curriculum-item" id="id_2">
                           <div className="card-header" id="cc_2">
                             <h5 className="mb-0">
@@ -533,7 +610,7 @@ alert("")
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="/assets/images/profile/1.jpg" alt="" />
-                          <a  onClick={enrollCourseNow}>Enroll Now</a>
+                          <a onClick={enrollCourseNow}>Enroll Now</a>
                         </div>
                         <div className="fci-details">
                           <a href="#" className="c-cate"><i className="icon_tag_alt" />Computer Science</a>
@@ -557,7 +634,7 @@ alert("")
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="/assets/images/profile/2.jpg" alt="" />
-                          <a className="enroll" onClick={enrollCourseNow}>Enroll Now</a>
+                          <a className="enroll" style={{ color: "white" }} onClick={enrollCourseNow}>Enroll Now</a>
                         </div>
                         <div className="fci-details">
                           <a href="#" className="c-cate"><i className="icon_tag_alt" />Art &amp; Design</a>
@@ -605,7 +682,7 @@ alert("")
                       <div className="feature-course-item-4">
                         <div className="fcf-thumb">
                           <img src="/assets/images/profile/4.jpg" alt="" />
-                          <a className="enroll"  onClick={enrollCourseNow}>Enroll Now</a>
+                          <a className="enroll" onClick={enrollCourseNow}>Enroll Now</a>
                         </div>
                         <div className="fci-details">
                           <a href="#" className="c-cate"><i className="icon_tag_alt" />Data Science</a>
@@ -666,7 +743,7 @@ alert("")
                         {courseDetail.language ? <>  <li><i className="icon_cog" /><span>Language: </span> </li>courseDetail.language</> : <></>}
                         {/* <li><i className="icon_calendar" /><span>Deadline: </span> 16 April 2020</li> */}
                       </ul>
-                      <a className="bisylms-btn" onClick={enrollCourseNow}>Enroll Course</a>
+                      <a className="bisylms-btn" style={{ color: "white" }} onClick={enrollCourseNow}>Enroll Course</a>
                     </div>
                   </aside>
                   <aside className="widget">
@@ -693,11 +770,12 @@ alert("")
               </div>
             </div>
           </div>
-        </section> : <>  <Loader type="ThreeDots"
+        </section > : <>  <Loader type="ThreeDots"
           color="#5838fc"
           height={100}
-          width={100} /></>}
-    </div>
+          width={100} /></>
+      }
+    </div >
   )
 }
 

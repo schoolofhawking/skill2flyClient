@@ -220,8 +220,10 @@ export default function Profile() {
         <div className="container">
           <div className="row">
             <ProfilePicture />
-            <div className="col-lg-9">
-              {/* Tab Title */}
+            {/* course tab wrapper add extra for tab change */}
+            <div className="col-lg-9 course-tab-wrapper">
+              {/* Tab Title  */}
+              {/* tab-title nav nav-tabs (was the previous cls instead of course tab) */}
               <ul className="tab-title nav nav-tabs">
                 <li>
                   <a className="active" href="#owned" data-toggle="tab">

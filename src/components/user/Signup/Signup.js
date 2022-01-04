@@ -5,39 +5,44 @@ import "./Signup.css";
 import Footer from "../Footer/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { userData } from "../../../redux/rootActions";
-import { API } from '../../../config/config'
-import toast, { Toaster } from 'react-hot-toast';
-import GoogleLogin from 'react-google-login';
-import { useHistory } from "react-router";
+import { API } from "../../../config/config";
+import toast, { Toaster } from "react-hot-toast";
+import GoogleLogin from "react-google-login";
+import { useParams, useHistory } from "react-router-dom";
 
 export default function Signup(props) {
-
- 
-  let history = useHistory()
-  const dispatch = useDispatch()
-  const userDetails = useSelector(state => state.userData)
+  let history = useHistory();
+  const dispatch = useDispatch();
+  const userDetails = useSelector((state) => state.userData);
   // const [country, setCountry] = useState([]);
   // const [state, setState] = useState([]);
   // const [city, setCity] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
-
   const [fieldValues, setFieldValues] = useState({
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    password: "",
+  });
 
-    fullName: '',
-    phoneNumber: '',
-    email: '',
-    password: ''
+  const [loading, setLoading] = useState(false);
+  // for getting referal id from url
+  const queryParams = new URLSearchParams(window.location.search);
+  const [referralId, setReferralId] = useState(null)
 
-  })
-const [loading,setLoading]=useState(false)
 
-  const {
-    fullName,
-    phoneNumber,
-    email,
-    password
+  useEffect(() => {
+    let referredBy=   queryParams.get("referral")
+    if (referredBy) {
+      localStorage.setItem("referralId", referredBy);
+      setReferralId(referredBy)
+    } else {
+       referredBy = localStorage.getItem("referralId");
+      setReferralId(referredBy)
+    }
+  }, []);
 
-  } = fieldValues
+  const { fullName, phoneNumber, email, password } = fieldValues;
 
   useEffect(() => {
     setIsLogin(props.login);
@@ -50,21 +55,23 @@ const [loading,setLoading]=useState(false)
     //getCountries();
   }, []);
 
-
   const handleChange = (name) => async (event) => {
-    setFieldValues({ ...fieldValues, [name]: event.target.value })
-  }
+    setFieldValues({ ...fieldValues, [name]: event.target.value });
+  };
 
   const userLogin = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true)
-      let { data } = await axios.post(process.env.REACT_APP_SERVER + '/login', { email, password }, { withCredentials: true })
+      setLoading(true);
+      let { data } = await axios.post(
+        process.env.REACT_APP_SERVER + "/login",
+        { email, password },
+        { withCredentials: true }
+      );
       console.log("this is data", data);
       if (data.error) {
-        toast.error(data.message)
-      }
-      else {
+        toast.error(data.message);
+      } else {
         // login successfull
         let userInfo = {
           userId: data.data._id,
@@ -72,89 +79,84 @@ const [loading,setLoading]=useState(false)
           userMail: data.data.email,
           userJwt: data.data.jwtToken,
           userPhone: data.data.mobileNumber,
-          userLogin: true
-        }
-        console.log(userInfo, "dd")
-        dispatch(userData(userInfo))
-        toast.success("Login sucess!!",
-          {
-            style: {
-              minWidth: '250px'
-            },
-            success: {
-              duration: 5000,
-              icon: '🔥',
-            },
-          })
-          history.push('/')
-          //setInterval(()=>{history.push('/')},2000) 
-      
+          userLogin: true,
+        };
+        console.log(userInfo, "dd");
+        dispatch(userData(userInfo));
+        toast.success("Login sucess!!", {
+          style: {
+            minWidth: "250px",
+          },
+          success: {
+            duration: 5000,
+            icon: "🔥",
+          },
+        });
+        history.push("/");
+        //setInterval(()=>{history.push('/')},2000)
       }
-      setLoading(false)
-    }
-    catch (err) {
-      setLoading(false)
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
 
-      toast.error("something went wrong")
+      toast.error("something went wrong");
       console.log("this is err", err);
-
-
     }
-
-  }
-
+  };
 
   const signupSubmit = async () => {
-
     const headers = {
-      Accept: 'application/json',
-      "Content-Type": 'application/json'
-    }
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    };
     try {
-            setLoading(true)
+      setLoading(true);
 
-      axios.post(process.env.REACT_APP_SERVER + '/signup', { fullName, email, phoneNumber, password }, { withCredentials: true }).then((response) => {
-        if (response.data.error === false) {
-          let userInfo = {
-            userId: response.data.data._id,
-            userName: response.data.data.fullName,
-            userMail: response.data.data.email,
-            userJwt: response.data.data.jwtToken,
-            userPhone: response.data.data.mobileNumber,
-            userLogin: true
-          }
-          console.log(userInfo, "userInfo");
-          dispatch(userData(userInfo))
-          toast.success("Signup successfull enjoy !!",
-            {
+      axios
+        .post(
+          process.env.REACT_APP_SERVER + "/signup",
+          { fullName, email, phoneNumber, password,referralId },
+          { withCredentials: true }
+        )
+        .then((response) => {
+          if (response.data.error === false) {
+            let userInfo = {
+              userId: response.data.data._id,
+              userName: response.data.data.fullName,
+              userMail: response.data.data.email,
+              userJwt: response.data.data.jwtToken,
+              userPhone: response.data.data.mobileNumber,
+              userLogin: true,
+            };
+            console.log(userInfo, "userInfo");
+            dispatch(userData(userInfo));
+            toast.success("Signup successfull enjoy !!", {
               style: {
-                minWidth: '250px'
+                minWidth: "250px",
               },
               success: {
                 duration: 5000,
-                icon: '🔥',
+                icon: "🔥",
               },
-            })
-            history.push('/')
+            });
+            history.push("/");
             //setInterval(()=>{history.push('/')},2000)
-        } else if (response.data.error === true) {
-          toast.error(response.data.message)
-        }
-      }).catch((err) => {
-        toast.error("Something Went Wrong!")
-      })
+          } else if (response.data.error === true) {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((err) => {
+          toast.error("Something Went Wrong!");
+        });
 
-      setLoading(false)
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+
+      console.log(err);
+      toast.error("This didn't work.");
     }
-    catch (err) {
-      setLoading(false)
-
-      console.log(err)
-      toast.error("This didn't work.")
-    }
-  }
-
-
+  };
 
   const responseSuccessGoogleSignup = async (response) => {
     console.log("signupsucess", response);
@@ -162,47 +164,52 @@ const [loading,setLoading]=useState(false)
     let email = response.profileObj.email;
 
     try {
-      axios.post(process.env.REACT_APP_SERVER + '/googleSignup', { userName, email }, { withCredentials: true }).then((response) => {
-        if (response.data.error === false) {
-          let userInfo = {
-            userId: response.data.data._id,
-            userName: response.data.data.fullName,
-            userMail: response.data.data.email,
-            userJwt: response.data.data.jwtToken,
-            userPhone: response.data.data.mobileNumber,
-            userLogin: true
-          }
-          console.log(userInfo, "userInfo");
-          dispatch(userData(userInfo))
-          toast.success("Signup successfull enjoy !!",
-            {
+      axios
+        .post(
+          process.env.REACT_APP_SERVER + "/googleSignup",
+          { userName, email },
+          { withCredentials: true }
+        )
+        .then((response) => {
+          if (response.data.error === false) {
+            let userInfo = {
+              userId: response.data.data._id,
+              userName: response.data.data.fullName,
+              userMail: response.data.data.email,
+              userJwt: response.data.data.jwtToken,
+              userPhone: response.data.data.mobileNumber,
+              userLogin: true,
+            };
+            console.log(userInfo, "userInfo");
+            dispatch(userData(userInfo));
+            toast.success("Signup successfull enjoy !!", {
               style: {
-                minWidth: '250px'
+                minWidth: "250px",
               },
               success: {
                 duration: 5000,
-                icon: '🔥',
+                icon: "🔥",
               },
-            })
-            history.push('/')
-        } else if (response.data.error === true) {
-          toast.error(response.data.message)
-        }
-      }).catch((err) => {
-        toast.error("Something Went Wrong!")
-      })
+            });
+            history.push("/");
+          } else if (response.data.error === true) {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((err) => {
+          toast.error("Something Went Wrong!");
+        });
+    } catch (err) {
+      console.log(err);
+      toast.error("This didn't work.");
     }
-    catch (err) {
-      console.log(err)
-      toast.error("This didn't work.")
-    }
-  }
+  };
   const responseErrorGoogleSignup = (response) => {
     console.log("signuperr", response);
-  }
+  };
   const responseErrorGoogleLogin = (response) => {
     console.log("login err", response);
-  }
+  };
 
   // google login
   const responseSuccessGoogleLogin = (response) => {
@@ -212,46 +219,46 @@ const [loading,setLoading]=useState(false)
     let email = response.profileObj.email;
 
     try {
-      axios.post(process.env.REACT_APP_SERVER + '/googleLogin', { userName, email }, { withCredentials: true }).then((response) => {
-        if (response.data.error === false) {
-          let userInfo = {
-            userId: response.data.data._id,
-            userName: response.data.data.fullName,
-            userMail: response.data.data.email,
-            userJwt: response.data.data.jwtToken,
-            userPhone: response.data.data.mobileNumber,
-            userLogin: true
-          }
-          console.log(userInfo, "userInfo");
-          dispatch(userData(userInfo))
-          toast.success("successfully Logged In !!",
-            {
+      axios
+        .post(
+          process.env.REACT_APP_SERVER + "/googleLogin",
+          { userName, email },
+          { withCredentials: true }
+        )
+        .then((response) => {
+          if (response.data.error === false) {
+            let userInfo = {
+              userId: response.data.data._id,
+              userName: response.data.data.fullName,
+              userMail: response.data.data.email,
+              userJwt: response.data.data.jwtToken,
+              userPhone: response.data.data.mobileNumber,
+              userLogin: true,
+            };
+            console.log(userInfo, "userInfo");
+            dispatch(userData(userInfo));
+            toast.success("successfully Logged In !!", {
               style: {
-                minWidth: '250px'
+                minWidth: "250px",
               },
               success: {
                 duration: 5000,
-                icon: '🔥',
+                icon: "🔥",
               },
-            })
-            history.push('/')
-        } else if (response.data.error === true) {
-          toast.error(response.data.message)
-        }
-      }).catch((err) => {
-        toast.error("Something Went Wrong!")
-      })
+            });
+            history.push("/");
+          } else if (response.data.error === true) {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((err) => {
+          toast.error("Something Went Wrong!");
+        });
+    } catch (err) {
+      console.log(err);
+      toast.error("This didn't work.");
     }
-    catch (err) {
-      console.log(err)
-      toast.error("This didn't work.")
-    }
-
-
-
-
-  }
-
+  };
 
   // const getCountries = () => {
   //   var headers = new Headers();
@@ -323,16 +330,12 @@ const [loading,setLoading]=useState(false)
   //     });
   // };
 
-
-
   return (
     <div>
-
       <Navbar />
 
       {!isLogin ? (
         <>
-
           <div className="container register">
             <div className="row">
               <div className="col-md-3 register-left">
@@ -367,7 +370,7 @@ const [loading,setLoading]=useState(false)
                         <label className="text-left">Full Name</label>
                         <input
                           type="text"
-                          onChange={handleChange('fullName')}
+                          onChange={handleChange("fullName")}
                           className="form-control"
                           name="fname"
                           placeholder="First Name *"
@@ -389,7 +392,7 @@ const [loading,setLoading]=useState(false)
                           className="form-control"
                           name="email"
                           placeholder="Your Email *"
-                          onChange={handleChange('email')}
+                          onChange={handleChange("email")}
                         />
                       </div>
                     </div>
@@ -401,7 +404,7 @@ const [loading,setLoading]=useState(false)
                           minLength={10}
                           maxLength={10}
                           name="phone"
-                          onChange={handleChange('phoneNumber')}
+                          onChange={handleChange("phoneNumber")}
                           className="form-control"
                           placeholder="Your Phone *"
                         />
@@ -411,7 +414,7 @@ const [loading,setLoading]=useState(false)
                         <label className="text-left">Password</label>
                         <input
                           type="password"
-                          onChange={handleChange('password')}
+                          onChange={handleChange("password")}
                           className="form-control"
                           name="password"
                           placeholder="Password *"
@@ -469,12 +472,27 @@ const [loading,setLoading]=useState(false)
 
                     <div className="col-md-6">
                       <div className="form-group">
-                
-                {!loading?<>    <button type="submit" onClick={() => signupSubmit()} className="btnLogin">
-                    Signup
-                        </button>
-                        </>:<> <button type="submit" className="btnLogin"> please wait.. <i class="fa fa-circle-o-notch fa-spin"></i></button> </>}
-                    
+                        {!loading ? (
+                          <>
+                            {" "}
+                            <button
+                              type="submit"
+                              onClick={() => signupSubmit()}
+                              className="btnLogin"
+                            >
+                              Signup
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            {" "}
+                            <button type="submit" className="btnLogin">
+                              {" "}
+                              please wait..{" "}
+                              <i class="fa fa-circle-o-notch fa-spin"></i>
+                            </button>{" "}
+                          </>
+                        )}
                       </div>
                       <div class="or-container">
                         <div class="line-separator"></div>
@@ -493,9 +511,8 @@ const [loading,setLoading]=useState(false)
                             buttonText="Sign up with Google"
                             onSuccess={responseSuccessGoogleSignup}
                             onFailure={responseErrorGoogleSignup}
-                            cookiePolicy={'single_host_origin'}
+                            cookiePolicy={"single_host_origin"}
                           />
-
                         </div>
                       </div>{" "}
                       <br></br>
@@ -537,10 +554,7 @@ const [loading,setLoading]=useState(false)
                   <h3 className="register-heading">Login Now</h3>
                   <div className="row register-form">
                     <div className="col-md-6">
-
                       <form onSubmit={userLogin}>
-
-
                         <div className="form-group">
                           <label className="text-left">User Email</label>
                           <input
@@ -548,7 +562,7 @@ const [loading,setLoading]=useState(false)
                             className="form-control"
                             name="fname"
                             placeholder="Johndoe@gmail.com "
-                            onChange={handleChange('email')}
+                            onChange={handleChange("email")}
                           />
                         </div>
                         <div className="form-group">
@@ -558,18 +572,27 @@ const [loading,setLoading]=useState(false)
                             className="form-control"
                             name="lname"
                             placeholder="password"
-                            onChange={handleChange('password')}
+                            onChange={handleChange("password")}
                           />
                         </div>
                         <div className="form-group">
-
-                        {!loading?<>    <button type="submit" className="btnLogin">
-                            Login{" "}
-                          </button>
-                        </>:<> <button className="btnLogin"> please wait.. <i class="fa fa-circle-o-notch fa-spin"></i></button> </>}
-
-
-                         
+                          {!loading ? (
+                            <>
+                              {" "}
+                              <button type="submit" className="btnLogin">
+                                Login{" "}
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              {" "}
+                              <button className="btnLogin">
+                                {" "}
+                                please wait..{" "}
+                                <i class="fa fa-circle-o-notch fa-spin"></i>
+                              </button>{" "}
+                            </>
+                          )}
                         </div>
                       </form>
                       <div class="or-container">
@@ -586,18 +609,14 @@ const [loading,setLoading]=useState(false)
 
                             Sign-in Using Google
                           </a>{" "} */}
-
                           <GoogleLogin
                             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
                             buttonText="Login with Google"
                             onSuccess={responseSuccessGoogleLogin}
                             onFailure={responseErrorGoogleLogin}
-                            cookiePolicy={'single_host_origin'}
+                            cookiePolicy={"single_host_origin"}
                           />
-
-
                         </div>
-
                       </div>{" "}
                       <br></br>
                     </div>

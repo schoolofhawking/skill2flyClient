@@ -63,8 +63,11 @@ function Navbar() {
                     <Link to="/" style={{textDecoration:"none"}}>Home</Link>
                   </li>
                   <li className="menu-item">
-                    <Link to="/course" style={{textDecoration:"none"}}>Course</Link>
+                    <Link to="/course" style={{textDecoration:"none"}}>All Courses</Link>
                   </li>
+                  {/* <li className="menu-item">
+                    <Link to="/course" style={{textDecoration:"none"}}>My Courses</Link>
+                  </li> */}
                   {/* <li className="menu-item-has-children">
                       <a href="javascript:void(0);">Pages</a>
                       <ul className="sub-menu">

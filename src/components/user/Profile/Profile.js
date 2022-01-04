@@ -196,6 +196,11 @@ export default function Profile() {
         setState(result);
       });
   };
+
+  // const getMycourses=async()=>{
+
+  //   await axios.get('/getMycourses',)
+  // }
   return (
     <div>
       <Navbar />
@@ -225,25 +230,27 @@ export default function Profile() {
               {/* Tab Title  */}
               {/* tab-title nav nav-tabs (was the previous cls instead of course tab) */}
               <ul className="tab-title nav nav-tabs">
-                <li>
-                  <a className="active" href="#owned" data-toggle="tab">
-                    Owned
-                  </a>
-                </li>
-                <li>
+               
+                {/* <li>
                   <a href="#purchased" data-toggle="tab" className>
                     Purchased
                   </a>
-                </li>
+                </li> */}
                 <li>
                   <a
                     onClick={() => editProfile()}
                     href="#myprofile"
+                    className="active"
                     data-toggle="tab"
                   >
                     My Profile
                   </a>
                 </li>
+                {/* <li>
+                  <a  href="#owned" data-toggle="tab" onClick={getMycourses}>
+                    My courses
+                  </a>
+                </li> */}
                 <li>
                   <a
                     onClick={() => editProfile()}

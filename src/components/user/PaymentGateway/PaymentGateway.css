@@ -1,0 +1,29 @@
+
+
+@media (min-width: 1200px) {
+    .payButton{
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        width: 100%;
+    }
+  }
+  .payButton{
+
+    width: 100%;
+  }
+
+  .orline {
+    width: 100%; 
+    text-align: center; 
+    border-bottom: 1px solid #000; 
+    line-height: 0.1em;
+    margin: 10px 0 20px; 
+ } 
+ 
+ .orline span { 
+     background:#f7f6fa; 
+     padding:0 10px; 
+ }

@@ -8,6 +8,7 @@ import { purchaseCourseAction } from '../../../redux/rootActions'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import { Modal } from 'react-bootstrap';
+import Footer from '../Footer/Footer';
 
 function SingleCourse() {
   const params = useParams();
@@ -604,7 +605,7 @@ function SingleCourse() {
                     <a className="twi" href="#"><i className="social_twitter" /></a>
                     <a className="goo" href="#"><i className="social_googleplus" /></a>
                   </div>
-                  <div className="related-course">
+                  {/* <div className="related-course">
                     <h3>Related Courses</h3>
                     <div className="related-course-slider owl-carousel">
                       <div className="feature-course-item-4">
@@ -728,7 +729,7 @@ function SingleCourse() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="col-lg-3">
@@ -743,7 +744,8 @@ function SingleCourse() {
                         {courseDetail.language ? <>  <li><i className="icon_cog" /><span>Language: </span> </li>courseDetail.language</> : <></>}
                         {/* <li><i className="icon_calendar" /><span>Deadline: </span> 16 April 2020</li> */}
                       </ul>
-                      <a className="bisylms-btn" style={{ color: "white" }} onClick={enrollCourseNow}>Enroll Course</a>
+                      
+                {userPurchase?<><a className="bisylms-btn" style={{ color: "white" }}>Purchased already</a></>  :<><a className="bisylms-btn" style={{ color: "white" }} onClick={enrollCourseNow}>Enroll Course</a></>}
                     </div>
                   </aside>
                   <aside className="widget">
@@ -775,7 +777,9 @@ function SingleCourse() {
           height={100}
           width={100} /></>
       }
+    <Footer/>
     </div >
+    
   )
 }
 

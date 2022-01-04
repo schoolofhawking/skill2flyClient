@@ -1,12 +1,13 @@
 import axios from "axios";
 import React from "react";
-import { useEffect } from "react";
+import { useEffect ,useState} from "react";
 import Footer from "../Footer/Footer";
 import Navbar from "../NavBar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router";
-
+import "./PaymentGateway.css";
+import Loader from "react-loader-spinner";
 function loadScript(src) {
   return new Promise((resolve) => {
     const script = document.createElement("script");
@@ -25,6 +26,7 @@ function PaymentGateway() {
   const userData = useSelector((state) => state.userData);
   const courseData = useSelector((state) => state.purchaseCourseData);
   const history = useHistory();
+  const [loading,setLoading]=useState(false)
 
   useEffect(() => {
     if (courseData.actualPrice != "") {
@@ -36,6 +38,8 @@ function PaymentGateway() {
   }, [courseData]);
 
   async function displayRazorpay() {
+    setLoading(true)
+
     let { data } = await axios.post(
       process.env.REACT_APP_SERVER + "/createOrder",
       { id: userData.userId, courseData },
@@ -47,6 +51,7 @@ function PaymentGateway() {
     );
     if (data.error) {
       toast.error("something went wrong");
+      setLoading(false)
     } else {
       console.log("__", data);
       var options = {
@@ -59,9 +64,9 @@ function PaymentGateway() {
         order_id: data.data.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
         handler: function (response) {
           console.log("resppp", response);
-          alert(response.razorpay_payment_id);
-          alert(response.razorpay_order_id);
-          alert(response.razorpay_signature);
+          // alert(response.razorpay_payment_id);
+          // alert(response.razorpay_order_id);
+          // alert(response.razorpay_signature);
           //to backend update the course purchase
           PaymentSuccess(response);
         },
@@ -95,19 +100,62 @@ function PaymentGateway() {
       );
       console.log("data", data);
       if (data.error) {
+        setLoading(false)
         toast.error(
           "something went wrong in payment please contact our team..."
         );
       } else {
-        toast.success("Payment success!!!!! need to update in redux");
+        setLoading(false)
+        toast.success("Payment successfully completed!!!!! ");
+        history.push("/profile");
+        
+
       }
     } catch (err) {
+      setLoading(false)
       toast.error("something went wrong in payment please contact our team...");
     }
   };
 
+  const contactAdmin=async()=>{
+
+
+    let phoneNumber=document.getElementById("myPhoneNumber").value
+
+    try{
+
+     let {data}= await axios.post( process.env.REACT_APP_SERVER + "/sendSms",
+      { phoneNumber },
+      {
+        headers: {
+          authorization: "Bearer " + userData.userJwt,
+        },
+      })
+
+      console.log("!!!!!!!",data)
+      if(data.error==false)
+      {
+      toast.success("success you will get a call soon")
+      document.getElementById('contactbtn').innerHTML="You will get guidence soon !"
+      }
+      else
+      {
+        toast.error("something went wrong")
+
+      }
+    }
+    catch(err)
+    {
+toast.error("something went wrong")
+    }
+
+    
+  }
+
   return (
     <div>
+
+  
       <Navbar />
 
       <section
@@ -126,7 +174,15 @@ function PaymentGateway() {
         </div>
       </section>
 
-      <section className="contact-section">
+      {loading?<><Loader
+      type="ThreeDots"
+      color="#5838fc"
+      height={100}
+      width={100}
+      />
+      <p style={{color:"black"}}>Don't go back or close the window</p>
+      </>:<>
+         <section className="contact-section">
         <div className="container">
           <div className="row">
             <div className="col-md-4">
@@ -181,15 +237,34 @@ function PaymentGateway() {
             </div>
             <div className="col-md-8">
               <div className="contact-form">
-                <h4>Pay Now</h4>
+                <h4>Pay with Razor pay</h4>
                 <p>You can use any payment modes through Razorpay!</p>
 
                 <div className="col-md-6" style={{ alignItems: "center" }}>
                   <button
-                    className="btn btn-primary btn-lg btn-block"
+                    className="btn btn-primary btn-lg  payButton"
                     onClick={displayRazorpay}
                   >
                     Pay ₹{courseData.discountPrice}
+                  </button>
+                </div>
+              </div>
+              <h4 className="orline"><span>(OR)</span></h4>
+              <div className="contact-form">
+                <h4 >Contact our team to Buy course</h4>
+                <p>Provide your phone Number we will guide you to buy the course<br/>
+                </p>
+                <div className="col-md-6" style={{ alignItems: "center" }}>
+                                        <input type="text" name="phone" placeholder="Phone Number" id="myPhoneNumber"/>
+                                    </div>
+                <div className="col-md-6" style={{ alignItems: "center" }}>
+                  
+                  <button
+                    className="btn btn-primary btn-lg  payButton"
+                    onClick={contactAdmin}
+                    id="contactbtn"
+                  >
+                  Contact me to buy course
                   </button>
                 </div>
               </div>
@@ -197,6 +272,8 @@ function PaymentGateway() {
           </div>
         </div>
       </section>
+      </>}
+   
 
       <Footer />
     </div>

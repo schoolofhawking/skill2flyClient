@@ -34,6 +34,7 @@ export default function Profile() {
     if (userData.userLogin === false) {
       swalFire();
     }
+    editProfile()
     getCountries();
   }, []);
 
@@ -60,7 +61,7 @@ export default function Profile() {
   const editProfile = () => {
     if (profileData.profileEnable == false) {
       axios
-        .get(process.env.REACT_APP_SERVER + "/getProfileData",  {
+        .get(process.env.REACT_APP_SERVER + "/getProfileData", {
           headers: {
             authorization: "Bearer " + userData.userJwt,
           },
@@ -79,7 +80,7 @@ export default function Profile() {
               designation: data.profileDesignation,
               qualification: data.profileQualification,
             });
-          }else{
+          } else {
             toast.error(response.data.message);
           }
         });
@@ -105,6 +106,11 @@ export default function Profile() {
         }
       });
   };
+
+  const coursePush = (id)=>
+  {
+    history.push('/singleCourse/'+id)
+  }
 
   const handleChange = (name) => async (event) => {
     if (
@@ -161,10 +167,10 @@ export default function Profile() {
     };
     fetch(
       "https://api.countrystatecity.in/v1/countries/" +
-        country +
-        "/states/" +
-        state +
-        "/cities",
+      country +
+      "/states/" +
+      state +
+      "/cities",
       requestOptions
     )
       .then((response) => response.json())
@@ -230,27 +236,28 @@ export default function Profile() {
               {/* Tab Title  */}
               {/* tab-title nav nav-tabs (was the previous cls instead of course tab) */}
               <ul className="tab-title nav nav-tabs">
-               
+
                 {/* <li>
-                  <a href="#purchased" data-toggle="tab" className>
+                  <a href="#purchased" data-toggle="tab" className="active">
                     Purchased
                   </a>
                 </li> */}
                 <li>
+                  <a href="#owned" data-toggle="tab" className="active">
+                    My courses
+                  </a>
+                </li>
+                <li>
                   <a
                     onClick={() => editProfile()}
                     href="#myprofile"
-                    className="active"
+
                     data-toggle="tab"
                   >
                     My Profile
                   </a>
                 </li>
-                {/* <li>
-                  <a  href="#owned" data-toggle="tab" onClick={getMycourses}>
-                    My courses
-                  </a>
-                </li> */}
+
                 <li>
                   <a
                     onClick={() => editProfile()}
@@ -317,188 +324,47 @@ export default function Profile() {
                 >
                   <h3 className="course-title">My Courses</h3>
                   <div className="row">
-                    <div className="col-lg-4 col-md-6">
-                      <div className="feature-course-item-4">
-                        <div className="fcf-thumb">
-                          <img src="assets/images/profile/1.jpg" alt="" />
-                          <a className="enroll" href="#">
-                            Enroll Now
-                          </a>
-                        </div>
-                        <div className="fci-details">
-                          <a href="#" className="c-cate">
-                            <i className="icon_tag_alt" />
-                            Computer Science
-                          </a>
-                          <h4>
-                            <a href="#">Using Creative Problem Solving</a>
-                          </h4>
-                          <div className="author">
-                            <img
-                              src="assets/images/home3/course/a1.png"
-                              alt=""
-                            />
-                            <a href="#">Anthony</a>
-                          </div>
-                          <div className="price-rate">
-                            <div className="course-price">
-                              Free
-                              <span>$42.85</span>
+                    {profileData.profileCourse.length > 0 ? profileData.profileCourse.map((data, i) => {
+                      return (
+                        <div className="col-lg-4 col-md-6">
+                          <div className="feature-course-item-4">
+                            <div className="fcf-thumb">
+                              <img src={process.env.REACT_APP_S3_COURSE_BUCKET + data._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "assets/images/profile/1.jpg" }}   alt="" />
+                              <a style={{cursor:"pointer"}} className="enroll" onClick={()=>coursePush(data._id)}>
+                                View Course
+                              </a>
                             </div>
-                            <div className="ratings">
-                              <i className="icon_star" />
-                              <span>4.5 (2,420)</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-lg-4 col-md-6">
-                      <div className="feature-course-item-4">
-                        <div className="fcf-thumb">
-                          <img src="assets/images/profile/2.jpg" alt="" />
-                          <a className="enroll" href="#">
-                            Enroll Now
-                          </a>
-                        </div>
-                        <div className="fci-details">
-                          <a href="#" className="c-cate">
-                            <i className="icon_tag_alt" />
-                            Art &amp; Design
-                          </a>
-                          <h4>
-                            <a href="#">
-                              The Art of Black and White Photography
-                            </a>
-                          </h4>
-                          <div className="author">
-                            <img
-                              src="assets/images/home3/course/a2.png"
-                              alt=""
-                            />
-                            <a href="#">Giles Posture</a>
-                          </div>
-                          <div className="price-rate">
-                            <div className="course-price">
-                              $75.00
-                              <span>$92.00</span>
-                            </div>
-                            <div className="ratings">
-                              <i className="icon_star" />
-                              <span>4.2 (1,203)</span>
+                            <div className="fci-details">
+                              {/* <a href="#" className="c-cate">
+                                <i className="icon_tag_alt" />
+                                Computer Science
+                              </a> */}
+                              <h4>
+                                <a>{data.courseName}</a>
+                              </h4>
+                              <div className="author">
+                                {/* <img
+                                  src="assets/images/home3/course/a1.png"
+                                  alt=""
+                                /> */}
+                                <a style={{margin:"auto"}}>{data.author}</a>
+                              </div>
+                              <div className="price-rate" style={{justifyContent:"center"}}>
+                                <div className="course-price">
+                                  Purchased
+                                  <span>₹  {data.actualPrice}</span>
+                                </div>
+                                {/* <div className="ratings">
+                                  <i className="icon_star" />
+                                  <span>4.5 (2,420)</span>
+                                </div> */}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    <div className="col-lg-4 col-md-6">
-                      <div className="feature-course-item-4">
-                        <div className="fcf-thumb">
-                          <img src="assets/images/profile/3.jpg" alt="" />
-                          <a className="enroll" href="#">
-                            Enroll Now
-                          </a>
-                        </div>
-                        <div className="fci-details">
-                          <a href="#" className="c-cate">
-                            <i className="icon_tag_alt" />
-                            Business Study
-                          </a>
-                          <h4>
-                            <a href="#">Learning jQuery mobile for Beginners</a>
-                          </h4>
-                          <div className="author">
-                            <img
-                              src="assets/images/home3/course/a3.png"
-                              alt=""
-                            />
-                            <a href="#">Hans Down</a>
-                          </div>
-                          <div className="price-rate">
-                            <div className="course-price">
-                              $53.00
-                              <span>$74.00</span>
-                            </div>
-                            <div className="ratings">
-                              <i className="icon_star" />
-                              <span>4.5 (2,420)</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-lg-4 col-md-6">
-                      <div className="feature-course-item-4">
-                        <div className="fcf-thumb">
-                          <img src="assets/images/profile/4.jpg" alt="" />
-                          <a className="enroll" href="#">
-                            Enroll Now
-                          </a>
-                        </div>
-                        <div className="fci-details">
-                          <a href="#" className="c-cate">
-                            <i className="icon_tag_alt" />
-                            Data Science
-                          </a>
-                          <h4>
-                            <a href="#">Buddhism and modern Psychology</a>
-                          </h4>
-                          <div className="author">
-                            <img
-                              src="assets/images/home3/course/a4.png"
-                              alt=""
-                            />
-                            <a href="#">Richard Tea</a>
-                          </div>
-                          <div className="price-rate">
-                            <div className="course-price">
-                              $62.00
-                              <span>$97.00</span>
-                            </div>
-                            <div className="ratings">
-                              <i className="icon_star" />
-                              <span>4.5 (2,420)</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-lg-4 col-md-6">
-                      <div className="feature-course-item-4">
-                        <div className="fcf-thumb">
-                          <img src="assets/images/profile/5.jpg" alt="" />
-                          <a className="enroll" href="#">
-                            Enroll Now
-                          </a>
-                        </div>
-                        <div className="fci-details">
-                          <a href="#" className="c-cate">
-                            <i className="icon_tag_alt" />
-                            Web Development
-                          </a>
-                          <h4>
-                            <a href="#">Making music with Other people</a>
-                          </h4>
-                          <div className="author">
-                            <img
-                              src="assets/images/home3/course/a6.png"
-                              alt=""
-                            />
-                            <a href="#">Hilary Ouse</a>
-                          </div>
-                          <div className="price-rate">
-                            <div className="course-price">
-                              #34.00
-                              <span>$55.00</span>
-                            </div>
-                            <div className="ratings">
-                              <i className="icon_star" />
-                              <span>4.5 (2,420)</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      )
+                    }) : <h5>You Havent Purchased Any Courses</h5>}
+
                   </div>
                 </div>
                 {/* Owned Tab */}
@@ -755,10 +621,10 @@ export default function Profile() {
                           </option>
                           {country.length > 0
                             ? country.map((data, index) => {
-                                return (
-                                  <option value={data.iso2}>{data.name}</option>
-                                );
-                              })
+                              return (
+                                <option value={data.iso2}>{data.name}</option>
+                              );
+                            })
                             : ""}
                         </select>
                       </div>
@@ -776,10 +642,10 @@ export default function Profile() {
                           </option>
                           {state.length > 0
                             ? state.map((data, index) => {
-                                return (
-                                  <option value={data.iso2}>{data.name}</option>
-                                );
-                              })
+                              return (
+                                <option value={data.iso2}>{data.name}</option>
+                              );
+                            })
                             : ""}
                         </select>
                       </div>
@@ -797,10 +663,10 @@ export default function Profile() {
                           </option>
                           {city.length > 0
                             ? city.map((data, index) => {
-                                return (
-                                  <option value={data.iso2}>{data.name}</option>
-                                );
-                              })
+                              return (
+                                <option value={data.iso2}>{data.name}</option>
+                              );
+                            })
                             : ""}
                         </select>
                       </div>

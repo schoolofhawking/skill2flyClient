@@ -19,6 +19,7 @@ function SingleCourse() {
   const [videoPlayer, setVideoPlayer] = useState({ videoId: "", videoName: "" })
   const [userPurchase, setUserPurchase] = useState(false)
   const [bool, setBool] = useState(false)
+  const [test,setTest] = useState(false)
   const userData = useSelector((state) => state.userData);
   const courseData = useSelector(state => state.courseData)
   const dispatch = useDispatch()
@@ -32,7 +33,7 @@ function SingleCourse() {
       setOtherCourse(arr)
     }
 
-  }, [])
+  }, [test])
 
   const loadCourse = async (id) => {
     setLoading(true)
@@ -76,6 +77,12 @@ function SingleCourse() {
       videoName:data.videoName
     })
     setBool(!bool)
+  }
+
+  const coursePush = (id)=>
+  {
+    history.push('/singleCourse/'+id)
+    setTest(!test)
   }
 
   function hai() {
@@ -753,9 +760,9 @@ function SingleCourse() {
                     {otherCourse.length > 0 ? otherCourse.map((data, i) => {
                       if (data._id != courseDetail._id) {
                         return (
-                          <div className="latest-course">
+                          <div className="latest-course" style={{cursor:"pointer"}} onClick={()=>coursePush(data._id)}>
                             <a><img style={{ width: "60px", height: "auto" }} src={process.env.REACT_APP_S3_COURSE_BUCKET + data._id + ".jpg"} onError={(e) => { e.target.onerror = null; e.target.src = "/assets/images/course/1.jpg" }} alt="" /></a>
-                            <h5><a href="single-course.html">{data.courseName}</a></h5>
+                            <h5><a >{data.courseName}</a></h5>
                             <div className="course-price">
                               {'₹ ' + data.discountPrice}
                               <span className='ml-2'>₹{data.actualPrice}</span>

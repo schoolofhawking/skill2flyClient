@@ -15,6 +15,7 @@ import UserManagement from "../UserManagement/UserManagement";
 import MangeQuestion from '../QuestionManagement/ManageQuestion'
 import './Sidebar.css'
 import ManageReferalAgents from "../ReferalAgents/ManageReferalAgents";
+import Help from "../Help/Help";
 
 export default function Sidebar() {
   const adminDetails = useSelector(state => state.adminData)
@@ -247,6 +248,25 @@ export default function Sidebar() {
                   </Collapse>
                 </li>
 
+                <li className="sidebar-dropdown">
+                  <a onClick={() => { setOthersBool(!othersBool); setDashboardBool(false) }} aria-controls="othersCollapse"
+                    aria-expanded={othersBool} style={{ marginLeft: "0em" }} className="sideElement" >
+                    <i className="fas fa-university" />
+                    <span >Helps</span>
+                    {/* <span className="badge badge-pill badge-primary">Beta</span> */}
+                  </a>
+                  <Collapse in={othersBool}>
+                    <div id="othersCollapse">
+                      <Link to="/admin/Helps" className="sideElement">
+                        <i className="far fa-gem" />
+                        <span>Helps requested</span>
+                      </Link>
+
+                      
+                     
+                    </div>
+                  </Collapse>
+                </li>
               </ul>
             </div>
             {/* sidebar-menu  */}
@@ -287,6 +307,7 @@ export default function Sidebar() {
                 <Route path="/admin/editCourse/:id"><EditCourse /></Route>
                 <Route path="/admin/questions"><MangeQuestion /></Route>
                 <Route path="/admin/referals"><ManageReferalAgents /></Route>
+                <Route path="/admin/Helps"><Help /></Route>
 
               </Route>
             </Switch>

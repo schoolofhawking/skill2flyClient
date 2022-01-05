@@ -1,12 +1,13 @@
 import axios from "axios";
 import React from "react";
-import { useEffect ,useState} from "react";
+import { useEffect, useState } from "react";
 import Footer from "../Footer/Footer";
 import Navbar from "../NavBar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router";
 import "./PaymentGateway.css";
+import { profileData as profileAction } from "../../../redux/rootActions";
 import Loader from "react-loader-spinner";
 function loadScript(src) {
   return new Promise((resolve) => {
@@ -23,10 +24,11 @@ function loadScript(src) {
 }
 
 function PaymentGateway() {
+  const dispatch = useDispatch();
   const userData = useSelector((state) => state.userData);
   const courseData = useSelector((state) => state.purchaseCourseData);
   const history = useHistory();
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (courseData.actualPrice != "") {
@@ -38,7 +40,7 @@ function PaymentGateway() {
   }, [courseData]);
 
   async function displayRazorpay() {
-    setLoading(true)
+    setLoading(true);
 
     let { data } = await axios.post(
       process.env.REACT_APP_SERVER + "/createOrder",
@@ -51,7 +53,7 @@ function PaymentGateway() {
     );
     if (data.error) {
       toast.error("something went wrong");
-      setLoading(false)
+      setLoading(false);
     } else {
       console.log("__", data);
       var options = {
@@ -63,6 +65,7 @@ function PaymentGateway() {
         image: "https://example.com/your_logo",
         order_id: data.data.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
         handler: function (response) {
+          setLoading(true)
           console.log("resppp", response);
           // alert(response.razorpay_payment_id);
           // alert(response.razorpay_order_id);
@@ -84,10 +87,12 @@ function PaymentGateway() {
       };
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
+      setLoading(false)
     }
   }
 
   const PaymentSuccess = async (razorpayResponse) => {
+    setLoading(true)
     try {
       let { data } = await axios.post(
         process.env.REACT_APP_SERVER + "/purchaseSuccess",
@@ -100,62 +105,76 @@ function PaymentGateway() {
       );
       console.log("data", data);
       if (data.error) {
-        setLoading(false)
+        setLoading(false);
         toast.error(
           "something went wrong in payment please contact our team..."
         );
       } else {
-        setLoading(false)
-        toast.success("Payment successfully completed!!!!! ");
+        getProfileData();
+        toast.success("Payment successfully completed! check Your profile to view courses ");
+
         history.push("/profile");
-        
 
       }
     } catch (err) {
-      setLoading(false)
+      setLoading(false);
       toast.error("something went wrong in payment please contact our team...");
     }
   };
 
-  const contactAdmin=async()=>{
+  const contactAdmin = async () => {
+  let userId=userData.userId
 
+    try {
+      let { data } = await axios.post(
+        process.env.REACT_APP_SERVER + "/getHelp",
+        { userId },
+        {
+          headers: {
+            authorization: "Bearer " + userData.userJwt,
+          },
+        }
+      );
 
-    let phoneNumber=document.getElementById("myPhoneNumber").value
-
-    try{
-
-     let {data}= await axios.post( process.env.REACT_APP_SERVER + "/sendSms",
-      { phoneNumber },
-      {
-        headers: {
-          authorization: "Bearer " + userData.userJwt,
-        },
-      })
-
-      console.log("!!!!!!!",data)
-      if(data.error==false)
-      {
-      toast.success("success you will get a call soon")
-      document.getElementById('contactbtn').innerHTML="You will get guidence soon !"
+      console.log("!!!!!!!", data);
+      if (data.error == false) {
+        toast.success("success you will get a call soon");
+ 
+          document.getElementById('contactbtn').style="disply:none"
+          document.getElementById('sucesscallbtn').style="disply:block"
+      } else {
+        toast.error("something went wrong");
       }
-      else
-      {
-        toast.error("something went wrong")
-
-      }
+    } catch (err) {
+      toast.error("something went wrong");
     }
-    catch(err)
-    {
-toast.error("something went wrong")
-    }
+  };
 
+
+  const getProfileData = () => {
+    setLoading(true)
+      axios
+        .get(process.env.REACT_APP_SERVER + "/getProfileData", {
+          headers: {
+            authorization: "Bearer " + userData.userJwt,
+          },
+        })
+        .then((response) => {
+          if (response.data.error === false) {
+            dispatch(profileAction(response.data.profileData));
+            let data = response.data.profileData;
+            
+          } else {
+            toast.error(response.data.message);
+          }
+          setLoading(false)
+        });
     
-  }
+  };
+
 
   return (
     <div>
-
-  
       <Navbar />
 
       <section
@@ -174,33 +193,33 @@ toast.error("something went wrong")
         </div>
       </section>
 
-      {loading?<><Loader
-      type="ThreeDots"
-      color="#5838fc"
-      height={100}
-      width={100}
-      />
-      <p style={{color:"black"}}>Don't go back or close the window</p>
-      </>:<>
-         <section className="contact-section">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-4">
-              <div className="contact--info-area">
-                <h3>Enroll the course For ₹{courseData.discountPrice}</h3>
-                <p>
-                  Any issues with purchase..? feel free to contact us for
-                  purchase related queries.
-                </p>
-                <div className="single-info">
-                  <h5>Headquaters</h5>
-                  <p>
-                    <i className="icon_house_alt" />
-                    Hilite Business Park, 5th floor (codelattice) Craft Square
-                    <br /> Kozhikode, Kerala 673014
-                  </p>
-                </div>
-                {/* <div className="single-info">
+      {loading ? (
+        <>
+          <Loader type="ThreeDots" color="#5838fc" height={100} width={100} />
+          <p style={{ color: "black" }}>Don't go back or close the window</p>
+        </>
+      ) : (
+        <>
+          <section className="contact-section">
+            <div className="container">
+              <div className="row">
+                <div className="col-md-4">
+                  <div className="contact--info-area">
+                    <h3>Enroll the course For ₹{courseData.discountPrice}</h3>
+                    <p>
+                      Any issues with purchase..? feel free to contact us for
+                      purchase related queries.
+                    </p>
+                    <div className="single-info">
+                      <h5>Headquaters</h5>
+                      <p>
+                        <i className="icon_house_alt" />
+                        Hilite Business Park, 5th floor (codelattice) Craft
+                        Square
+                        <br /> Kozhikode, Kerala 673014
+                      </p>
+                    </div>
+                    {/* <div className="single-info">
                                     <h5>Phone</h5>
                                     <p>
                                         <i className="icon_phone" />
@@ -208,72 +227,89 @@ toast.error("something went wrong")
                                         (+420) 336 476 328
                                     </p>
                                 </div> */}
-                <div className="single-info">
-                  <h5>Support</h5>
-                  <p>
-                    <i className="icon_mail_alt" />
-                    <a href="mailto:schoolofhawking@gmail.com">
-                      schoolofhawking@gmail.com
-                    </a>{" "}
-                    <br />
-                  </p>
+                    <div className="single-info">
+                      <h5>Support</h5>
+                      <p>
+                        <i className="icon_mail_alt" />
+                        <a href="mailto:schoolofhawking@gmail.com">
+                          schoolofhawking@gmail.com
+                        </a>{" "}
+                        <br />
+                      </p>
+                    </div>
+                    <div className="ab-social">
+                      <h5>Follow Us</h5>
+                      <a className="fac" href="#">
+                        <i className="social_facebook" />
+                      </a>
+                      <a className="twi" href="#">
+                        <i className="social_twitter" />
+                      </a>
+                      <a className="you" href="#">
+                        <i className="social_youtube" />
+                      </a>
+                      <a className="lin" href="#">
+                        <i className="social_linkedin" />
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <div className="ab-social">
-                  <h5>Follow Us</h5>
-                  <a className="fac" href="#">
-                    <i className="social_facebook" />
-                  </a>
-                  <a className="twi" href="#">
-                    <i className="social_twitter" />
-                  </a>
-                  <a className="you" href="#">
-                    <i className="social_youtube" />
-                  </a>
-                  <a className="lin" href="#">
-                    <i className="social_linkedin" />
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-8">
-              <div className="contact-form">
-                <h4>Pay with Razor pay</h4>
-                <p>You can use any payment modes through Razorpay!</p>
+                <div className="col-md-8">
+                  <div className="contact-form">
+                    <h4>Pay with Razor pay</h4>
+                    <p>You can use any payment modes through Razorpay!</p>
 
-                <div className="col-md-6" style={{ alignItems: "center" }}>
-                  <button
-                    className="btn btn-primary btn-lg  payButton"
-                    onClick={displayRazorpay}
-                  >
-                    Pay ₹{courseData.discountPrice}
-                  </button>
-                </div>
-              </div>
-              <h4 className="orline"><span>(OR)</span></h4>
-              <div className="contact-form">
-                <h4 >Contact our team to Buy course</h4>
-                <p>Provide your phone Number we will guide you to buy the course<br/>
-                </p>
-                <div className="col-md-6" style={{ alignItems: "center" }}>
-                                        <input type="text" name="phone" placeholder="Phone Number" id="myPhoneNumber"/>
-                                    </div>
-                <div className="col-md-6" style={{ alignItems: "center" }}>
-                  
-                  <button
-                    className="btn btn-primary btn-lg  payButton"
-                    onClick={contactAdmin}
-                    id="contactbtn"
-                  >
-                  Contact me to buy course
-                  </button>
+                    <div className="col-md-6" style={{ alignItems: "center" }}>
+                      <button
+                        className="btn btn-primary btn-lg  payButton"
+                        onClick={displayRazorpay}
+                      >
+                        Pay ₹{courseData.discountPrice}
+                      </button>
+                    </div>
+                  </div>
+                  <h4 className="orline">
+                    <span>(OR)</span>
+                  </h4>
+                  <div className="contact-form">
+                    <h4>Contact our team to Buy course</h4>
+                    <p>
+                      click the below button our team will guide you to get the course
+                      <br />
+                    </p>
+                    {/* <div className="col-md-6" style={{ alignItems: "center" }}>
+                      <input
+                        type="text"
+                        name="phone"
+                        placeholder="Phone Number"
+                        id="myPhoneNumber"
+                      />
+                    </div> */}
+                    <div className="col-md-6" style={{ alignItems: "center" }}>
+                      <button
+                        className="btn btn-primary btn-lg  payButton"
+                        onClick={contactAdmin}
+                        id="contactbtn"
+                      >
+                        Request for help to buy course
+                      </button>
+
+                      <button
+                        className="btn btn-primary btn-lg  payButton"
+                    id="sucesscallbtn"
+                    style={{display:"none"}}
+                      >
+                  our team will connect you soon!
+                      </button>
+
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-      </>}
-   
+          </section>
+        </>
+      )}
 
       <Footer />
     </div>

@@ -23,6 +23,8 @@ export default function Admin() {
                 <Route path="/admin/questions"><Sidebar /></Route>
                 <Route path="/admin/referals"><Sidebar /></Route>
                 <Route path="/admin/Helps"><Sidebar /></Route>
+                <Route path="/admin/purchase"><Sidebar /></Route>
+                <Route path="/admin/purchasedUsers/:id"><Sidebar /></Route>
                 {/* <Route path="/admin/*"><Error /></Route> */}
             </Switch>
         </div>

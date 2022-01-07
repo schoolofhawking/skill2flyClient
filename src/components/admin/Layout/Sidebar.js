@@ -16,6 +16,8 @@ import MangeQuestion from '../QuestionManagement/ManageQuestion'
 import './Sidebar.css'
 import ManageReferalAgents from "../ReferalAgents/ManageReferalAgents";
 import Help from "../Help/Help";
+import PurchaseList from "../PurchaseList/PurchaseList";
+import PurchasedUsersList from "../PurchaseList/PurchasedUsersList/PurchasedUsersList";
 
 export default function Sidebar() {
   const adminDetails = useSelector(state => state.adminData)
@@ -252,6 +254,27 @@ export default function Sidebar() {
                   <a onClick={() => { setOthersBool(!othersBool); setDashboardBool(false) }} aria-controls="othersCollapse"
                     aria-expanded={othersBool} style={{ marginLeft: "0em" }} className="sideElement" >
                     <i className="fas fa-university" />
+                    <span >Purchases (All courses)</span>
+                    {/* <span className="badge badge-pill badge-primary">Beta</span> */}
+                  </a>
+                  <Collapse in={othersBool}>
+                    <div id="othersCollapse">
+                      <Link to="/admin/purchase" className="sideElement">
+                        <i className="far fa-gem" />
+                        <span>View all purchases</span>
+                      </Link>
+
+                      
+                    </div>
+                  </Collapse>
+                </li>
+
+
+
+                <li className="sidebar-dropdown">
+                  <a onClick={() => { setOthersBool(!othersBool); setDashboardBool(false) }} aria-controls="othersCollapse"
+                    aria-expanded={othersBool} style={{ marginLeft: "0em" }} className="sideElement" >
+                    <i className="fas fa-university" />
                     <span >Helps</span>
                     {/* <span className="badge badge-pill badge-primary">Beta</span> */}
                   </a>
@@ -308,6 +331,8 @@ export default function Sidebar() {
                 <Route path="/admin/questions"><MangeQuestion /></Route>
                 <Route path="/admin/referals"><ManageReferalAgents /></Route>
                 <Route path="/admin/Helps"><Help /></Route>
+                <Route path="/admin/purchase"><PurchaseList /></Route>
+                <Route path="/admin/purchasedUsers/:id"><PurchasedUsersList /></Route>
 
               </Route>
             </Switch>
